@@ -1,0 +1,1587 @@
+FORMAT: 1A
+
+# Project X API draft v.20170406
+
+Project X is an online system that helps restaurant owners to manage the customers in a few clicks and allows customers to easily make a reservation, check the menu, and place orders directly from free iOS and Android App.
+
+This document defines APIs for the project X and is an implementation of [JSON API](http://jsonapi.org/).
+
+## Query parameters
+
+All routes support query parameters defined in [JSON API](http://jsonapi.org/) to refine responses.
+
++ [include](http://jsonapi.org/format/#fetching-includes)
++ [fields](http://jsonapi.org/format/#fetching-sparse-fieldsets)
++ [sort](jsonapi.org/format/#fetching-sorting)
++ [page](http://jsonapi.org/format/#fetching-pagination)
++ [filter](http://jsonapi.org/format/#fetching-filtering)
+    + [recommendation](http://jsonapi.org/recommendations/#filtering)
+
+## Changes
+
++ 2017-04-06
+    + add Menu APIs
+    + branch's "floor_plan" needs to be defined...
+
++ 2017-04-05
+    + modify the formats of restaurant ID and branch ID
+    + remove all "relationships" and "links"
+
+# Group Restaurant
+
+Resources related to restaurants in the API.
+
+## Restaurant [/restaurants/{restaurant_id}]
+
++ Parameters
+    + restaurant_id: 20170001 (string) - Unique ID of a restaurant.
+
+### Retrieve a restaurant [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": {
+                    "type": "restaurants",
+                    "id": "20170001",
+                    "attributes": {
+                        "name": "wangsteak",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "social": {
+                            "web": "https://www.wangsteak.com.tw/",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "photo": [
+                            "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                        ]
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "attributes": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "desc": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "object",
+                                        "properties": {
+                                            "continent": {
+                                                "type": "string"
+                                            },
+                                            "country": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "city": {
+                                                "type": "string"
+                                            },
+                                            "dist": {
+                                                "type": "string"
+                                            },
+                                            "address": {
+                                                "type": "string"
+                                            },
+                                            "tel": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "continent",
+                                            "country",
+                                            "state",
+                                            "city",
+                                            "dist",
+                                            "address",
+                                            "tel"
+                                        ]
+                                    },
+                                    "social": {
+                                        "type": "object",
+                                        "properties": {
+                                            "web": {
+                                                "type": "string"
+                                            },
+                                            "facebook": {
+                                                "type": "string"
+                                            },
+                                            "twitter": {
+                                                "type": "string"
+                                            },
+                                            "google_plus": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "web",
+                                            "facebook",
+                                            "twitter",
+                                            "google_plus"
+                                        ]
+                                    },
+                                    "photo": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "desc",
+                                    "category",
+                                    "location",
+                                    "social",
+                                    "photo"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "id",
+                            "attributes"
+                        ]
+                    }
+                },
+                "required": [
+                    "data"
+                ]
+            }
+
+### Update a restaurant [PATCH]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "restaurants",
+                    "id": "20170001",
+                    "attributes": {
+                        "name": "wangsteak",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "social": {
+                            "web": "https://www.wangsteak.com.tw/",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "photo": [
+                            "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                        ]
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "attributes": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "desc": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "object",
+                                        "properties": {
+                                            "continent": {
+                                                "type": "string"
+                                            },
+                                            "country": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "city": {
+                                                "type": "string"
+                                            },
+                                            "dist": {
+                                                "type": "string"
+                                            },
+                                            "address": {
+                                                "type": "string"
+                                            },
+                                            "tel": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "continent",
+                                            "country",
+                                            "state",
+                                            "city",
+                                            "dist",
+                                            "address",
+                                            "tel"
+                                        ]
+                                    },
+                                    "social": {
+                                        "type": "object",
+                                        "properties": {
+                                            "web": {
+                                                "type": "string"
+                                            },
+                                            "facebook": {
+                                                "type": "string"
+                                            },
+                                            "twitter": {
+                                                "type": "string"
+                                            },
+                                            "google_plus": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "web",
+                                            "facebook",
+                                            "twitter",
+                                            "google_plus"
+                                        ]
+                                    },
+                                    "photo": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "desc",
+                                    "category",
+                                    "location",
+                                    "social",
+                                    "photo"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "id"
+                        ]
+                    }
+                },
+                "required": [
+                    "data"
+                ]
+            }
+
++ Response 204
+
+### Remove a restaurant [DELETE]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 204
+
+## Restaurant Collection [/restaurants]
+
+### List all restaurants [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": [
+                    {
+                        "type": "restaurants",
+                        "id": "20170001",
+                        "attributes": {
+                            "name": "wangsteak",
+                            "desc": "",
+                            "category": "",
+                            "location": {
+                                "continent": "",
+                                "country": "",
+                                "state": "",
+                                "city": "",
+                                "dist": "",
+                                "address": "",
+                                "tel": ""
+                            },
+                            "social": {
+                                "web": "https://www.wangsteak.com.tw/",
+                                "facebook": "",
+                                "twitter": "",
+                                "google_plus": ""
+                            },
+                            "photo": [
+                                "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                            ]
+                        }
+                    },
+                    {
+                        ...
+                    },
+                    ...
+                ]
+            }
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "id": {
+                                    "type": "string"
+                                },
+                                "attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "desc": {
+                                            "type": "string"
+                                        },
+                                        "category": {
+                                            "type": "string"
+                                        },
+                                        "location": {
+                                            "type": "object",
+                                            "properties": {
+                                                "continent": {
+                                                    "type": "string"
+                                                },
+                                                "country": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "city": {
+                                                    "type": "string"
+                                                },
+                                                "dist": {
+                                                    "type": "string"
+                                                },
+                                                "address": {
+                                                    "type": "string"
+                                                },
+                                                "tel": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "continent",
+                                                "country",
+                                                "state",
+                                                "city",
+                                                "dist",
+                                                "address",
+                                                "tel"
+                                            ]
+                                        },
+                                        "social": {
+                                            "type": "object",
+                                            "properties": {
+                                                "web": {
+                                                    "type": "string"
+                                                },
+                                                "facebook": {
+                                                    "type": "string"
+                                                },
+                                                "twitter": {
+                                                    "type": "string"
+                                                },
+                                                "google_plus": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "web",
+                                                "facebook",
+                                                "twitter",
+                                                "google_plus"
+                                            ]
+                                        },
+                                        "photo": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "desc",
+                                        "category",
+                                        "location",
+                                        "social",
+                                        "photo"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "id",
+                                "attributes"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "data"
+                ]
+            }
+
+### Create a new restaurant [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "restaurants",
+                    "attributes": {
+                        "name": "TGI FRIDAYS",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "social": {
+                            "web": "",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "photo": [
+                            ""
+                        ]
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "attributes": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "desc": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "object",
+                                        "properties": {
+                                            "continent": {
+                                                "type": "string"
+                                            },
+                                            "country": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "city": {
+                                                "type": "string"
+                                            },
+                                            "dist": {
+                                                "type": "string"
+                                            },
+                                            "address": {
+                                                "type": "string"
+                                            },
+                                            "tel": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "continent",
+                                            "country",
+                                            "state",
+                                            "city",
+                                            "dist",
+                                            "address",
+                                            "tel"
+                                        ]
+                                    },
+                                    "social": {
+                                        "type": "object",
+                                        "properties": {
+                                            "web": {
+                                                "type": "string"
+                                            },
+                                            "facebook": {
+                                                "type": "string"
+                                            },
+                                            "twitter": {
+                                                "type": "string"
+                                            },
+                                            "google_plus": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "web",
+                                            "facebook",
+                                            "twitter",
+                                            "google_plus"
+                                        ]
+                                    },
+                                    "photo": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "desc",
+                                    "category",
+                                    "location",
+                                    "social",
+                                    "photo"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "attributes"
+                        ]
+                    }
+                },
+                "required": [
+                    "data"
+                ]
+            }
+
++ Response 201 (application/vnd.api+json)
+
+    + Headers
+
+            Location: /restaurants/20170002
+
+    + Body
+
+            {
+                "data": {
+                    "type": "restaurants",
+                    "id": "20170002",
+                    "attributes": {
+                        "name": "TGI FRIDAYS",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "social": {
+                            "web": "",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "photo": [
+                            ""
+                        ]
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "attributes": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "desc": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "object",
+                                        "properties": {
+                                            "continent": {
+                                                "type": "string"
+                                            },
+                                            "country": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "city": {
+                                                "type": "string"
+                                            },
+                                            "dist": {
+                                                "type": "string"
+                                            },
+                                            "address": {
+                                                "type": "string"
+                                            },
+                                            "tel": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "continent",
+                                            "country",
+                                            "state",
+                                            "city",
+                                            "dist",
+                                            "address",
+                                            "tel"
+                                        ]
+                                    },
+                                    "social": {
+                                        "type": "object",
+                                        "properties": {
+                                            "web": {
+                                                "type": "string"
+                                            },
+                                            "facebook": {
+                                                "type": "string"
+                                            },
+                                            "twitter": {
+                                                "type": "string"
+                                            },
+                                            "google_plus": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "web",
+                                            "facebook",
+                                            "twitter",
+                                            "google_plus"
+                                        ]
+                                    },
+                                    "photo": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "desc",
+                                    "category",
+                                    "location",
+                                    "social",
+                                    "photo"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "id",
+                            "attributes"
+                        ]
+                    }
+                },
+                "required": [
+                    "data"
+                ]
+            }
+
+# Group Branch
+
+Resources related to branches in the API.
+
+## Branch [/restaurants/{restaurant_id}/branches/{branch_id}]
+
++ Parameters
+    + restaurant_id: 20170001 (string)
+    + branch_id: 1 (string) - Unique ID of a branch of a restaurant.
+
+### Retrieve a branch [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": {
+                    "type": "branches",
+                    "id": "201700011",
+                    "attributes": {
+                        "name": "Xinyi branch",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "currency": "TWD",
+                        "social": {
+                            "web": "https://www.wangsteak.com.tw/xinyi",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "no_table": 50,
+                        "capacity": 250,
+                        "branch_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00",
+                        "photo": [
+                            "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                        ],
+                        "level": 4,
+                        "rating": 4.5,
+                        "floor_plan": [
+                            {
+                                "table_id": "t001",
+                                "shape": "rectangle",
+                                "x": 40,
+                                "y": 20,
+                                "width": 20,
+                                "height": 10
+                            },
+                            {
+                                "table_id": "t002",
+                                "shape": "round",
+                                "x": 20,
+                                "y": 40,
+                                "width": 10,
+                                "height": 10
+                            }
+                        ],
+                        "tag": [""],
+                        "tables": ["t001", "t002"],
+                        "details": "",
+                        "priority_pass": true,
+                        "priority_meal": false,
+                        "guarantee_best_seat": true,
+                        "welcome_drink": true,
+                        "appetizer_discount": true,
+                        "special_event": ["birthday cake", "anniversary flower"],
+                        "minimum_order": ""
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
+### Update a branch [PATCH]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "branches",
+                    "id": "201700011",
+                    "attributes": {
+                        "name": "Xinyi branch",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "currency": "TWD",
+                        "social": {
+                            "web": "https://www.wangsteak.com.tw/xinyi",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "no_table": 50,
+                        "capacity": 250,
+                        "branch_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00",
+                        "photo": [
+                            "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                        ],
+                        "level": 4,
+                        "rating": 4.5,
+                        "floor_plan": [
+                            {
+                                "table_id": "t001",
+                                "shape": "rectangle",
+                                "x": 40,
+                                "y": 20,
+                                "width": 20,
+                                "height": 10
+                            },
+                            {
+                                "table_id": "t002",
+                                "shape": "round",
+                                "x": 20,
+                                "y": 40,
+                                "width": 10,
+                                "height": 10
+                            }
+                        ],
+                        "tag": [""],
+                        "tables": ["t001", "t002"],
+                        "details": "",
+                        "priority_pass": true,
+                        "priority_meal": false,
+                        "guarantee_best_seat": true,
+                        "welcome_drink": true,
+                        "appetizer_discount": true,
+                        "special_event": ["birthday cake", "anniversary flower"],
+                        "minimum_order": ""
+                    }
+                }
+            }
+
+
+    + Schema
+
+            {}
+
++ Response 204
+
+### Remove a branch [DELETE]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 204
+
+## Branch Collection [/restaurants/{restaurant_id}/branches]
+
++ Parameters
+    + restaurant_id: 20170001 (string)
+
+### List all branches [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": [
+                    {
+                        "type": "branches",
+                        "id": "201700011",
+                        "attributes": {
+                            "name": "Xinyi branch",
+                            "desc": "",
+                            "category": "",
+                            "location": {
+                                "continent": "",
+                                "country": "",
+                                "state": "",
+                                "city": "",
+                                "dist": "",
+                                "address": "",
+                                "tel": ""
+                            },
+                            "currency": "TWD",
+                            "social": {
+                                "web": "https://www.wangsteak.com.tw/xinyi",
+                                "facebook": "",
+                                "twitter": "",
+                                "google_plus": ""
+                            },
+                            "no_table": 50,
+                            "capacity": 250,
+                            "branch_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00",
+                            "photo": [
+                                "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                            ],
+                            "level": 4,
+                            "rating": 4.5,
+                            "floor_plan": [
+                                {
+                                    "table_id": "t001",
+                                    "shape": "rectangle",
+                                    "x": 40,
+                                    "y": 20,
+                                    "width": 20,
+                                    "height": 10
+                                },
+                                {
+                                    "table_id": "t002",
+                                    "shape": "round",
+                                    "x": 20,
+                                    "y": 40,
+                                    "width": 10,
+                                    "height": 10
+                                }
+                            ],
+                            "tag": [""],
+                            "tables": ["t001", "t002"],
+                            "details": "",
+                            "priority_pass": true,
+                            "priority_meal": false,
+                            "guarantee_best_seat": true,
+                            "welcome_drink": true,
+                            "appetizer_discount": true,
+                            "special_event": ["birthday cake", "anniversary flower"],
+                            "minimum_order": ""
+                        }
+                    },
+                    {
+                        ...
+                    },
+                    ...
+                ]
+            }
+
+    + Schema
+
+            {}
+
+### Create a new branch [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "branches",
+                    "attributes": {
+                        "name": "Xinyi branch",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "currency": "TWD",
+                        "social": {
+                            "web": "https://www.wangsteak.com.tw/xinyi",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "no_table": 50,
+                        "capacity": 250,
+                        "branch_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00",
+                        "photo": [
+                            "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                        ],
+                        "level": 4,
+                        "rating": 4.5,
+                        "floor_plan": [
+                            {
+                                "table_id": "t001",
+                                "shape": "rectangle",
+                                "x": 40,
+                                "y": 20,
+                                "width": 20,
+                                "height": 10
+                            },
+                            {
+                                "table_id": "t002",
+                                "shape": "round",
+                                "x": 20,
+                                "y": 40,
+                                "width": 10,
+                                "height": 10
+                            }
+                        ],
+                        "tag": [""],
+                        "tables": ["t001", "t002"],
+                        "details": "",
+                        "priority_pass": true,
+                        "priority_meal": false,
+                        "guarantee_best_seat": true,
+                        "welcome_drink": true,
+                        "appetizer_discount": true,
+                        "special_event": ["birthday cake", "anniversary flower"],
+                        "minimum_order": ""
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
++ Response 201 (application/vnd.api+json)
+
+    + Headers
+
+            Location: /restaurants/20170001/branches/2
+
+    + Body
+
+            {
+                "data": {
+                    "type": "branches",
+                    "id": "/restaurants/20170001/branches/2",
+                    "attributes": {
+                        "name": "Xinyi branch",
+                        "desc": "",
+                        "category": "",
+                        "location": {
+                            "continent": "",
+                            "country": "",
+                            "state": "",
+                            "city": "",
+                            "dist": "",
+                            "address": "",
+                            "tel": ""
+                        },
+                        "currency": "TWD",
+                        "social": {
+                            "web": "https://www.wangsteak.com.tw/xinyi",
+                            "facebook": "",
+                            "twitter": "",
+                            "google_plus": ""
+                        },
+                        "no_table": 50,
+                        "capacity": 250,
+                        "branch_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00",
+                        "photo": [
+                            "https://www.wangsteak.com.tw/styles/images/about_03.jpg"
+                        ],
+                        "level": 4,
+                        "rating": 4.5,
+                        "floor_plan": [
+                            {
+                                "table_id": "t001",
+                                "shape": "square",
+                                "x": 40,
+                                "y": 20
+                            },
+                            {
+                                "table_id": "t002",
+                                "shape": "round",
+                                "x": 20,
+                                "y": 40
+                            }
+                        ],
+                        "tag": [""],
+                        "tables": ["t001", "t002"],
+                        "details": "",
+                        "priority_pass": true,
+                        "priority_meal": false,
+                        "guarantee_best_seat": true,
+                        "welcome_drink": true,
+                        "appetizer_discount": true,
+                        "special_event": ["birthday cake", "anniversary flower"],
+                        "minimum_order": ""
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
+
+# Group Table
+
+Resources related to tables in the API.
+
+## Table [/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}]
+
++ Parameters
+    + restaurant_id: 20170001 (string)
+    + branch_id: 1 (string)
+    + table_id: t001 (string) - Unique ID of the table in a branch.
+
+### Retrieve a table [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": {
+                    "type": "tables",
+                    "id": "t001"
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Table 001",
+                        "table_desc": "",
+                        "availability": true,
+                        "no_seat": 6,
+                        "type": "square",
+                        "occupied": false,
+                        "tag": ["window facing", "accessibility", "private room"],
+                        "table_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00"
+                    }
+                }
+            }
+
+
+    + Schema
+
+            {}
+
+### Update a table [PATCH]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "tables",
+                    "id": "t001"
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Table 001",
+                        "table_desc": "",
+                        "availability": true,
+                        "no_seat": 6,
+                        "type": "square",
+                        "occupied": false,
+                        "tag": ["window facing", "accessibility", "private room"],
+                        "table_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00"
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
++ Response 204
+
+### Remove a table [DELETE]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 204
+
+## Table Collection [/restaurants/{restaurant_id}/branches/{branch_id}/tables]
+
++ Parameters
+    + restaurant_id: 20170001 (string)
+    + branch_id: 1 (string)
+
+### List all tables [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": [
+                    {
+                        "type": "tables",
+                        "id": "t001"
+                        "attributes": {
+                            "branch_id": "201700011",
+                            "name": "Table 001",
+                            "table_desc": "",
+                            "availability": true,
+                            "no_seat": 6,
+                            "type": "square",
+                            "occupied": false,
+                            "tag": ["window facing", "accessibility", "private room"],
+                            "table_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00"
+                        }
+                    },
+                    {
+                        ...
+                    },
+                    ...
+                ]
+            }
+
+    + Schema
+
+            {}
+
+### Create a new table [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "tables",
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Table 002",
+                        "table_desc": "",
+                        "availability": true,
+                        "no_seat": 6,
+                        "type": "square",
+                        "occupied": false,
+                        "tag": ["window facing", "accessibility", "private room"],
+                        "table_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00"
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
++ Response 201 (application/vnd.api+json)
+
+    + Headers
+
+            Location: /restaurants/20170001/branches/1/tables/t002
+
+    + Body
+
+            {
+                "data": {
+                    "type": "tables",
+                    "id": "t002"
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Table 002",
+                        "table_desc": "",
+                        "availability": true,
+                        "no_seat": 6,
+                        "type": "square",
+                        "occupied": false,
+                        "tag": ["window facing", "accessibility", "private room"],
+                        "table_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00"
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
+# Group Menu
+
+Resources related to menus in the API.
+
+## Menu [/restaurants/{restaurant_id}/branches/{branch_id}/memus/{menu_id}]
+
++ Parameters
+    + restaurant_id: 20170001 (string)
+    + branch_id: 1 (string)
+    + menu_id: m001 (string) - Unique ID of the menu in a branch.
+
+### Retrieve a menu [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": {
+                    "type": "menus",
+                    "id": "m001",
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Menu 001",
+                        "menu_desc": "",
+                        "menu_cat": "breakfast",
+                        "menu_availability": true,
+                        "items": [],
+                        "menu_hours": ""
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
+### Update a menu [PATCH]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "menus",
+                    "id": "m001",
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Menu 001",
+                        "menu_desc": "",
+                        "menu_cat": "breakfast",
+                        "menu_availability": true,
+                        "items": [],
+                        "menu_hours": ""
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
++ Response 204
+
+### Remove a menu [DELETE]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 204
+
+## Menu Collection [/restaurants/{restaurant_id}/branches/{branch_id}/menus]
+
++ Parameters
+    + restaurant_id: 20170001 (string)
+    + branch_id: 1 (string)
+
+### List all menus [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": [
+                    {
+                        "type": "menus",
+                        "id": "m001",
+                        "attributes": {
+                            "branch_id": "201700011",
+                            "name": "Menu 001",
+                            "menu_desc": "",
+                            "menu_cat": "breakfast",
+                            "menu_availability": true,
+                            "items": [],
+                            "menu_hours": ""
+                        }
+                    },
+                    {
+                        ...
+                    },
+                    ...
+                ]
+            }
+
+    + Schema
+
+            {}
+
+### Create a new menu [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "menus",
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Menu 002",
+                        "menu_desc": "",
+                        "menu_cat": "breakfast",
+                        "menu_availability": true,
+                        "items": [],
+                        "menu_hours": ""
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
++ Response 201 (application/vnd.api+json)
+
+    + Headers
+
+            Location: /restaurants/20170001/branches/1/menus/m002
+
+    + Body
+
+            {
+                "data": {
+                    "type": "menus",
+                    "id": "m002",
+                    "attributes": {
+                        "branch_id": "201700011",
+                        "name": "Menu 002",
+                        "menu_desc": "",
+                        "menu_cat": "breakfast",
+                        "menu_availability": true,
+                        "items": [],
+                        "menu_hours": ""
+                    }
+                }
+            }
+
+    + Schema
+
+            {}
+
+# Group Restaurant Item
+
+Resources related to menu items in the API.

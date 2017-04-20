@@ -1,0 +1,722 @@
+{
+  "[GET]/restaurants/{restaurant_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "desc": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "object",
+                    "properties": {
+                      "continent": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "dist": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      },
+                      "tel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "continent",
+                      "country",
+                      "state",
+                      "city",
+                      "dist",
+                      "address",
+                      "tel"
+                    ]
+                  },
+                  "social": {
+                    "type": "object",
+                    "properties": {
+                      "web": {
+                        "type": "string"
+                      },
+                      "facebook": {
+                        "type": "string"
+                      },
+                      "twitter": {
+                        "type": "string"
+                      },
+                      "google_plus": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "web",
+                      "facebook",
+                      "twitter",
+                      "google_plus"
+                    ]
+                  },
+                  "photo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "desc",
+                  "category",
+                  "location",
+                  "social",
+                  "photo"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "id",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[PATCH]/restaurants/{restaurant_id}": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "desc": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "object",
+                    "properties": {
+                      "continent": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "dist": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      },
+                      "tel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "continent",
+                      "country",
+                      "state",
+                      "city",
+                      "dist",
+                      "address",
+                      "tel"
+                    ]
+                  },
+                  "social": {
+                    "type": "object",
+                    "properties": {
+                      "web": {
+                        "type": "string"
+                      },
+                      "facebook": {
+                        "type": "string"
+                      },
+                      "twitter": {
+                        "type": "string"
+                      },
+                      "google_plus": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "web",
+                      "facebook",
+                      "twitter",
+                      "google_plus"
+                    ]
+                  },
+                  "photo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "desc",
+                  "category",
+                  "location",
+                  "social",
+                  "photo"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[GET]/restaurants": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "desc": {
+                      "type": "string"
+                    },
+                    "category": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "object",
+                      "properties": {
+                        "continent": {
+                          "type": "string"
+                        },
+                        "country": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "city": {
+                          "type": "string"
+                        },
+                        "dist": {
+                          "type": "string"
+                        },
+                        "address": {
+                          "type": "string"
+                        },
+                        "tel": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "continent",
+                        "country",
+                        "state",
+                        "city",
+                        "dist",
+                        "address",
+                        "tel"
+                      ]
+                    },
+                    "social": {
+                      "type": "object",
+                      "properties": {
+                        "web": {
+                          "type": "string"
+                        },
+                        "facebook": {
+                          "type": "string"
+                        },
+                        "twitter": {
+                          "type": "string"
+                        },
+                        "google_plus": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "web",
+                        "facebook",
+                        "twitter",
+                        "google_plus"
+                      ]
+                    },
+                    "photo": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "desc",
+                    "category",
+                    "location",
+                    "social",
+                    "photo"
+                  ]
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "attributes"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[POST]/restaurants": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "desc": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "object",
+                    "properties": {
+                      "continent": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "dist": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      },
+                      "tel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "continent",
+                      "country",
+                      "state",
+                      "city",
+                      "dist",
+                      "address",
+                      "tel"
+                    ]
+                  },
+                  "social": {
+                    "type": "object",
+                    "properties": {
+                      "web": {
+                        "type": "string"
+                      },
+                      "facebook": {
+                        "type": "string"
+                      },
+                      "twitter": {
+                        "type": "string"
+                      },
+                      "google_plus": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "web",
+                      "facebook",
+                      "twitter",
+                      "google_plus"
+                    ]
+                  },
+                  "photo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "desc",
+                  "category",
+                  "location",
+                  "social",
+                  "photo"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "desc": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "object",
+                    "properties": {
+                      "continent": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "dist": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      },
+                      "tel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "continent",
+                      "country",
+                      "state",
+                      "city",
+                      "dist",
+                      "address",
+                      "tel"
+                    ]
+                  },
+                  "social": {
+                    "type": "object",
+                    "properties": {
+                      "web": {
+                        "type": "string"
+                      },
+                      "facebook": {
+                        "type": "string"
+                      },
+                      "twitter": {
+                        "type": "string"
+                      },
+                      "google_plus": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "web",
+                      "facebook",
+                      "twitter",
+                      "google_plus"
+                    ]
+                  },
+                  "photo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "desc",
+                  "category",
+                  "location",
+                  "social",
+                  "photo"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "id",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[PATCH]/restaurants/{restaurant_id}/branches/{branch_id}": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/branches": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {}
+    },
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[PATCH]/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/tables": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/tables": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {}
+    },
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/memus/{menu_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[PATCH]/restaurants/{restaurant_id}/branches/{branch_id}/memus/{menu_id}": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/menus": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/menus": [
+    {
+      "meta": {
+        "type": "request",
+        "title": null
+      },
+      "schema": {}
+    },
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {}
+    }
+  ]
+}

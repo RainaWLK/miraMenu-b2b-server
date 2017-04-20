@@ -1,0 +1,39 @@
+{
+  "name": "myrestaurant",
+  "version": "1.0.0",
+  "description": "my restaurant",
+  "main": "build/app.js",
+  "scripts": {
+    "transpile": "babel src -d build",
+    "test": "mocha --compilers js:babel-core/register --require babel-polyfill --timeout 5000",
+    "deploy": "npm run transpile && claudia create --region us-east-1 --api-module build/app",
+    "release": "npm run transpile && claudia set-version --version production",
+    "renew": "npm run transpile && claudia update",
+    "start": "npm run transpile && node build/app.js"
+  },
+  "author": "Jumimi",
+  "license": "ISC",
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+	"babel-preset-es2016": "^6.22.0",
+    "babel-preset-es2017": "^6.22.0",
+    "claudia": "^2.9.0",
+    "claudia-api-builder": "^2.4.0",
+    "lodash": "^4.17.4",
+    "sprintf-js": "^1.0.3"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.19.0",
+    "babel-cli": "^6.23.0",
+    "body-parser": "^1.17.0",
+    "chai": "^3.5.0",
+    "chai-ajv-json-schema": "^1.0.0",
+    "chai-http": "^3.0.0",
+    "chai-json-schema": "^1.4.0",
+    "chai-things": "^0.2.0",
+    "express": "^4.15.0",
+    "mocha": "^3.2.0",
+    "ntl": "^1.2.0"
+  }
+}
