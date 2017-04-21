@@ -27,6 +27,22 @@ function makeReqData(req) {
     return reqData;
 }
 
+function makeBinaryReqData(req) {
+    let reqData = new ReqData();
+
+    if(DEBUG) {
+        reqData.paths = req.url.split('/');
+        reqData.params = req.params;
+    }
+    else {
+        reqData.paths = req.proxyRequest.path.split('/');
+        reqData.params = req.pathParams;
+    }
+    //reqData.body = req.body;
+
+    return reqData;
+}
+
 function responseOK(res, msg) {
     if(DEBUG) {
         res.send(msg);
@@ -152,7 +168,29 @@ class Rest {
 		});
 	}
 
+	async bGet(orgURI, callback){
+		let uri = translateURI(orgURI);
 
+		let bFunc = async function(req, res){
+			let reqData = makeBinaryReqData(req);
+			try {
+				let resultMsg = await callback(reqData);
+				console.log("responseOK");
+				return responseOK(res, resultMsg);
+			}
+			catch(errcode) {
+				return responseError(res, errcode);
+			}
+		};
+
+		if(DEBUG) {
+			await this.app.get(uri, bFunc);
+		}
+		else {
+			await this.app.get(uri, bFunc, { success: { contentType: 'image/jpg', contentHandling: 'CONVERT_TO_BINARY'}});
+		}
+		
+	}
 
 }
 

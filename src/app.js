@@ -6,6 +6,7 @@ import Tables from './table.js';
 import Menus from './menu.js';
 import Items from './item.js';
 import Rest from './rest.js';
+import * as S3 from './s3.js';
 
 let api = new Rest();
 
@@ -404,53 +405,14 @@ api.delete('/restaurants/{restaurant_id}/items/{item_id}', async (req) => {
 });
 
 
-var AWS = require('aws-sdk');
-var s3 = new AWS.S3();
-
-api.app.get('/restaurants/{restaurant_id}/picture',  (req, res) => {
-	'use strict';
-
-	var params = {
-		Bucket: 'jumi-upload',
-		Key: 'download.jpg'
-	};
-
-	//var file = require('fs').createWriteStream('/download.jpg');
-	//s3.getObject(params).createReadStream().pipe(file);
-
-	
-	/*s3.getObject(params, function(err, data) {
-		// Handle any error and exit
-		if (err)
-			return err;
-
-		// No error happened
-		// Convert Body from a Buffer to a String
-		res.setHeader("Content-Type", data.ContentType);
-		res.send(data.Body);
-		//let objectData = data.Body.toString('utf-8'); // Use the encoding necessary
-	});*/
-
-	return new Promise((resolve, reject) => {
-		s3.getObject(params, function(err, data) {
-			// Handle any error and exit
-			if (err)
-				return err;
-
-			// No error happened
-			// Convert Body from a Buffer to a String
-			//res.setHeader("Content-Type", data.ContentType);
-			//res.send(data.Body);
-			resolve(data.Body);
-		});
-		/*s3.getObject(params).createReadStream()
-		.on('end', () => { return resolve(file); })
-		.on('error', (error) => { return reject(error); })
-		.pipe(file)*/
-	});
-
-	//return fs.readFilePromise(path.join(__dirname, 'img.png'));
-}, { success: { contentType: 'image/jpg', contentHandling: 'CONVERT_TO_BINARY'}});
+api.bGet('/restaurants/{restaurant_id}/picture',  async(req) => {
+    try{
+        return await S3.getS3Obj("download.jpg");
+    }
+    catch(err){
+        throw 404;
+    }
+});
 
 
 module.exports = api.app;
