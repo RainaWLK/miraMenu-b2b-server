@@ -38,7 +38,7 @@ function makeBinaryReqData(req) {
         reqData.paths = req.proxyRequest.path.split('/');
         reqData.params = req.pathParams;
     }
-    //reqData.body = req.body;
+    reqData.body = req.body;
 
     return reqData;
 }
@@ -81,9 +81,12 @@ class Rest {
 		    let express = require('express');
 		    let bodyParser = require('body-parser');
 		    let db = require('./dynamodb.js');
+			let path = require('path');
 		    
 		    this.app = express();
 		    this.app.use(bodyParser.json());
+			this.app.use(bodyParser.raw({limit: '50mb'}));
+			this.app.use("/", express.static(path.join(__dirname, '../www')));
 
 		    let server = this.app.listen(8081, () => {
 		        let host = server.address().address;
@@ -188,6 +191,36 @@ class Rest {
 		}
 		else {
 			await this.app.get(uri, bFunc, { success: { contentType: 'image/jpg', contentHandling: 'CONVERT_TO_BINARY'}});
+		}
+		
+	}
+
+	async bPost(orgURI, callback){
+		let uri = translateURI(orgURI);
+
+		let bFunc = async function(req, res){
+			let reqData = makeBinaryReqData(req);
+			try {
+				let resultMsg = await callback(reqData);
+				console.log("responseOK");
+				return responseOK(res, resultMsg);
+			}
+			catch(errcode) {
+				return responseError(res, errcode);
+			}
+		};
+
+		if(DEBUG) {
+			await this.app.post(uri, bFunc);
+		}
+		else {
+			await this.app.post(uri, bFunc, {
+				requestContentHandling: 'CONVERT_TO_BINARY', 
+				success: { 
+					contentType: 'image/jpg',
+					contentHandling: 'CONVERT_TO_BINARY'
+				}
+			});
 		}
 		
 	}

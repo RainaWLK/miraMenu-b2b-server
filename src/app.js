@@ -414,5 +414,14 @@ api.bGet('/restaurants/{restaurant_id}/picture',  async(req) => {
     }
 });
 
+api.bPost('/restaurants/{restaurant_id}/picture',  async(req) => {
+    try{
+        return await S3.uploadToS3("456.jpg", req.body);
+        //return "jumi";
+    }
+    catch(err){
+        throw 404;
+    }
+});
 
 module.exports = api.app;

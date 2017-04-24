@@ -22,4 +22,26 @@ function getS3Obj(file){
 }
 
 
+async function uploadToS3(filename, buf){
+    var s3bucket = new AWS.S3({params: {Bucket: 'jumi-upload'}});
+
+	var params = {
+		ACL: "public-read",
+		Key: filename,
+		Body: buf
+	};
+
+	try {
+		let data = await s3bucket.upload(params).promise();
+		console.log("Upload successed: " + data.Location);
+		return;
+	}
+	catch(err){
+		console.log('ERROR MSG: ', err);
+		throw err;
+	}
+
+}
+
 exports.getS3Obj = getS3Obj;
+exports.uploadToS3 = uploadToS3;

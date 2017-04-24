@@ -1,6 +1,7 @@
 {
   "name": "myrestaurant",
   "version": "1.0.0",
+  "files": [ "build" ],
   "description": "my restaurant",
   "main": "build/app.js",
   "scripts": {
