@@ -1,6 +1,7 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 import { sprintf } from 'sprintf-js';
+import * as S3 from './s3.js';
 
 const TABLE_NAME = "Restaurants";
 const CONTROL_TABLE_NAME = "Control";
@@ -9,6 +10,7 @@ function RestaurantControl() {
     //contructor() {
         this.branchesMaxID = "0";
         this.branch_ids = [];
+        this.pictureMaxID = "0";
     //}
 }
 
@@ -19,6 +21,11 @@ class Restaurant {
 
     getNewID(controlData) {
         let maxID = parseInt(controlData.value, 10) + 1;
+        return maxID.toString();
+    }
+
+    getNewPictureID(controlData){
+        let maxID = parseInt(controlData.pictureMaxID, 10) + 1;
         return maxID.toString();
     }
 
@@ -52,7 +59,7 @@ class Restaurant {
             let controlData = await db.queryById(CONTROL_TABLE_NAME, "RestaurantsMaxID");
             let data = JSONAPI.parseJSONAPI(payload);
             data.restaurantControl = JSON.parse(JSON.stringify(new RestaurantControl()));   //bug
-            let restaurant_id = await this.getNewID(controlData);
+            let restaurant_id = this.getNewID(controlData);
 
             data.id = restaurant_id;
 
@@ -98,6 +105,20 @@ class Restaurant {
             return msg;
         }catch(err) {
             console.log(err);
+            throw err;
+        }
+    }
+
+    async addPicture(payload) {
+        try {
+            let restaurant_id = this.reqData.params.restaurant_id;
+            let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
+
+            let picture_id = this.getNewPictureID(restaurantData.restaurantControl);
+
+            let msg = await S3.uploadToS3(picture_id+".jpg", payload);
+            return msg;       
+        }catch(err) {
             throw err;
         }
     }

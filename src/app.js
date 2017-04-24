@@ -415,9 +415,11 @@ api.bGet('/restaurants/{restaurant_id}/picture',  async(req) => {
 });
 
 api.bPost('/restaurants/{restaurant_id}/picture',  async(req) => {
+    let cmdObj = new Restaurant(req);
+
     try{
-        return await S3.uploadToS3("456.jpg", req.body);
-        //return "jumi";
+        return await cmdObj.addPicture(req.body);
+        //return await S3.uploadToS3("456.jpg", req.body);
     }
     catch(err){
         throw 404;
