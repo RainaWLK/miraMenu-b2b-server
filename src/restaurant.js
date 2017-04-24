@@ -25,6 +25,11 @@ class Restaurant {
     }
 
     getNewPictureID(controlData){
+	//migration
+	if(typeof controlData.pictureMaxID == 'undefined'){
+		controlData.pictureMaxID = "0";
+	}
+		
         let maxID = parseInt(controlData.pictureMaxID, 10) + 1;
         return maxID.toString();
     }
@@ -117,6 +122,7 @@ class Restaurant {
             let picture_id = this.getNewPictureID(restaurantData.restaurantControl);
 
             let msg = await S3.uploadToS3(picture_id+".jpg", payload);
+	    console.log(msg);
             return msg;       
         }catch(err) {
             throw err;

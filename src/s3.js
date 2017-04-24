@@ -34,7 +34,7 @@ async function uploadToS3(filename, buf){
 	try {
 		let data = await s3bucket.upload(params).promise();
 		console.log("Upload successed: " + data.Location);
-		return;
+		return data;
 	}
 	catch(err){
 		console.log('ERROR MSG: ', err);
