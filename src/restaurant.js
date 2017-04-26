@@ -121,9 +121,10 @@ class Restaurant {
 
             let picture_id = this.getNewPictureID(restaurantData.restaurantControl);
 
-            let msg = await S3.uploadToS3(picture_id+".jpg", payload);
-	    console.log(msg);
-            return msg;       
+            //let msg = await S3.uploadToS3(picture_id+".jpg", payload);
+	    //console.log(msg);
+            //return msg;
+            return payload.length;       
         }catch(err) {
             throw err;
         }

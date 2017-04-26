@@ -1,6 +1,9 @@
 let ApiBuilder = require('claudia-api-builder');
 
-const DEBUG = 0;
+let DEBUG = 0;
+if(process.env.NODE_ENV == 'development'){
+	DEBUG = 1;
+}
 
 //private functions
 class ReqData{
@@ -214,13 +217,7 @@ class Rest {
 			await this.app.post(uri, bFunc);
 		}
 		else {
-			await this.app.post(uri, bFunc, {
-				requestContentHandling: 'CONVERT_TO_BINARY', 
-				success: { 
-					contentType: 'image/jpg',
-					contentHandling: 'CONVERT_TO_BINARY'
-				}
-			});
+			await this.app.post(uri, bFunc, { success: { contentType: 'text/plain' } });
 		}
 		
 	}
