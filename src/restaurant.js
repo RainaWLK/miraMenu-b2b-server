@@ -113,18 +113,44 @@ class Restaurant {
             throw err;
         }
     }
+	
+    async getPicture() {
+        try {
+            let restaurant_id = this.reqData.params.restaurant_id;
+            let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
+
+	    let path = "restaurants/"+restaurant_id+"/pictures";
+	    let file_name = this.reqData.queryString.key;
+            let data = await S3.getS3Obj(path + "/" + file_name);
+            return data;
+        }catch(err) {
+            throw err;
+        }
+    }
 
     async addPicture(payload) {
         try {
             let restaurant_id = this.reqData.params.restaurant_id;
             let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
 
+	    let path = "restaurants/"+restaurant_id+"/pictures";
+			
             let picture_id = this.getNewPictureID(restaurantData.restaurantControl);
+	    let file_name = picture_id+".jpg";
 
-            //let msg = await S3.uploadToS3(picture_id+".jpg", payload);
+            let msg = await S3.uploadToS3(path + "/" + file_name, payload);
+			
+	    //update db
+	    if(typeof restaurantData.photos == 'undefined'){
+		restaurantData.photos = [];
+	    }
+	    restaurantData.photos.push(file_name);
+	    restaurantData.restaurantControl.pictureMaxID = picture_id;
+	
+	    console.log(restaurantData);
+	    let msg2 = await db.put(TABLE_NAME, restaurantData);
 	    //console.log(msg);
-            //return msg;
-            return payload.length;       
+            return msg;
         }catch(err) {
             throw err;
         }

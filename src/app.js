@@ -406,8 +406,10 @@ api.delete('/restaurants/{restaurant_id}/items/{item_id}', async (req) => {
 
 
 api.bGet('/restaurants/{restaurant_id}/picture',  async(req) => {
+    let cmdObj = new Restaurant(req);
+    
     try{
-        return await S3.getS3Obj("download.jpg");
+	return await cmdObj.getPicture();
     }
     catch(err){
         throw 404;
@@ -419,7 +421,6 @@ api.bPost('/restaurants/{restaurant_id}/picture',  async(req) => {
 
     try{
         return await cmdObj.addPicture(req.body);
-        //return await S3.uploadToS3("456.jpg", req.body);
     }
     catch(err){
         throw 404;

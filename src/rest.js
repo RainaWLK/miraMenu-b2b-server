@@ -10,6 +10,7 @@ class ReqData{
     constructor() {
         this.paths = [];
         this.params = {};
+	this.queryString = {};
         this.body = {};
     }
 }
@@ -20,10 +21,12 @@ function makeReqData(req) {
     if(DEBUG) {
         reqData.paths = req.url.split('/');
         reqData.params = req.params;
+	reqData.queryString = req.query;
     }
     else {
         reqData.paths = req.proxyRequest.path.split('/');
         reqData.params = req.pathParams;
+	reqData.queryString = req.queryString;
     }
     reqData.body = req.body;
 
@@ -36,10 +39,12 @@ function makeBinaryReqData(req) {
     if(DEBUG) {
         reqData.paths = req.url.split('/');
         reqData.params = req.params;
+	reqData.queryString = req.query;
     }
     else {
         reqData.paths = req.proxyRequest.path.split('/');
         reqData.params = req.pathParams;
+	reqData.queryString = req.queryString;
     }
     reqData.body = req.body;
 
