@@ -423,7 +423,7 @@ api.bPost('/restaurants/{restaurant_id}/picture',  async(req) => {
         return await cmdObj.addPicture(req.body);
     }
     catch(err){
-        throw 404;
+        throw err;
     }
 });
 

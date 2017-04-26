@@ -51,24 +51,6 @@ function makeBinaryReqData(req) {
     return reqData;
 }
 
-function responseOK(res, msg) {
-    if(DEBUG) {
-        res.send(msg);
-        res.end();
-    }
-    return msg;
-}
-
-function responseError(res, code) {
-    if(DEBUG) {
-        res.status(code);
-        res.end();
-    }
-    else {
-        return new app.ApiResponse('Error', {'Content-Type': 'text/plain'}, code);
-    }
-}
-
 //for compatible between express and AWS
 function translateURI(orgURI){
 	let uri = orgURI;
@@ -118,17 +100,38 @@ class Rest {
 		    this.app = new ApiBuilder();
 		}
 	}
+	
+	responseOK(res, msg) {
+		if(DEBUG) {
+			res.send(msg);
+			res.end();
+		}
+		return msg;
+	}
+	
+	responseError(res, code) {
+		if(DEBUG) {
+			res.status(code);
+			res.end();
+		}
+		else {
+			//return new this.app.ApiResponse('Error', {'Content-Type': 'text/plain'}, code);
+			return code;
+		}
+	}
 
 	async get(orgURI, callback){
 		let uri = translateURI(orgURI);
+		let self = this;
+		
 		await this.app.get(uri, async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
-				return responseOK(res, resultMsg);
+				return self.responseOK(res, resultMsg);
 			}
 			catch(errcode) {
-				return responseError(res, errcode);
+				return self.responseError(res, errcode);
 			}
 			
 		});
@@ -136,14 +139,16 @@ class Rest {
 
 	async post(orgURI, callback){
 		let uri = translateURI(orgURI);
+		let self = this;
+		
 		await this.app.post(uri, async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
-				return responseOK(res, resultMsg);
+				return self.responseOK(res, resultMsg);
 			}
 			catch(errcode) {
-				return responseError(res, errcode);
+				return self.responseError(res, errcode);
 			}
 			
 		});
@@ -151,14 +156,16 @@ class Rest {
 
 	async patch(orgURI, callback){
 		let uri = translateURI(orgURI);
+		let self = this;
+		
 		await this.app.patch(uri, async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
-				return responseOK(res, resultMsg);
+				return self.responseOK(res, resultMsg);
 			}
 			catch(errcode) {
-				return responseError(res, errcode);
+				return self.responseError(res, errcode);
 			}
 			
 		});
@@ -166,14 +173,16 @@ class Rest {
 
 	async delete(orgURI, callback){
 		let uri = translateURI(orgURI);
+		let self = this;
+		
 		await this.app.delete(uri, async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
-				return responseOK(res, resultMsg);
+				return self.responseOK(res, resultMsg);
 			}
 			catch(errcode) {
-				return responseError(res, errcode);
+				return self.responseError(res, errcode);
 			}
 			
 		});
@@ -181,16 +190,17 @@ class Rest {
 
 	async bGet(orgURI, callback){
 		let uri = translateURI(orgURI);
+		let self = this;
 
 		let bFunc = async function(req, res){
 			let reqData = makeBinaryReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
 				console.log("responseOK");
-				return responseOK(res, resultMsg);
+				return self.responseOK(res, resultMsg);
 			}
 			catch(errcode) {
-				return responseError(res, errcode);
+				return self.responseError(res, errcode);
 			}
 		};
 
@@ -205,16 +215,17 @@ class Rest {
 
 	async bPost(orgURI, callback){
 		let uri = translateURI(orgURI);
+		let self = this;
 
 		let bFunc = async function(req, res){
 			let reqData = makeBinaryReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
 				console.log("responseOK");
-				return responseOK(res, resultMsg);
+				return self.responseOK(res, resultMsg);
 			}
 			catch(errcode) {
-				return responseError(res, errcode);
+				return self.responseError(res, errcode);
 			}
 		};
 
