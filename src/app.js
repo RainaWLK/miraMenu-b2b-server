@@ -405,18 +405,18 @@ api.delete('/restaurants/{restaurant_id}/items/{item_id}', async (req) => {
 });
 
 
-api.bGet('/restaurants/{restaurant_id}/picture',  async(req) => {
+api.bGet('/restaurants/{restaurant_id}/pictures',  async(req) => {
     let cmdObj = new Restaurant(req);
     
     try{
-	return await cmdObj.getPicture();
+	    return await cmdObj.getPicture();
     }
     catch(err){
         throw 404;
     }
 });
 
-api.bPost('/restaurants/{restaurant_id}/picture',  async(req) => {
+api.bPost('/restaurants/{restaurant_id}/pictures',  async(req) => {
     let cmdObj = new Restaurant(req);
 
     try{
@@ -424,6 +424,17 @@ api.bPost('/restaurants/{restaurant_id}/picture',  async(req) => {
     }
     catch(err){
         throw err;
+    }
+});
+
+api.delete('/restaurants/{restaurant_id}/pictures', async (req) => {
+    let cmdObj = new Restaurant(req);
+
+    try{
+        return await cmdObj.deletePicture();
+    }
+    catch(err){
+        throw 403;
     }
 });
 

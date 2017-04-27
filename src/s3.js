@@ -44,5 +44,22 @@ async function uploadToS3(filename, buf){
 
 }
 
+async function deleteS3Obj(file){
+	var params = {
+		Bucket: BUCKET,
+		Key: file
+	};
+
+	try {
+		let msg = await s3.deleteObject(params).promise();
+		//res.setHeader("Content-Type", data.ContentType);
+		return msg;
+	}catch(err){
+		throw err;
+	}
+
+}
+
 exports.getS3Obj = getS3Obj;
 exports.uploadToS3 = uploadToS3;
+exports.deleteS3Obj = deleteS3Obj;

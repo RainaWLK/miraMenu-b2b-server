@@ -142,14 +142,44 @@ class Restaurant {
 			
             //update db
             if(typeof restaurantData.photos == 'undefined'){
-            restaurantData.photos = [];
+                restaurantData.photos = {}; //filename: desc
             }
-            restaurantData.photos.push(file_name);
+            restaurantData.photos[file_name] = "ccc";
             restaurantData.restaurantControl.pictureMaxID = picture_id;
         
             console.log(restaurantData);
             let msg2 = await db.put(TABLE_NAME, restaurantData);
             //console.log(msg);
+            return msg;
+        }catch(err) {
+            throw err;
+        }
+    }
+
+    async deletePicture() {
+        try {
+            let restaurant_id = this.reqData.params.restaurant_id;
+            let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
+
+	        let path = "restaurants/"+restaurant_id+"/pictures";
+
+            if(typeof this.reqData.queryString.key == 'undefined'){
+                console.log("qq");
+                throw null;
+            }
+            let file_name = this.reqData.queryString.key;
+            if(typeof restaurantData.photos[file_name] == 'undefined'){
+                console.log("not found");
+                throw null;
+            }
+
+            let msg = await S3.deleteS3Obj(path + "/" + file_name);
+
+             //update db
+            delete restaurantData.photos[file_name];
+        
+            console.log(restaurantData);
+            let msg2 = await db.put(TABLE_NAME, restaurantData);           
             return msg;
         }catch(err) {
             throw err;
