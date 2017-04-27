@@ -1,38 +1,39 @@
 let AWS = require('aws-sdk');
-AWS.config.update({
-    region: "us-east-1"
-});
+let s3options = {
+	useDualstack: true,
+	region: "us-east-1"
+}
+const BUCKET = "jumi-upload";
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3(s3options);
 
 
-function getS3Obj(file){
+async function getS3Obj(file){
 	var params = {
-		Bucket: 'jumi-upload',
+		Bucket: BUCKET,
 		Key: file
 	};
-	return new Promise((resolve, reject) => {
-		s3.getObject(params).promise().then(data => {
-            //res.setHeader("Content-Type", data.ContentType);
-            resolve(data.Body);
-        }).catch(err => {
-            reject(err);
-        });
-	});
+
+	try {
+		let data = await s3.getObject(params).promise();
+		//res.setHeader("Content-Type", data.ContentType);
+		return data.Body;
+	}catch(err){
+		throw err;
+	}
 }
 
 
 async function uploadToS3(filename, buf){
-    var s3bucket = new AWS.S3({params: {Bucket: 'jumi-upload'}});
-
 	var params = {
+		Bucket: BUCKET,
 		ACL: "public-read",
 		Key: filename,
 		Body: buf
 	};
 
 	try {
-		let data = await s3bucket.upload(params).promise();
+		let data = await s3.upload(params).promise();
 		console.log("Upload successed: " + data.Location);
 		return data;
 	}
