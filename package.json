@@ -11,7 +11,6 @@
     "release": "claudia set-version --version production",
     "renew": "npm run transpile && claudia update --version production --set-env NODE_ENV=production",
     "start": "npm run transpile && NODE_ENV=development node build/app.js"
-    "renew": "npm run transpile && claudia update --set-env NODE_ENV=production",
   },
   "author": "Jumimi",
   "license": "ISC",
