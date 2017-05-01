@@ -28,8 +28,14 @@ function transformURI(uri) {
 */
 function checkSchema(res, method, URI) {
   let schemaPath = "["+method.toUpperCase()+"]"+URI;
-  let responseSchema = mySchema[schemaPath][0].schema;
-  //console.log(responseSchema);
+  let responseSchema;
+  if(Array.isArray(mySchema[schemaPath])){
+	responseSchema = mySchema[schemaPath][0].schema;
+  }
+  else {
+	responseSchema = mySchema[schemaPath].schema;
+  }
+  console.log(responseSchema);
 
   res.should.have.status(200);
 
@@ -45,7 +51,6 @@ before(done => {
   fs.readFile('./test/schema.json', (err, data) => {
     mySchema = JSON.parse(data.toString());
     console.log(mySchema);
-    //chai.tv4.addSchema(uri, schema);
     chai.ajv.addSchema(mySchema, "test_schema");
     done();
   });

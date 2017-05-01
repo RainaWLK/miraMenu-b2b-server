@@ -87,25 +87,15 @@ function restaurantTest() {
 
 function restaurantByIDTest() {
   let URI = '/restaurants';
-  let URI_ID = URI+"/{id}";
+  let URI_ID = URI+"/{restaurant_id}";
   let op = new CommonTest(URI_ID);
   let modbusEquipment;
   let id;
+  
+  id = "20170003";
+  URI_ID = URI+"/"+id;
 
-  before(done => {
-    let myURI = '/mxc/equipments';
-
-    op.pureOperation('GET', myURI, null).then((res) => {
-      let rnd = Math.floor(Math.random() * res.body.length);
-
-      modbusEquipment = res.body[rnd];
-      done();
-    }).catch(err => {
-      done(err);
-    });
-  });
-
-  describe(URI+'/{id} test', () => {
+  /*describe(URI+'/{id} test', () => {
     it('set data: POST ' + URI_ID, (done) => {
       let rnd = Math.floor(Math.random() * modbusEquipment.equipmentTags.length);
       let input = {
@@ -123,18 +113,18 @@ function restaurantByIDTest() {
       }).catch(err => {
         done(err);
       });
-    });
+    });*/
 
     it('check data saved: GET '+URI_ID, (done) => {
       op.checkOperation('GET', URI_ID, null, null).then((res) => {
-        res.body.should.have.deep.property('id', id);
+        res.body.data.should.have.deep.property('id', id);
         done();
       }).catch(err => {
         done(err);
       });
     });
 
-    it('set data: PUT ' + URI_ID, (done) => {
+    /*it('set data: PUT ' + URI_ID, (done) => {
       let rnd = Math.floor(Math.random() * modbusEquipment.equipmentTags.length);
       let input = {
         "reference": "0x40001",
@@ -163,11 +153,11 @@ function restaurantByIDTest() {
       });
     });
 
-  });
+  });*/
 }
 
 function go() {
   restaurantTest();
-  //restaurantByIDTest();
+  restaurantByIDTest();
 };
 exports.go = go;

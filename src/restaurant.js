@@ -141,10 +141,10 @@ class Restaurant {
             let msg = await S3.uploadToS3(path + "/" + file_name, payload);
 			
             //update db
-            if(typeof restaurantData.photos == 'undefined'){
-                restaurantData.photos = {}; //filename: desc
+            if(typeof restaurantData.photo == 'undefined'){
+                restaurantData.photo = {}; //filename: desc
             }
-            restaurantData.photos[file_name] = "ccc";
+            restaurantData.photo[file_name] = "ccc";
             restaurantData.restaurantControl.pictureMaxID = picture_id;
         
             console.log(restaurantData);
@@ -168,7 +168,7 @@ class Restaurant {
                 throw null;
             }
             let file_name = this.reqData.queryString.key;
-            if(typeof restaurantData.photos[file_name] == 'undefined'){
+            if(typeof restaurantData.photo[file_name] == 'undefined'){
                 console.log("not found");
                 throw null;
             }
@@ -176,7 +176,7 @@ class Restaurant {
             let msg = await S3.deleteS3Obj(path + "/" + file_name);
 
              //update db
-            delete restaurantData.photos[file_name];
+            delete restaurantData.photo[file_name];
         
             console.log(restaurantData);
             let msg2 = await db.put(TABLE_NAME, restaurantData);           

@@ -80,19 +80,10 @@
                       "google_plus": {
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "web",
-                      "facebook",
-                      "twitter",
-                      "google_plus"
-                    ]
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
                     }
+                  },
+                  "photos": {
+                    "type": "object"
                   }
                 },
                 "required": [
@@ -101,7 +92,7 @@
                   "category",
                   "location",
                   "social",
-                  "photo"
+                  "photos"
                 ]
               }
             },
@@ -199,19 +190,10 @@
                       "google_plus": {
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "web",
-                      "facebook",
-                      "twitter",
-                      "google_plus"
-                    ]
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
                     }
+                  },
+                  "photos": {
+                    "type": "object"
                   }
                 },
                 "required": [
@@ -220,7 +202,7 @@
                   "category",
                   "location",
                   "social",
-                  "photo"
+                  "photos"
                 ]
               }
             },
@@ -319,19 +301,10 @@
                         "google_plus": {
                           "type": "string"
                         }
-                      },
-                      "required": [
-                        "web",
-                        "facebook",
-                        "twitter",
-                        "google_plus"
-                      ]
-                    },
-                    "photo": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
                       }
+                    },
+                    "photos": {
+                      "type": "object"
                     }
                   },
                   "required": [
@@ -340,7 +313,7 @@
                     "category",
                     "location",
                     "social",
-                    "photo"
+                    "photos"
                   ]
                 }
               },
@@ -436,19 +409,10 @@
                       "google_plus": {
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "web",
-                      "facebook",
-                      "twitter",
-                      "google_plus"
-                    ]
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
                     }
+                  },
+                  "photos": {
+                    "type": "object"
                   }
                 },
                 "required": [
@@ -457,7 +421,7 @@
                   "category",
                   "location",
                   "social",
-                  "photo"
+                  "photos"
                 ]
               }
             },
@@ -552,19 +516,10 @@
                       "google_plus": {
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "web",
-                      "facebook",
-                      "twitter",
-                      "google_plus"
-                    ]
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
                     }
+                  },
+                  "photos": {
+                    "type": "object"
                   }
                 },
                 "required": [
@@ -573,7 +528,7 @@
                   "category",
                   "location",
                   "social",
-                  "photo"
+                  "photos"
                 ]
               }
             },
