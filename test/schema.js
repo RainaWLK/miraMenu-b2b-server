@@ -26,20 +26,28 @@ function transformURI(uri) {
   return schemaURI;
 }
 */
-function checkSchema(res, method, URI) {
+function getSchema(method, URI){
   let schemaPath = "["+method.toUpperCase()+"]"+URI;
-  let responseSchema;
+  let responseSchema = '';
+
   if(Array.isArray(mySchema[schemaPath])){
-	responseSchema = mySchema[schemaPath][0].schema;
+	mySchema[schemaPath].map(spec => {
+		if(spec.meta.type == "response"){
+			responseSchema = spec.schema;
+		}
+	});	  
   }
-  else {
-	responseSchema = mySchema[schemaPath].schema;
-  }
-  console.log(responseSchema);
+
+  //console.log(responseSchema);
+  return responseSchema;
+}
+
+function checkSchema(res, method, URI) {
+  let responseSchema = getSchema(method, URI);
 
   res.should.have.status(200);
 
-  if(typeof responseSchema != 'undefined') {
+  if(responseSchema != '') {
       res.body.should.be.validWithSchema(responseSchema);
   }
   return;
@@ -50,7 +58,7 @@ before(done => {
   // load first instance manually
   fs.readFile('./test/schema.json', (err, data) => {
     mySchema = JSON.parse(data.toString());
-    console.log(mySchema);
+    //console.log(mySchema);
     chai.ajv.addSchema(mySchema, "test_schema");
     done();
   });

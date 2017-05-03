@@ -28,18 +28,17 @@ let sample = {"data": sampleData};
 
 function restaurantTest() {
   let URI = '/restaurants';
-  let modbusEquipment;
   let op = new CommonTest(URI);
 
   describe(URI+' test', () => {
 
-    describe('POST test', () => {
+    describe('CRUD test', () => {
       let id;
       it('set data: POST ' + URI, (done) => {
         let input = sample;
 
         op.checkOperation('POST', URI, input).then((res) => {
-          id = res.body.id;
+          id = res.body.data.id;
           done(); 
         }).catch(err => {
           done(err);
@@ -48,34 +47,7 @@ function restaurantTest() {
 
       it('check data saved: GET '+URI, (done) => {
         op.checkOperation('GET', URI, null, null).then((res) => {
-          res.body.should.include.something.that.have.deep.property('id', id);
-          done();
-        }).catch(err => {
-          done(err);
-        });
-      });
-
-      /*it('set data: PUT ' + URI, (done) => {
-        let rnd = Math.floor(Math.random() * modbusEquipment.equipmentTags.length);
-        let input = [{
-          "id": id,
-          "reference": "0x40003",
-          "quantity": modbusEquipment.equipmentTags[rnd].quantity,
-          "equipmentName": modbusEquipment.equipmentName,
-          "equipmentType": modbusEquipment.equipmentType,
-          "tagName": modbusEquipment.equipmentTags[rnd].name
-        }];
-
-        op.checkOperation('PUT', URI, input).then((res) => {
-          done(); 
-        }).catch(err => {
-          done(err);
-        });
-      });
-
-      it('check data saved: GET '+URI, (done) => {
-        op.checkOperation('GET', URI, null, null).then((res) => {
-          res.body.should.include.something.that.have.deep.property('id', id);
+          res.body.data.should.include.something.that.have.deep.property('id', id);
           done();
         }).catch(err => {
           done(err);
@@ -83,8 +55,8 @@ function restaurantTest() {
       });
 
       it('delete data: DELETE '+URI, (done) => {
-        let input = [id];
-        op.checkOperation('DELETE', URI, input).then((res) => {          
+	 let URI_ID = URI + "/" +id;
+        op.checkOperation('DELETE', URI_ID, null).then((res) => {          
           done();
         }).catch(err => {
           done(err);
@@ -93,12 +65,12 @@ function restaurantTest() {
 
       it('check data deleted: GET '+URI, (done) => {
         op.checkOperation('GET', URI, null, null).then((res) => {
-          res.body.should.not.include.something.that.have.deep.property('id', id);
+          res.body.data.should.not.include.something.that.have.deep.property('id', id);
           done();
         }).catch(err => {
           done(err);
         })
-      });*/
+      });
 
     });
   });
@@ -108,31 +80,20 @@ function restaurantByIDTest() {
   let URI = '/restaurants';
   let URI_ID = URI+"/{restaurant_id}";
   let op = new CommonTest(URI_ID);
-  let modbusEquipment;
   let id;
-  
-  id = "20170003";
-  URI_ID = URI+"/"+id;
 
-  /*describe(URI+'/{id} test', () => {
-    it('set data: POST ' + URI_ID, (done) => {
-      let rnd = Math.floor(Math.random() * modbusEquipment.equipmentTags.length);
-      let input = {
-        "reference": "0x40000",
-        "quantity": modbusEquipment.equipmentTags[rnd].quantity,
-        "equipmentName": modbusEquipment.equipmentName,
-        "equipmentType": modbusEquipment.equipmentType,
-        "tagName": modbusEquipment.equipmentTags[rnd].name
-      };
+  describe(URI+'/{id} test', () => {
+    it('set data: POST ' + URI, (done) => {
+        let input = sample;
 
-      op.pureOperation('POST', URI, input).then((res) => {
-        id = res.body.id;
-        URI_ID = URI+"/"+id;
-        done(); 
-      }).catch(err => {
-        done(err);
+        op.checkOperation('POST', URI, input).then((res) => {
+          id = res.body.data.id;
+	   URI_ID = URI+"/"+id;
+          done(); 
+        }).catch(err => {
+          done(err);
+        });
       });
-    });*/
 
     it('check data saved: GET '+URI_ID, (done) => {
       op.checkOperation('GET', URI_ID, null, null).then((res) => {
@@ -142,19 +103,22 @@ function restaurantByIDTest() {
         done(err);
       });
     });
+	
+    it('set data: PATCH ' + URI_ID, (done) => {
+	let input = sample;
+	input.data.attributes.social["twitch"] = "https://www.twitch.tv/HNRT";
 
-    /*it('set data: PUT ' + URI_ID, (done) => {
-      let rnd = Math.floor(Math.random() * modbusEquipment.equipmentTags.length);
-      let input = {
-        "reference": "0x40001",
-        "quantity": modbusEquipment.equipmentTags[rnd].quantity,
-        "equipmentName": modbusEquipment.equipmentName,
-        "equipmentType": modbusEquipment.equipmentType,
-        "tagName": modbusEquipment.equipmentTags[rnd].name
-      };
-      op.checkOperation('PUT', URI_ID, input).then((res) => {
-        return op.checkOperation('GET', URI_ID, null, input);
-      }).then((res) => {
+        op.checkOperation('PATCH', URI_ID, input).then((res) => {
+          done(); 
+        }).catch(err => {
+          done(err);
+        });
+    });
+	
+    it('check data saved: GET '+URI_ID, (done) => {
+      op.checkOperation('GET', URI_ID, null, null).then((res) => {
+        res.body.data.should.have.deep.property('id', id);
+	 res.body.data.should.have.deep.property('attributes.social.twitch', 'https://www.twitch.tv/HNRT');
         done();
       }).catch(err => {
         done(err);
@@ -172,11 +136,11 @@ function restaurantByIDTest() {
       });
     });
 
-  });*/
+  });
 }
 
 function go() {
   restaurantTest();
-//  restaurantByIDTest();
+  restaurantByIDTest();
 };
 exports.go = go;

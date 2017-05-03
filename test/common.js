@@ -38,6 +38,8 @@ class CommonTest {
 
   checkOperation(op ,uri, input, expectOutput) {
     return new Promise((resolve, reject) => {
+      console.log("======================");
+      console.log(op + " " + uri);
       this.sendRequest(op, uri, input).end((err, res) => {
         if(err) {
           //console.log(err);
@@ -98,8 +100,3 @@ class CommonTest {
 
 
 export default CommonTest;
-
-
-//exports.sendRequest = sendRequest;
-//exports.checkOperation = checkOperation;
-//exports.pureOperation = pureOperation;

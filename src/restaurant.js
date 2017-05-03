@@ -1,5 +1,6 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
+import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 import * as S3 from './s3.js';
 
@@ -73,7 +74,11 @@ class Restaurant {
             //update restaurant
             controlData.value = restaurant_id
             await db.put(CONTROL_TABLE_NAME, controlData);
-            return msg;            
+			
+	    //output
+	    delete data.restaurantControl;
+	    let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], data);
+            return output;    
         }catch(err) {
             throw err;
         }
