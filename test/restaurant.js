@@ -1,5 +1,31 @@
 import CommonTest from './common.js';
 
+let sampleData = {
+    "type": "restaurants",
+    "attributes": {
+        "social": {
+            "facebook": "htttps://www.facebook.com/testraman"
+        },
+        "photos": {},
+        "location": {
+            "continent": "asia",
+            "country": "japan",
+            "address": "Ikebukuro, 1町目123-1",
+            "city": "tokyo",
+            "dist": "Ikebukuro",
+            "tel": "012-3345678",
+            "state": "tokyo"
+        },
+        "menus": {},
+        "category": "japanese",
+        "branch_ids": [],
+        "name": "啾咪拉麵",
+        "desc": "This is a auto test data: Raman"
+    }
+}
+
+let sample = {"data": sampleData};
+
 function restaurantTest() {
   let URI = '/restaurants';
   let modbusEquipment;
@@ -9,15 +35,8 @@ function restaurantTest() {
 
     describe('POST test', () => {
       let id;
-      /*it('set data: POST ' + URI, (done) => {
-        let rnd = Math.floor(Math.random() * modbusEquipment.equipmentTags.length);
-        let input = {
-          "reference": "0x40000",
-          "quantity": modbusEquipment.equipmentTags[rnd].quantity,
-          "equipmentName": modbusEquipment.equipmentName,
-          "equipmentType": modbusEquipment.equipmentType,
-          "tagName": modbusEquipment.equipmentTags[rnd].name
-        }
+      it('set data: POST ' + URI, (done) => {
+        let input = sample;
 
         op.checkOperation('POST', URI, input).then((res) => {
           id = res.body.id;
@@ -25,11 +44,11 @@ function restaurantTest() {
         }).catch(err => {
           done(err);
         });
-      });*/
+      });
 
       it('check data saved: GET '+URI, (done) => {
         op.checkOperation('GET', URI, null, null).then((res) => {
-          //res.body.should.include.something.that.have.deep.property('id', id);
+          res.body.should.include.something.that.have.deep.property('id', id);
           done();
         }).catch(err => {
           done(err);
@@ -158,6 +177,6 @@ function restaurantByIDTest() {
 
 function go() {
   restaurantTest();
-  restaurantByIDTest();
+//  restaurantByIDTest();
 };
 exports.go = go;
