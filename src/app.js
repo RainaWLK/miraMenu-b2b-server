@@ -405,9 +405,10 @@ api.delete('/restaurants/{restaurant_id}/items/{item_id}', async (req) => {
 });
 
 
-api.bGet('/restaurants/{restaurant_id}/pictures',  async(req) => {
+api.bGet('/restaurants/{restaurant_id}/pictures/{picture_id}',  async(req) => {
     let cmdObj = new Restaurant(req);
-    
+    console.log("pictures/{picture_id}");
+	console.log(req);
     try{
 	    return await cmdObj.getPicture();
     }
@@ -416,11 +417,23 @@ api.bGet('/restaurants/{restaurant_id}/pictures',  async(req) => {
     }
 });
 
+api.get('/restaurants/{restaurant_id}/pictures/{picture_id}/info', async (req) => {
+    let cmdObj = new Restaurant(req);
+    console.log("pictures/{picture_id}/info");
+	console.log(req);
+    try{
+        return await cmdObj.getPictureInfo();
+    }
+    catch(err){
+        throw 404;
+    }
+});
+
 api.bPost('/restaurants/{restaurant_id}/pictures',  async(req) => {
     let cmdObj = new Restaurant(req);
-
+console.log(req);
     try{
-        return await cmdObj.addPicture(req.body);
+        return await cmdObj.addPicture(req.body, req.binaryBody);
     }
     catch(err){
         throw err;

@@ -125,7 +125,8 @@ class Restaurant {
             let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
 
 	        let path = "restaurants/"+restaurant_id+"/pictures";
-	        let file_name = this.reqData.queryString.key;
+	        let file_name = this.reqData.params.picture_id + ".jpg";
+			console.log(file_name);
             let data = await S3.getS3Obj(path + "/" + file_name);
             return data;
         }catch(err) {
@@ -133,7 +134,20 @@ class Restaurant {
         }
     }
 
-    async addPicture(payload) {
+	async getPictureInfo() {
+        try {
+            let restaurant_id = this.reqData.params.restaurant_id;
+            let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
+
+	        let picture_id = this.reqData.params.picture_id;
+
+            return restaurantData.photos[picture_id];
+        }catch(err) {
+            throw err;
+        }
+    }
+	
+    async addPicture(payload, binaryData) {
         try {
             let restaurant_id = this.reqData.params.restaurant_id;
             let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
@@ -143,13 +157,13 @@ class Restaurant {
             let picture_id = this.getNewPictureID(restaurantData.restaurantControl);
 	        let file_name = picture_id+".jpg";
 
-            let msg = await S3.uploadToS3(path + "/" + file_name, payload);
+            let msg = await S3.uploadToS3(path + "/" + file_name, binaryData);
 			
             //update db
-            if(typeof restaurantData.photo == 'undefined'){
-                restaurantData.photo = {}; //filename: desc
+            if(typeof restaurantData.photos == 'undefined'){
+                restaurantData.photos = {}; //filename: desc
             }
-            restaurantData.photo[file_name] = "ccc";
+            restaurantData.photos[picture_id] = payload;
             restaurantData.restaurantControl.pictureMaxID = picture_id;
         
             console.log(restaurantData);
@@ -168,12 +182,9 @@ class Restaurant {
 
 	        let path = "restaurants/"+restaurant_id+"/pictures";
 
-            if(typeof this.reqData.queryString.key == 'undefined'){
-                console.log("qq");
-                throw null;
-            }
-            let file_name = this.reqData.queryString.key;
-            if(typeof restaurantData.photo[file_name] == 'undefined'){
+		let picture_id = this.reqData.params.picture_id;
+            let file_name = picture_id + ".jpg";
+            if(typeof restaurantData.photos[picture_id] == 'undefined'){
                 console.log("not found");
                 throw null;
             }
@@ -181,7 +192,7 @@ class Restaurant {
             let msg = await S3.deleteS3Obj(path + "/" + file_name);
 
              //update db
-            delete restaurantData.photo[file_name];
+            delete restaurantData.photos[picture_id];
         
             console.log(restaurantData);
             let msg2 = await db.put(TABLE_NAME, restaurantData);           

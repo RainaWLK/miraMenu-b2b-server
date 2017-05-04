@@ -48,10 +48,12 @@ function makeBinaryReqData(req) {
 		reqData.queryString = req.queryString;
     }
 
-    reqData.binaryBody = Buffer.from(req.body.image, 'base64');
+	if(typeof req.body.image == 'string'){
+		reqData.binaryBody = Buffer.from(req.body.image, 'base64');
+		delete reqData.body.image;
+	}
 	reqData.body = req.body;
-	delete reqData.body.image;
-
+	
     return reqData;
 }
 
@@ -78,8 +80,8 @@ class Rest {
 			let path = require('path');
 		    
 		    this.app = express();
-		    this.app.use(bodyParser.json());
-			this.app.use(bodyParser.raw({limit: '50mb'}));
+		    this.app.use(bodyParser.json({limit: '50mb'}));
+			//this.app.use(bodyParser.raw({limit: '50mb'}));
 			this.app.use("/", express.static(path.join(__dirname, '../www')));
 
 		    let server = this.app.listen(8081, () => {

@@ -33,7 +33,24 @@
       }
 
     }
-
+	function _arrayBufferToBase64( buffer ) {
+		var binary = '';
+		var bytes = new Uint8Array( buffer );
+		var len = bytes.byteLength;
+		for (var i = 0; i < len; i++) {
+			binary += String.fromCharCode( bytes[ i ] );
+		}
+		return window.btoa( binary );
+	}
+	
+	function bufferToBase64(buf) {
+		console.log(buf.byteLength);
+		var binstr = Array.prototype.map.call(buf, function (ch) {
+			return String.fromCharCode(ch);
+		}).join('');
+		console.log(binstr);
+		return btoa(binstr);
+	}
 
     function FileSelectHandler(e) {
       // cancel event and hover styling
@@ -60,8 +77,25 @@
 
         // start upload
         xhr.open("POST", path, true);
-        xhr.setRequestHeader("Content-Type", "application/octet-stream");
-        xhr.send(file);
+        //xhr.setRequestHeader("Content-Type", "application/octet-stream");
+	xhr.setRequestHeader("Content-Type", "application/json");
+       
+		
+		var reader = new FileReader();
+
+		reader.onload = function(e) {
+		  var arrayBuffer = reader.result;
+		  
+		  var output = {
+			"image": _arrayBufferToBase64(arrayBuffer),
+			"title": "pomerinan",
+			"desc": "cute pomerinan"
+		  }
+		  console.log(output);
+		   xhr.send(JSON.stringify(output));
+		}
+
+		reader.readAsArrayBuffer(file);
       }
 
     }
