@@ -12,6 +12,7 @@ class ReqData{
         this.params = {};
 		this.queryString = {};
         this.body = {};
+		this.binaryBody = null;
     }
 }
 
@@ -46,7 +47,10 @@ function makeBinaryReqData(req) {
         reqData.params = req.pathParams;
 		reqData.queryString = req.queryString;
     }
-    reqData.body = req.body;
+
+    reqData.binaryBody = Buffer.from(req.body.image, 'base64');
+	reqData.body = req.body;
+	delete reqData.body.image;
 
     return reqData;
 }
