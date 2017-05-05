@@ -1,4 +1,5 @@
 let ApiBuilder = require('claudia-api-builder');
+import { makeInfo } from './image.js';
 
 let DEBUG = 0;
 if(process.env.NODE_ENV == 'development'){
@@ -13,6 +14,7 @@ class ReqData{
 		this.queryString = {};
         this.body = {};
 		this.binaryBody = null;
+		this.type = "json";
     }
 }
 
@@ -50,7 +52,8 @@ function makeBinaryReqData(req) {
 
 	if(typeof req.body.image == 'string'){
 		reqData.binaryBody = Buffer.from(req.body.image, 'base64');
-		delete reqData.body.image;
+		delete req.body.image;
+		reqData.type = "image";
 	}
 	reqData.body = req.body;
 	
@@ -226,6 +229,12 @@ class Rest {
 		let bFunc = async function(req, res){
 			let reqData = makeBinaryReqData(req);
 			try {
+				//image
+				if(reqData.type == 'image'){
+					let imageInfo = await makeInfo(reqData.body ,reqData.binaryBody);
+					reqData.body = imageInfo;
+				}
+
 				let resultMsg = await callback(reqData);
 				console.log("responseOK");
 				return self.responseOK(res, resultMsg);

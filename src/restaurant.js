@@ -3,6 +3,7 @@ let JSONAPI = require('./jsonapi.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 import * as S3 from './s3.js';
+import { makeInfo } from './image.js';
 
 const TABLE_NAME = "Restaurants";
 const CONTROL_TABLE_NAME = "Control";
@@ -150,15 +151,17 @@ class Restaurant {
     async addPicture(payload, binaryData) {
         try {
             let restaurant_id = this.reqData.params.restaurant_id;
+console.log("0");
             let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
-
+console.log("1");
 	        let path = "restaurants/"+restaurant_id+"/pictures";
 			
             let picture_id = this.getNewPictureID(restaurantData.restaurantControl);
 	        let file_name = picture_id+".jpg";
-
+console.log("2: "+file_name);
+console.log(binaryData.length);
             let msg = await S3.uploadToS3(path + "/" + file_name, binaryData);
-			
+console.log("3");			
             //update db
             if(typeof restaurantData.photos == 'undefined'){
                 restaurantData.photos = {}; //filename: desc
@@ -171,6 +174,7 @@ class Restaurant {
             //console.log(msg);
             return msg;
         }catch(err) {
+            console.log(err);
             throw err;
         }
     }

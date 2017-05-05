@@ -431,7 +431,7 @@ api.get('/restaurants/{restaurant_id}/pictures/{picture_id}/info', async (req) =
 
 api.bPost('/restaurants/{restaurant_id}/pictures',  async(req) => {
     let cmdObj = new Restaurant(req);
-console.log(req);
+
     try{
         return await cmdObj.addPicture(req.body, req.binaryBody);
     }
