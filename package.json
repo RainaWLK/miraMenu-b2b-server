@@ -12,7 +12,9 @@
     "deploy": "npm run transpile && claudia create --region us-east-1 --api-module build/app",
     "release": "claudia set-version --version production",
     "renew": "npm run transpile && claudia update --set-env NODE_ENV=production",
-    "start": "npm run transpile && cross-env NODE_ENV=development node build/app.js"
+    "start": "npm run transpile && cross-env NODE_ENV=development node build/app.js",
+    "help": "claudia --help",
+    "destroy": "claudia destroy"
   },
   "author": "Jumimi",
   "license": "ISC",
