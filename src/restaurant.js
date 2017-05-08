@@ -151,17 +151,14 @@ class Restaurant {
     async addPicture(payload, binaryData) {
         try {
             let restaurant_id = this.reqData.params.restaurant_id;
-console.log("0");
             let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
-console.log("1");
 	        let path = "restaurants/"+restaurant_id+"/pictures";
 			
             let picture_id = this.getNewPictureID(restaurantData.restaurantControl);
 	        let file_name = picture_id+".jpg";
-console.log("2: "+file_name);
-console.log(binaryData.length);
+
             let msg = await S3.uploadToS3(path + "/" + file_name, binaryData);
-console.log("3");			
+		
             //update db
             if(typeof restaurantData.photos == 'undefined'){
                 restaurantData.photos = {}; //filename: desc
@@ -169,7 +166,6 @@ console.log("3");
             restaurantData.photos[picture_id] = payload;
             restaurantData.restaurantControl.pictureMaxID = picture_id;
         
-            console.log(restaurantData);
             let msg2 = await db.put(TABLE_NAME, restaurantData);
             //console.log(msg);
             return msg;

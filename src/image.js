@@ -11,8 +11,6 @@ function makeInfo(userInfo, binaryData){
                 return;
             }
 
-            console.log(data);
-
             imageInfo.mimeType = data['Mime type'];
             imageInfo.size = data.size; //width, height
             

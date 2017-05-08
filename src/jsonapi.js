@@ -44,17 +44,13 @@ function makeJSONAPI(path, dataList) {
 }
 
 function parseJSONAPI(orgData) {
-    console.log('==parseJSONAPI==');
-    //console.log(orgData);
     let data = orgData.data;
-    //console.log(data);
 
     let dbData = data.attributes;
 
     if(typeof data.id != 'undefined')
         dbData.id = data.id;
 
-    //console.log(dbData);
     return dbData;
 }
 
