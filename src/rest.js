@@ -231,7 +231,9 @@ class Rest {
 			try {
 				//image
 				if(reqData.type == 'image'){
+					console.log("qq");
 					let imageInfo = await makeInfo(reqData.body ,reqData.binaryBody);
+					console.log("bPost return");
 					reqData.body = imageInfo;
 				}
 

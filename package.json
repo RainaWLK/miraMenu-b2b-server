@@ -27,6 +27,7 @@
     "claudia-api-builder": "^2.4.0",
     "gm": "^1.23.0",
     "lodash": "^4.17.4",
+    "sharp": "^0.17.3",
     "sprintf-js": "^1.0.3"
   },
   "devDependencies": {
