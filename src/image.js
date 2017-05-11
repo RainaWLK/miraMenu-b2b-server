@@ -1,29 +1,34 @@
 import sharp from 'sharp';
+var mime = require('mime-types')
 
 //import gm from 'gm';
 //const im = gm.subClass({ imageMagick: true });
 
-function makeInfo(userInfo, binaryData){
+
+
+
+
+
+async function makeInfo(userInfo, binaryData){
     let imageInfo = userInfo;
 
-    const image = sharp(binaryData);
+    try {
+        let metadata = await sharp(binaryData).metadata();
+        console.log(metadata);    
+        let mimetype = mime.contentType(metadata.format);
+        imageInfo.mimeType = mimetype;
+        
+        imageInfo.width = metadata.width;
+        imageInfo.height = metadata.height;
+        return imageInfo;
+    }
+    catch(err){
+        throw(err);
+    }
+
+
+
     
-    return new Promise((resolve, reject) => {
-        image.metadata().then(metadata => {
-            console.log(metadata);
-            imageInfo.mimeType = data.format;
-            imageInfo.width = data.width;
-            imageInfo.height = data.height;
-
-            resolve();
-        }).catch(err => {
-            rehect(err);
-        });
-    });
-
-
-    
-
     /*return new Promise((resolve, reject) => {
         im(binaryData).identify((err, data) => {
             if(err){
