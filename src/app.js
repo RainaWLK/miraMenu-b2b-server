@@ -46,6 +46,14 @@ api.delete('/restaurants/{restaurant_id}', async (req) => {
 api.get('/restaurants', async (req) => {
     let cmdObj = new Restaurant(req);
 
+var exec = require('child_process').exec;
+var cmd = 'convert --version';
+exec(cmd, function(err, stdout, stderr){
+console.log(err);
+console.log(stdout);
+console.log(stderr);
+});
+
     try{
         return await cmdObj.get();
     }
