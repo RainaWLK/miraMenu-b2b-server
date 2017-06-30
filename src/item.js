@@ -78,6 +78,11 @@ class  Items {
             let menusData = await db.queryById(TABLE_NAME, this.branchID);
 
             let data = menusData.items[this.reqData.params.item_id];
+            if(typeof data == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
             data.id = this.reqData.params.item_id;
 
             return JSONAPI.makeJSONAPI(TYPE_NAME, data);
@@ -154,6 +159,11 @@ class  Items {
         try{
             let menusData = await db.queryById(TABLE_NAME, this.branchID);
 
+            if(typeof menusData.items[this.reqData.params.item_id] == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
             delete menusData.items[this.reqData.params.item_id];
 
             let msg = await db.put(TABLE_NAME, menusData);

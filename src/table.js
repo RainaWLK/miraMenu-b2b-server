@@ -152,6 +152,12 @@ class Tables {
             let branchFullID = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
             let branchData = await db.queryById(TABLE_NAME, branchFullID);
 
+            if(typeof branchData.tables[this.reqData.params.table_id] == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
+
             delete branchData.tables[this.reqData.params.table_id];
 
             let msg = await db.put(TABLE_NAME, branchData);

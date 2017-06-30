@@ -78,6 +78,11 @@ class Menus {
             let menusData = await db.queryById(TABLE_NAME, this.branchID);
 
             let data = menusData.menus[this.reqData.params.menu_id];
+            if(typeof data == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
             data.id = this.reqData.params.menu_id;
 
             return JSONAPI.makeJSONAPI(TYPE_NAME, data);
@@ -171,6 +176,11 @@ class Menus {
         try{
             let menusData = await db.queryById(TABLE_NAME, this.branchID);
 
+            if(typeof menusData.menus[this.reqData.params.menu_id] == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
             delete menusData.menus[this.reqData.params.menu_id];
 
             let msg = await db.put(TABLE_NAME, menusData);

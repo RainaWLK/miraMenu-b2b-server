@@ -7,7 +7,7 @@ if(process.env.NODE_ENV == 'development'){
 }
 
 let ApiGatewayOptions = {
-	authorizationType: 'AWS_IAM',
+//	authorizationType: 'AWS_IAM',
 	invokeWithCredentials: true
 };
 
