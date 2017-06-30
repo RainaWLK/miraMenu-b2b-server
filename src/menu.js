@@ -182,5 +182,4 @@ class Menus {
     }
 }
 
-
-export default Menus;
+exports.main = Menus;

@@ -1,0 +1,11 @@
+{
+  "lambda": {
+    "role": "myrestaurant-executor",
+    "name": "myrestaurant",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "aoboid0wkl",
+    "module": "build/app"
+  }
+}

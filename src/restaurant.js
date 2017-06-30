@@ -2,11 +2,13 @@ let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
-import * as S3 from './s3.js';
-import { makeInfo } from './image.js';
+//let S3 = require('./s3');
+
+//import { makeInfo } from './image.js';
 
 const TABLE_NAME = "Restaurants";
 const CONTROL_TABLE_NAME = "Control";
+const USERINFO_TABLE_NAME = "Users";
 
 function RestaurantControl() {
     //contructor() {
@@ -69,16 +71,22 @@ class Restaurant {
             let restaurant_id = this.getNewID(controlData);
 
             data.id = restaurant_id;
-
-            let msg = await db.post(TABLE_NAME, data);
+           // data.owner = this.reqData.userinfo.cognitoIdentityId;
 
             //update restaurant
+            await db.post(TABLE_NAME, data);
+
+            //update control data
             controlData.value = restaurant_id
             await db.put(CONTROL_TABLE_NAME, controlData);
+
+            //update user data
+            //let userData = await db.queryById(USERINFO_TABLE_NAME, data.owner);
+            //console.log(userData);
 			
-	    //output
-	    delete data.restaurantControl;
-	    let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], data);
+            //output
+            delete data.restaurantControl;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], data);
             return output;    
         }catch(err) {
             throw err;
@@ -91,15 +99,17 @@ class Restaurant {
         try {
             data.id = this.reqData.params.restaurant_id;
             let restaurantData = await db.queryById(TABLE_NAME, data.id);
-            //console.log("--branchData--");
-            //console.log(branchData);
 
             //copy control data
-            data.branchControl = cloneDeep(restaurantData.restaurantControl);
+            data.restaurantControl = cloneDeep(restaurantData.restaurantControl);
 
             //update
-            let msg = await db.put(TABLE_NAME, data);
-            return msg;
+            let dbOutput = await db.put(TABLE_NAME, data);
+
+            //output
+            delete dbOutput.restaurantControl;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], dbOutput);
+            return output;
         }catch(err) {
             console.log(err);
             throw err;
@@ -120,7 +130,7 @@ class Restaurant {
         }
     }
 	
-    async getPicture() {
+    /*async getPicture() {
         try {
             let restaurant_id = this.reqData.params.restaurant_id;
             let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
@@ -133,7 +143,7 @@ class Restaurant {
         }catch(err) {
             throw err;
         }
-    }
+    }*/
 
 	async getPictureInfo() {
         try {
@@ -148,7 +158,7 @@ class Restaurant {
         }
     }
 	
-    async addPicture(payload, binaryData) {
+    /*async addPicture(payload, binaryData) {
         try {
             let restaurant_id = this.reqData.params.restaurant_id;
             let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
@@ -173,7 +183,7 @@ class Restaurant {
             console.log(err);
             throw err;
         }
-    }
+    }*/
 
     async deletePicture() {
         try {
@@ -204,4 +214,4 @@ class Restaurant {
 }
 
 
-export default Restaurant;
+exports.main = Restaurant;

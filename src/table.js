@@ -67,6 +67,11 @@ class Tables {
             let branchData = await db.queryById(TABLE_NAME, branchFullID);
 
             let data = branchData.tables[this.reqData.params.table_id];
+            if(typeof data == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
             data.id = this.reqData.params.table_id;
 
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], data);
@@ -83,7 +88,7 @@ class Tables {
 
             let data = JSONAPI.parseJSONAPI(payload);
             let table_id = this.getNewID(branchData);
-            console.log(table_id);
+ 
             //data.id = table_id;
             //migration
             if(typeof branchData.tables == 'undefined'){
@@ -92,11 +97,17 @@ class Tables {
 
             branchData.tables[table_id] = data;
 
+            //update db
             //branchData.branchControl.table_ids.push(table_id);
             branchData.branchControl.tablesMaxID = table_id;
+            let dbOutput = await db.put(TABLE_NAME, branchData);
 
-            let msg = await db.put(TABLE_NAME, branchData);
-            return msg;
+            //output
+            let outputRawData = dbOutput.tables[table_id];
+            outputRawData.id = table_id;
+
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputRawData);
+            return output;
         }
         catch(err) {
             throw err;
@@ -108,14 +119,28 @@ class Tables {
         try{
             let branchFullID = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
             let branchData = await db.queryById(TABLE_NAME, branchFullID);
+            let table_id = this.reqData.params.table_id;
+
+            //check table existed
+            if(typeof branchData.tables[table_id] == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
 
             let data = JSONAPI.parseJSONAPI(payload);
             delete data.id;
 
-            branchData.tables[this.reqData.params.table_id] = data;
+            branchData.tables[table_id] = data;
 
-            let msg = await db.put(TABLE_NAME, branchData);
-            return msg;
+            let dbOutput = await db.put(TABLE_NAME, branchData);
+
+            //output
+            let outputRawData = dbOutput.tables[table_id];
+            outputRawData.id = table_id;
+
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputRawData);
+            return output;
         }
         catch(err) {
             throw err;
@@ -138,5 +163,4 @@ class Tables {
     }
 }
 
-
-export default Tables;
+exports.main = Tables;

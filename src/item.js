@@ -165,5 +165,4 @@ class  Items {
     }
 }
 
-
-export default Items;
+exports.main = Items;

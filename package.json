@@ -9,9 +9,9 @@
   "scripts": {
     "transpile": "babel src -d build",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill --timeout 15000",
-    "deploy": "npm run transpile && claudia create --region us-east-1 --api-module build/app",
+    "create": "npm run transpile && claudia create --name myrestaurant-dev --region us-east-1 --api-module build/app --version development --no-optional-dependencies",
     "release": "claudia set-version --version production",
-    "renew": "npm run transpile && claudia update --set-env NODE_ENV=production",
+    "deploy": "npm run transpile && claudia update --version development --set-env NODE_ENV=production --no-optional-dependencies",
     "start": "npm run transpile && cross-env NODE_ENV=development node build/app.js",
     "help": "claudia --help",
     "destroy": "claudia destroy"
@@ -20,29 +20,29 @@
   "license": "ISC",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "lodash": "^4.17.4",
+    "mime-types": "^2.1.15",
+    "sprintf-js": "^1.0.3",
+    "claudia-api-builder": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-es2016": "^6.22.0",
     "babel-preset-es2017": "^6.22.0",
-    "claudia": "^2.9.0",
-    "claudia-api-builder": "^2.4.0",
-    "gm": "^1.23.0",
-    "lodash": "^4.17.4",
-    "mime-types": "^2.1.15",
-    "sharp": "^0.17.3",
-    "sprintf-js": "^1.0.3"
-  },
-  "devDependencies": {
-    "aws-sdk": "^2.19.0",
-    "babel-cli": "^6.23.0",
     "body-parser": "^1.17.0",
     "chai": "^3.5.0",
     "chai-ajv-json-schema": "^1.0.0",
     "chai-http": "^3.0.0",
     "chai-json-schema": "^1.4.0",
     "chai-things": "^0.2.0",
+    "claudia": "^2.14.0",
     "cross-env": "^4.0.0",
     "express": "^4.15.0",
     "mocha": "^3.2.0",
     "ntl": "^1.2.0"
+  },
+  "optionalDependencies": {
+    "aws-sdk": "^2.78.0"
   }
 }

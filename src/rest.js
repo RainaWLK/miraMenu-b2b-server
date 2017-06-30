@@ -1,10 +1,15 @@
 let ApiBuilder = require('claudia-api-builder');
-import { makeInfo } from './image.js';
+//import { makeInfo } from './image.js';
 
 let DEBUG = 0;
 if(process.env.NODE_ENV == 'development'){
 	DEBUG = 1;
 }
+
+let ApiGatewayOptions = {
+	authorizationType: 'AWS_IAM',
+	invokeWithCredentials: true
+};
 
 //private functions
 class ReqData{
@@ -15,6 +20,16 @@ class ReqData{
         this.body = {};
 		this.binaryBody = null;
 		this.type = "json";
+
+		this.userinfo = {
+			cognitoAuthenticationProvider: "",
+			cognitoAuthenticationType: "",
+			cognitoIdentityId: "",
+			cognitoIdentityPoolId: ""
+			//invokeid: "",
+			//awsRequestId: "",
+			//invokedFunctionArn: ""
+		}
     }
 }
 
@@ -25,18 +40,31 @@ function makeReqData(req) {
         reqData.paths = req.url.split('/');
         reqData.params = req.params;
 		reqData.queryString = req.query;
+
+		//fake user info
+		reqData.userinfo.cognitoAuthenticationProvider = "jumi.co";
+		reqData.userinfo.cognitoAuthenticationType = "authenticated";
+		reqData.userinfo.cognitoIdentityId = 'us-east-1:4dff44c5-29e8-4c1d-a751-8c013c088d02';
+		reqData.userinfo.cognitoIdentityPoolId = 'us-east-1:4ad17068-f8a4-4fed-aaf7-55e7e9a2e7ac';		
     }
     else {
         reqData.paths = req.proxyRequest.path.split('/');
         reqData.params = req.pathParams;
 		reqData.queryString = req.queryString;
+
+		//userinfo
+		reqData.userinfo.cognitoAuthenticationProvider = req.context.cognitoAuthenticationProvider;
+		reqData.userinfo.cognitoAuthenticationType = req.context.cognitoAuthenticationType;
+		reqData.userinfo.cognitoIdentityId = req.context.cognitoIdentityId;
+		reqData.userinfo.cognitoIdentityPoolId = req.context.cognitoIdentityPoolId;
     }
     reqData.body = req.body;
+	console.log(reqData);
 
     return reqData;
 }
 
-function makeBinaryReqData(req) {
+/*function makeBinaryReqData(req) {
     let reqData = new ReqData();
 
     if(DEBUG) {
@@ -58,7 +86,7 @@ function makeBinaryReqData(req) {
 	reqData.body = req.body;
 	
     return reqData;
-}
+}*/
 
 //for compatible between express and AWS
 function translateURI(orgURI){
@@ -118,13 +146,23 @@ class Rest {
 		return msg;
 	}
 	
-	responseError(res, code) {
+	responseError(res, err) {
+		if(typeof err == 'undefined'){
+			err = {};
+		}
+		if(typeof err.statusCode == 'undefined'){
+			err.statusCode = 403;
+		}
+		if(typeof err.message == 'undefined'){
+			err.message = "";
+		}
+
 		if(DEBUG) {
-			res.status(code);
-			res.end();
+			res.status(err.statusCode);
+			res.end(err.message);
 		}
 		else {
-			return new this.app.ApiResponse('Error', {'Content-Type': 'text/plain'}, code);
+			return new this.app.ApiResponse(err.message, {'Content-Type': 'text/plain'}, err.statusCode);
 			//return code;
 		}
 	}
@@ -132,8 +170,8 @@ class Rest {
 	async get(orgURI, callback){
 		let uri = translateURI(orgURI);
 		let self = this;
-		
-		await this.app.get(uri, async (req, res) => {
+
+		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
@@ -143,31 +181,46 @@ class Rest {
 				return self.responseError(res, errcode);
 			}
 			
-		});
+		};
+
+		if(DEBUG) {
+			await this.app.get(uri, action);
+		}
+		else {
+			await this.app.get(uri, action, ApiGatewayOptions);
+		}
 	}
 
 	async post(orgURI, callback){
 		let uri = translateURI(orgURI);
 		let self = this;
 		
-		await this.app.post(uri, async (req, res) => {
+		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
 				return self.responseOK(res, resultMsg);
 			}
-			catch(errcode) {
-				return self.responseError(res, errcode);
+			catch(err) {
+				return self.responseError(res, err);
 			}
 			
-		});
+		};
+
+		if(DEBUG) {
+			await this.app.post(uri, action);
+		}
+		else {
+			ApiGatewayOptions.success = { code: 201 };
+			await this.app.post(uri, action, ApiGatewayOptions);
+		}
 	}
 
 	async patch(orgURI, callback){
 		let uri = translateURI(orgURI);
 		let self = this;
 		
-		await this.app.patch(uri, async (req, res) => {
+		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
 				let resultMsg = await callback(reqData);
@@ -177,27 +230,42 @@ class Rest {
 				return self.responseError(res, errcode);
 			}
 			
-		});
+		};
+
+		if(DEBUG) {
+			await this.app.patch(uri, action);
+		}
+		else {
+			await this.app.patch(uri, action, ApiGatewayOptions);
+		}
 	}
 
 	async delete(orgURI, callback){
 		let uri = translateURI(orgURI);
 		let self = this;
 		
-		await this.app.delete(uri, async (req, res) => {
+		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
-				let resultMsg = await callback(reqData);
-				return self.responseOK(res, resultMsg);
+				await callback(reqData);
+				return self.responseOK(res, "");
 			}
 			catch(errcode) {
 				return self.responseError(res, errcode);
 			}
 			
-		});
+		};
+
+		if(DEBUG) {
+			await this.app.delete(uri, action);
+		}
+		else {
+			ApiGatewayOptions.success = { code: 204 };
+			await this.app.delete(uri, action, ApiGatewayOptions);
+		}
 	}
 
-	async bGet(orgURI, callback){
+	/*async bGet(orgURI, callback){
 		let uri = translateURI(orgURI);
 		let self = this;
 
@@ -220,9 +288,9 @@ class Rest {
 			await this.app.get(uri, bFunc, { success: { contentType: 'image/jpg', contentHandling: 'CONVERT_TO_BINARY'}});
 		}
 		
-	}
+	}*/
 
-	async bPost(orgURI, callback){
+	/*async bPost(orgURI, callback){
 		let uri = translateURI(orgURI);
 		let self = this;
 
@@ -253,8 +321,8 @@ class Rest {
 			await this.app.post(uri, bFunc, { success: { contentType: 'text/plain' } });
 		}
 		
-	}
+	}*/
 
 }
 
-export default Rest;
+exports.main = Rest;

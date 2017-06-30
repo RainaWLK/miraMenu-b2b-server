@@ -100,13 +100,17 @@ class Branches {
 
             data.id = control.restaurant_id+control.branch_id;
 
-            let msg = await db.post(TABLE_NAME, data);
+            await db.post(TABLE_NAME, data);
 
             //update restaurant
             restaurantData.restaurantControl.branchesMaxID = branch_id;
             restaurantData.restaurantControl.branch_ids.push(branch_id);
             await db.put(RESTAURANT_TABLE_NAME, restaurantData);
-            return msg;
+
+            //output
+            delete data.branchControl;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[3], data);
+            return output;   
         }
         catch(err) {
             throw err;
@@ -131,8 +135,12 @@ class Branches {
             data.branchControl = cloneDeep(branchData.branchControl);
 
             //update
-            let msg = await db.put(TABLE_NAME, data);
-            return msg;
+            let dbOutput = await db.put(TABLE_NAME, data);
+
+            //output
+            delete dbOutput.branchControl;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[3], dbOutput);
+            return output;   
         }catch(err) {
             console.log(err);
             throw err;
@@ -156,4 +164,4 @@ class Branches {
 }
 
 
-export default Branches;
+exports.main = Branches;

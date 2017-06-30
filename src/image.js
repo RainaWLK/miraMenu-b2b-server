@@ -1,4 +1,4 @@
-var mime = require('mime-types')
+/*var mime = require('mime-types')
 import gm from 'gm';
 const im = gm.subClass({ imageMagick: true });
 
@@ -43,3 +43,4 @@ console.log(data);
 
 
 exports.makeInfo = makeInfo;
+*/

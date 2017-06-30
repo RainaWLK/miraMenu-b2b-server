@@ -9,20 +9,6 @@ AWS.config.update({
 //const doc = require('dynamodb-doc');
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-function makeResponse(err, msg) {
-    /*let res = {
-        statusCode: err ? '400' : '200',
-        body: err ? err.message : JSON.stringify(msg),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }*/
-    let res = err ? err.message : msg;
-
-
-    return res;
-}
-
 async function queryDataById(tableName, id){
     var params = {
         TableName : tableName,
@@ -35,15 +21,23 @@ async function queryDataById(tableName, id){
         }
     };
 
-    let dataArray = await queryData(params);
-    if(dataArray.length == 0) {
-        throw new Error();
+    try {
+        let dataArray = await queryData(params);
+        if(dataArray.length == 0) {
+            let err = new Error("not found");
+            err.statusCode = 404;
+            throw err;
+        }
+        //debug
+        if(dataArray.length > 1){
+            console.log('!!!! queryDataById issue !!!!!');
+        }
+        return dataArray[0];
     }
-    //debug
-    if(dataArray.length > 1){
-        console.log('!!!! queryDataById issue !!!!!');
+    catch(err) {
+        throw err;
     }
-    return dataArray[0];
+
 }
 
 function queryDataByName(tableName, name){
@@ -61,16 +55,17 @@ function queryDataByName(tableName, name){
     return queryData(params);
 }
 
-function queryData(params) {
+async function queryData(params) {
     console.log("==queryData==");
     console.log(params);
-    return new Promise((resolve, reject) => {
-        docClient.query(params).promise().then(data => {
-            resolve(data.Items);
-        }).catch(err => { 
-            reject(err);
-        });
-    });
+
+    try {
+        let data = await docClient.query(params).promise();
+        return data.Items;
+    }
+    catch(err){
+        throw err;
+    }
 }
 
 async function scanDataByFilter(params){
@@ -147,7 +142,9 @@ function putData(tableName, data){
 
         docClient.update(params).promise().then(result => {
             console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-            resolve(result);
+             let outputData = result.Attributes;
+             outputData.id = data.id;
+            resolve(outputData);
         }).catch(err => {
             console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
             reject(err);
