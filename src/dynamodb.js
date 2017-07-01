@@ -61,6 +61,7 @@ async function queryData(params) {
 
     try {
         let data = await docClient.query(params).promise();
+        console.log(data);
         return data.Items;
     }
     catch(err){

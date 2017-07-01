@@ -6,11 +6,6 @@ if(process.env.NODE_ENV == 'development'){
 	DEBUG = 1;
 }
 
-let ApiGatewayOptions = {
-//	authorizationType: 'AWS_IAM',
-	invokeWithCredentials: true
-};
-
 //private functions
 class ReqData{
     constructor() {
@@ -163,7 +158,6 @@ class Rest {
 		}
 		else {
 			return new this.app.ApiResponse(err.message, {'Content-Type': 'text/plain'}, err.statusCode);
-			//return code;
 		}
 	}
 
@@ -187,7 +181,11 @@ class Rest {
 			await this.app.get(uri, action);
 		}
 		else {
-			await this.app.get(uri, action, ApiGatewayOptions);
+			await this.app.get(uri, action, {
+				//authorizationType: 'AWS_IAM',
+				//invokeWithCredentials: true,
+				success: { code: 200 }
+			});
 		}
 	}
 
@@ -211,8 +209,11 @@ class Rest {
 			await this.app.post(uri, action);
 		}
 		else {
-			ApiGatewayOptions.success = { code: 201 };
-			await this.app.post(uri, action, ApiGatewayOptions);
+			await this.app.post(uri, action, {
+				//authorizationType: 'AWS_IAM',
+				//invokeWithCredentials: true,
+				success: { code: 201 }
+			});
 		}
 	}
 
@@ -236,7 +237,11 @@ class Rest {
 			await this.app.patch(uri, action);
 		}
 		else {
-			await this.app.patch(uri, action, ApiGatewayOptions);
+			await this.app.patch(uri, action, {
+				//authorizationType: 'AWS_IAM',
+				//invokeWithCredentials: true,
+				success: { code: 200 }
+			});
 		}
 	}
 
@@ -260,8 +265,11 @@ class Rest {
 			await this.app.delete(uri, action);
 		}
 		else {
-			ApiGatewayOptions.success = { code: 204 };
-			await this.app.delete(uri, action, ApiGatewayOptions);
+			await this.app.delete(uri, action, {
+				//authorizationType: 'AWS_IAM',
+				//invokeWithCredentials: true,
+				success: { code: 204 }
+			});
 		}
 	}
 
