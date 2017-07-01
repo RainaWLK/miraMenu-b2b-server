@@ -1,6 +1,5 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
-import Control from './control.js';
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 
@@ -36,8 +35,6 @@ class  Items {
     }
 
     getNewID(controlData) {  //format: i001
-        console.log('==getNew item ID==');
-
         //migration
         if(typeof controlData.itemsMaxID == 'undefined'){
             controlData.itemsMaxID = "i001";
@@ -46,7 +43,6 @@ class  Items {
 
         let itemNumID = controlData.itemsMaxID.slice(1);
         let maxID = sprintf("i%03d", parseInt(itemNumID, 10) + 1);
-        console.log(maxID);
         return maxID;
     }
 
@@ -99,37 +95,41 @@ class  Items {
             let item_id = this.getNewID(branchData[this.controlName]);
 
             let menusData;
-            let createNew = false;
+            //let createNew = false;
             try {
                 menusData = await db.queryById(TABLE_NAME, this.branchID);
-                createNew = true;
+                //createNew = true;
             }
             catch(err){
-                console.log("createNew");
+                //console.log("createNew");
                 //init
                 menusData = {
                     "id": this.branchID,
                     "menus": {},
                     "items": {}
                 } 
-                console.log(menusData);
+                //console.log(menusData);
             }
             menusData.items[item_id] = inputData; 
-            console.log(menusData);
+            //console.log(menusData);
 
-            let msg;
-            if(createNew){
-                msg = await db.post(TABLE_NAME, menusData);
-            }
-            else{
-                msg = await db.put(TABLE_NAME, menusData);
-            }
+            //let msg;
+            //if(createNew){
+            let msg = await db.post(TABLE_NAME, menusData);
+            //}
+            //else{
+            //    msg = await db.put(TABLE_NAME, menusData);
+            //}
 
             //update branch
             branchData[this.controlName].itemsMaxID = item_id;
             await db.put(this.branchTable, branchData);
 
-            return msg;
+            //output
+            let outputBuf = menusData.items[item_id];
+            outputBuf.id = item_id;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            return output;   
         }
         catch(err) {
             console.log(err);
@@ -141,14 +141,27 @@ class  Items {
     async updateByID(payload) {
         try{
             let menusData = await db.queryById(TABLE_NAME, this.branchID);
+            let item_id = this.reqData.params.item_id;
+
+            //check item existed
+            if(typeof menusData.items[item_id] == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
 
             let data = JSONAPI.parseJSONAPI(payload);
             delete data.id;
 
             menusData.items[this.reqData.params.item_id] = data;
 
-            let msg = await db.put(TABLE_NAME, menusData);
-            return msg;
+            let dbOutput = await db.put(TABLE_NAME, menusData);
+
+            //output
+            let outputBuf = dbOutput.items[item_id];
+            outputBuf.id = item_id;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            return output;
         }
         catch(err) {
             throw err;

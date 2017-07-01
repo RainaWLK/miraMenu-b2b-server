@@ -1,6 +1,5 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
-import Control from './control.js';
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 
@@ -27,7 +26,7 @@ class Tables {
 
         //migration
         if(typeof branchData.branchControl.tablesMaxID == 'undefined'){
-            branchData.branchControl.tablesMaxID = "t001";
+            branchData.branchControl.tablesMaxID = "t000";
             //branchData.branchControl.table_ids = [];
         }
 

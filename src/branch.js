@@ -1,6 +1,5 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
-import Control from './control.js';
 import { cloneDeep } from 'lodash';
 
 const TABLE_NAME = "Branches";
@@ -12,9 +11,9 @@ function BranchControl() {
         //this.branch_ids = [];
         this.restaurant_id = "0";
         this.branch_id = "0";
-        this.tablesMaxID = "t001";
-        this.menusMaxID = "m001";
-        this.itemsMaxID = "i001";
+        this.tablesMaxID = "t000";
+        this.menusMaxID = "m000";
+        this.itemsMaxID = "i000";
         //this.table_ids = [];
     //}
 }

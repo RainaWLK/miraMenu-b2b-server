@@ -1,6 +1,5 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
-import Control from './control.js';
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 
@@ -36,17 +35,15 @@ class Menus {
     }
 
     getNewID(controlData) {  //format: m001
-        console.log('==getNew menu ID==');
 
         //migration
         if(typeof controlData.menusMaxID == 'undefined'){
-            controlData.menusMaxID = "m001";
+            controlData.menusMaxID = "m000";
             //controlData.table_ids = [];
         }
 
         let menuNumID = controlData.menusMaxID.slice(1);
         let maxID = sprintf("m%03d", parseInt(menuNumID, 10) + 1);
-        console.log(maxID);
         return maxID;
     }
 
@@ -99,10 +96,10 @@ class Menus {
             let menu_id = this.getNewID(branchData[this.controlName]);
 
             let menusData;
-            let createNew = false;
+            //let createNew = false;
             try {
                 menusData = await db.queryById(TABLE_NAME, this.branchID);
-                createNew = true;
+                //createNew = true;
 
                 //migration
                 if(typeof menusData.items == 'undefined'){
@@ -110,43 +107,46 @@ class Menus {
                 }
             }
             catch(err){
-                console.log("createNew");
                 //init
                 menusData = {
                     "id": this.branchID,
                     "menus": {},
                     "items": {}
                 } 
-                console.log(menusData);
             }
 
             //check item existed
             let validItems = inputData.items.reduce((result, item_id) => {
-                console.log(item_id);
+                //console.log(item_id);
                 if(typeof menusData.items[item_id] != 'undefined'){
                     result.push(item_id);
                 }
                 return result;
             }, []);
-            console.log(validItems);
+            //console.log(validItems);
             inputData.items = validItems;
 
             menusData.menus[menu_id] = inputData; 
-            console.log(menusData);
+            //console.log(menusData);
 
-            let msg;
-            if(createNew){
-                msg = await db.post(TABLE_NAME, menusData);
-            }
-            else{
-                msg = await db.put(TABLE_NAME, menusData);
-            }
+            //bug? no fully table rewrite
+            //let msg;
+            //if(createNew){
+            let msg = await db.post(TABLE_NAME, menusData);
+            //}
+            //else{
+            //let dbOutput = await db.put(TABLE_NAME, menusData);
+            //}
 
             //update branch
             branchData[this.controlName].menusMaxID = menu_id;
             await db.put(this.branchTable, branchData);
 
-            return msg;
+            //output
+            let outputBuf = menusData.menus[menu_id];
+            outputBuf.id = menu_id;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            return output;   
         }
         catch(err) {
             console.log(err);
@@ -158,14 +158,27 @@ class Menus {
     async updateByID(payload) {
         try{
             let menusData = await db.queryById(TABLE_NAME, this.branchID);
+            let menu_id = this.reqData.params.menu_id;
+
+            //check menu existed
+            if(typeof menusData.menus[menu_id] == 'undefined'){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
 
             let data = JSONAPI.parseJSONAPI(payload);
             delete data.id;
 
-            menusData.menus[this.reqData.params.menu_id] = data;
+            menusData.menus[menu_id] = data;
 
-            let msg = await db.put(TABLE_NAME, menusData);
-            return msg;
+            let dbOutput = await db.put(TABLE_NAME, menusData);
+
+            //output
+            let outputBuf = dbOutput.menus[menu_id];
+            outputBuf.id = menu_id;
+            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            return output;
         }
         catch(err) {
             throw err;
