@@ -26,6 +26,7 @@ class Menus {
         //parse request
         this.branchTable = RESTAURANT_TABLE_NAME;
         this.controlName = "restaurantControl";
+        this.restaurantID = this.reqData.params.restaurant_id;
         this.branchID = this.reqData.params.restaurant_id;
         if(typeof this.reqData.params.branch_id != 'undefined'){
             this.branchID += this.reqData.params.branch_id;
@@ -72,7 +73,19 @@ class Menus {
 
     async getByID() {
         try {
-            let menusData = await db.queryById(TABLE_NAME, this.branchID);
+            let restaurantMenusData = await db.queryById(TABLE_NAME, this.restaurantID);
+            let restaurantData = menusData.menus[this.reqData.params.menu_id];
+            data.id = this.reqData.params.menu_id;
+        }
+        catch(err) {
+            //no restaurant menu
+        }
+
+
+
+
+        try {
+            let branchMenusData = await db.queryById(TABLE_NAME, this.branchID);
 
             let data = menusData.menus[this.reqData.params.menu_id];
             if(typeof data == 'undefined'){
