@@ -19,18 +19,25 @@ const TYPE_NAME = "items";
     //}
 }*/
 
-class  Items {
+class Items {
     constructor(reqData){
         this.reqData = reqData;
 
+        //store restaurant var
+        this.restaurantTable = RESTAURANT_TABLE_NAME;
+        this.restaurantID = this.reqData.params.restaurant_id;
+
         //parse request
-        this.branchTable = RESTAURANT_TABLE_NAME;
         this.controlName = "restaurantControl";
         this.branchID = this.reqData.params.restaurant_id;
+        this.branchTable = RESTAURANT_TABLE_NAME;
+        this.branchQuery = false;
         if(typeof this.reqData.params.branch_id != 'undefined'){
-            this.branchID += this.reqData.params.branch_id;
+            this.branchID = this.restaurantID + this.reqData.params.branch_id;
             this.branchTable = BRANCH_TABLE_NAME;
             this.controlName = "branchControl";
+
+            this.branchQuery = true;
         }
     }
 
@@ -49,24 +56,49 @@ class  Items {
 
 
     async get() {
+        let restaurantMenuItemData = null;
+        let restaurantItemData = null;
+        let branchItemData = null;
         try {
-            let menusData = await db.queryById(TABLE_NAME, this.branchID);
-            let dataArray = [];
-            for(let item_id in menusData.items){
-                let data = menusData.items[item_id];
-                data.id = item_id;
-                dataArray.push(data);
-            }
+            restaurantMenuItemData = await db.queryById(TABLE_NAME, this.restaurantID);
+            restaurantItemData = restaurantMenuItemData.items;
+        }
+        catch(err) {
+            //no restaurant menu
+        }
 
-            /*dataArray.map(obj => {
-                delete obj.branchControl;
-            });*/
-            return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);            
-        }catch(err) {
-            console.log("==menu get err!!==");
-            console.log(err);
+        if(this.branchQuery){
+            try {
+                let branchMenuItemData = await db.queryById(TABLE_NAME, this.branchID);
+                branchItemData = branchMenuItemData.items;
+            }catch(err) {
+                //no branch menu
+            }           
+        }
+
+        //output
+        let dataArray = [];
+        
+        for(let item_id in restaurantItemData) {
+            let data = restaurantItemData[item_id];
+            data.id = this.restaurantID+item_id;
+            dataArray.push(data);
+        }
+
+        for(let item_id in branchItemData) {
+            let data = branchItemData[item_id];
+            data.id = this.branchID+item_id;
+            dataArray.push(data);
+        }
+
+        //if empty
+        if(dataArray.length == 0){
+            let err = new Error("not found");
+            err.statusCode = 404;
             throw err;
         }
+
+        return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
     }
 
     async getByID() {
@@ -79,7 +111,7 @@ class  Items {
                 err.statusCode = 404;
                 throw err;
             }
-            data.id = this.reqData.params.item_id;
+            data.id = this.branchID+this.reqData.params.item_id;
 
             return JSONAPI.makeJSONAPI(TYPE_NAME, data);
         }catch(err) {
@@ -127,7 +159,7 @@ class  Items {
 
             //output
             let outputBuf = menusData.items[item_id];
-            outputBuf.id = item_id;
+            outputBuf.id = this.branchID+item_id;
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
             return output;   
         }
@@ -159,7 +191,7 @@ class  Items {
 
             //output
             let outputBuf = dbOutput.items[item_id];
-            outputBuf.id = item_id;
+            outputBuf.id = this.branchID+item_id;
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
             return output;
         }

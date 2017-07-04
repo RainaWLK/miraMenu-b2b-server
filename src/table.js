@@ -45,7 +45,7 @@ class Tables {
             let dataArray = [];
             for(let table_id in branchData.tables){
                 let data = branchData.tables[table_id];
-                data.id = table_id;
+                data.id = branchFullID+table_id;
                 dataArray.push(data);
             }
 
@@ -71,7 +71,7 @@ class Tables {
                 err.statusCode = 404;
                 throw err;
             }
-            data.id = this.reqData.params.table_id;
+            data.id = branchFullID+this.reqData.params.table_id;
 
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], data);
             return output;
@@ -103,7 +103,7 @@ class Tables {
 
             //output
             let outputRawData = dbOutput.tables[table_id];
-            outputRawData.id = table_id;
+            outputRawData.id = branchFullID+table_id;
 
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputRawData);
             return output;
@@ -136,7 +136,7 @@ class Tables {
 
             //output
             let outputRawData = dbOutput.tables[table_id];
-            outputRawData.id = table_id;
+            outputRawData.id = branchFullID+table_id;
 
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputRawData);
             return output;
