@@ -1,5 +1,6 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
+let Utils = require('./utils.js');
 import { cloneDeep } from 'lodash';
 
 const TABLE_NAME = "Branches";
@@ -10,7 +11,7 @@ function BranchControl() {
         //this.branchesMaxID = "0";
         //this.branch_ids = [];
         this.restaurant_id = "0";
-        this.branch_id = "0";
+        this.branch_id = "s0";
         this.tablesMaxID = "t000";
         this.menusMaxID = "m000";
         this.itemsMaxID = "i000";
@@ -24,12 +25,20 @@ class Branches {
     }
 
     getNewID(restaurantData) {
+        let idList = Utils.parseID(restaurantData.restaurantControl.branchesMaxID);
+
+        let maxID = parseInt(idList.s, 16)+1;
+
+        return "s"+maxID.toString();
+    }
+
+    /*getNewID(restaurantData) {
         console.log('==getNewID==');
         console.log(restaurantData);
         let maxID = parseInt(restaurantData.restaurantControl.branchesMaxID, 16) + 1;
         console.log(maxID);
         return maxID.toString();
-    }
+    }*/
 
     async get() {
         try {

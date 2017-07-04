@@ -1,5 +1,6 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
+let Utils = require('./utils.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 //let S3 = require('./s3');
@@ -7,12 +8,16 @@ import { sprintf } from 'sprintf-js';
 //import { makeInfo } from './image.js';
 
 const TABLE_NAME = "Restaurants";
-const CONTROL_TABLE_NAME = "Control";
+let CONTROL_TABLE_NAME = "Control";
+if(process.env.NODE_ENV == 'development'){
+	CONTROL_TABLE_NAME = "Control-dev";
+}
+
 const USERINFO_TABLE_NAME = "Users";
 
 function RestaurantControl() {
     //contructor() {
-        this.branchesMaxID = "0";
+        this.branchesMaxID = "s0";
         this.branch_ids = [];
         this.pictureMaxID = "0";
     //}
@@ -23,9 +28,17 @@ class Restaurant {
         this.reqData = reqData;
     }
 
+
+
     getNewID(controlData) {
-        let maxID = parseInt(controlData.value, 10) + 1;
-        return maxID.toString();
+        console.log(typeof controlData);
+
+
+        let idList = Utils.parseID(controlData.value);
+
+        let maxID = parseInt(idList.r, 10)+1;
+
+        return "r"+maxID.toString();
     }
 
     getNewPictureID(controlData){
@@ -64,8 +77,20 @@ class Restaurant {
     }
 
     async create(payload) {
+        let controlData;
         try {
-            let controlData = await db.queryById(CONTROL_TABLE_NAME, "RestaurantsMaxID");
+            controlData = await db.queryById(CONTROL_TABLE_NAME, "RestaurantsMaxID");
+        }
+        catch(err){ //init system
+            let year = new Date().getFullYear();
+
+            controlData = {
+                id: "RestaurantsMaxID",
+                value: "r"+year+"00000"
+            }
+        }
+
+        try {
             let data = JSONAPI.parseJSONAPI(payload);
             data.restaurantControl = JSON.parse(JSON.stringify(new RestaurantControl()));   //bug
             let restaurant_id = this.getNewID(controlData);

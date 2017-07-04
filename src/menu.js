@@ -9,29 +9,25 @@ const TABLE_NAME = "Menus";
 
 const TYPE_NAME = "menus";
 
-/*function TableControl() {
-    //contructor() {
-        //this.branchesMaxID = "0";
-        //this.branch_ids = [];
-        this.restaurant_id = "0";
-        this.branch_id = "0";
-        this.table_id = "0";
-    //}
-}*/
-
 class Menus {
     constructor(reqData){
         this.reqData = reqData;
 
-        //parse request
-        this.branchTable = RESTAURANT_TABLE_NAME;
-        this.controlName = "restaurantControl";
+        //store restaurant var
+        this.restaurantTable = RESTAURANT_TABLE_NAME;
         this.restaurantID = this.reqData.params.restaurant_id;
+
+        //parse request
+        this.controlName = "restaurantControl";
         this.branchID = this.reqData.params.restaurant_id;
+        this.branchTable = RESTAURANT_TABLE_NAME;
+        this.branchQuery = false;
         if(typeof this.reqData.params.branch_id != 'undefined'){
-            this.branchID += this.reqData.params.branch_id;
+            this.branchID = this.restaurantID + this.reqData.params.branch_id;
             this.branchTable = BRANCH_TABLE_NAME;
             this.controlName = "branchControl";
+
+            this.branchQuery = true;
         }
     }
 
@@ -51,41 +47,46 @@ class Menus {
 
 
     async get() {
+        let restaurantMenuItemData = null;
+        let restaurantMenuData = null;
+        let branchMenuData = null;
         try {
-            let menusData = await db.queryById(TABLE_NAME, this.branchID);
-            let dataArray = [];
-            for(let menu_id in menusData.menus){
-                let data = menusData.menus[menu_id];
-                data.id = menu_id;
-                dataArray.push(data);
-            }
-
-            /*dataArray.map(obj => {
-                delete obj.branchControl;
-            });*/
-            return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);            
-        }catch(err) {
-            console.log("==menu get err!!==");
-            console.log(err);
-            throw err;
-        }
-    }
-
-    async getByID() {
-        try {
-            let restaurantMenusData = await db.queryById(TABLE_NAME, this.restaurantID);
-            let restaurantData = menusData.menus[this.reqData.params.menu_id];
-            data.id = this.reqData.params.menu_id;
+            restaurantMenuItemData = await db.queryById(TABLE_NAME, this.restaurantID);
+            restaurantMenuData = restaurantMenuItemData.menus;
         }
         catch(err) {
             //no restaurant menu
         }
 
+        if(this.branchQuery){
+            try {
+                let branchMenuItemData = await db.queryById(TABLE_NAME, this.branchID);
+                branchMenuData = branchMenuItemData.menus;
+            }catch(err) {
+                //no branch menu
+            }           
+        }
 
+        //output
+        let dataArray = [];
+        
+        for(let menu_id in restaurantMenuData) {
+            let data = restaurantMenuData[menu_id];
+            data.id = this.restaurantID+menu_id;
+            dataArray.push(data);
+        }
 
+        for(let menu_id in branchMenuData) {
+            let data = branchMenuData[menu_id];
+            data.id = this.branchID+menu_id;
+            dataArray.push(data);
+        }
+        return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
+    }
 
+    async getByID() {
         try {
-            let branchMenusData = await db.queryById(TABLE_NAME, this.branchID);
+            let menusData = await db.queryById(TABLE_NAME, this.branchID);
 
             let data = menusData.menus[this.reqData.params.menu_id];
             if(typeof data == 'undefined'){
@@ -93,7 +94,7 @@ class Menus {
                 err.statusCode = 404;
                 throw err;
             }
-            data.id = this.reqData.params.menu_id;
+            data.id = this.branchID+this.reqData.params.menu_id;
 
             return JSONAPI.makeJSONAPI(TYPE_NAME, data);
         }catch(err) {
@@ -157,7 +158,7 @@ class Menus {
 
             //output
             let outputBuf = menusData.menus[menu_id];
-            outputBuf.id = menu_id;
+            outputBuf.id = this.branchID+menu_id;
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
             return output;   
         }
@@ -189,7 +190,7 @@ class Menus {
 
             //output
             let outputBuf = dbOutput.menus[menu_id];
-            outputBuf.id = menu_id;
+            outputBuf.id = this.branchID+menu_id;
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
             return output;
         }
