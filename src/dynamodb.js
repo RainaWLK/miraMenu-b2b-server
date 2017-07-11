@@ -18,7 +18,8 @@ async function queryDataById(tableName, id){
         },
         ExpressionAttributeValues: {
             ":id":id
-        }
+        },
+        ReturnConsumedCapacity: "TOTAL"
     };
 
     try {
@@ -61,7 +62,9 @@ async function queryData(params) {
 
     try {
         let data = await docClient.query(params).promise();
-        console.log(data);
+        //console.log(data);
+        console.log("Consumed Capacity:");
+        console.log(data.ConsumedCapacity);
         return data.Items;
     }
     catch(err){
@@ -72,6 +75,8 @@ async function queryData(params) {
 async function scanDataByFilter(params){
     try {
         let data = await docClient.scan(params).promise();
+        console.log("Consumed Capacity:");
+        console.log(data.ConsumedCapacity);
         return data.Items;
     }
     catch(err){

@@ -54,7 +54,8 @@ class Branches {
                 },
                 ExpressionAttributeValues: {
                      ":b": restaurant_id 
-                }
+                },
+                ReturnConsumedCapacity: "TOTAL"
             };
             let dataArray = await db.scanDataByFilter(params);
             dataArray.map(obj => {
