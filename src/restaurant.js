@@ -9,9 +9,9 @@ import { sprintf } from 'sprintf-js';
 
 const TABLE_NAME = "Restaurants";
 let CONTROL_TABLE_NAME = "Control";
-if(process.env.NODE_ENV == 'development'){
+//if(process.env.NODE_ENV == 'development'){
 	CONTROL_TABLE_NAME = "Control-dev";
-}
+//}
 
 const USERINFO_TABLE_NAME = "Users";
 
@@ -31,9 +31,6 @@ class Restaurant {
 
 
     getNewID(controlData) {
-        console.log(typeof controlData);
-
-
         let idList = Utils.parseID(controlData.value);
 
         let maxID = parseInt(idList.r, 10)+1;
@@ -52,6 +49,51 @@ class Restaurant {
     }
 
     async get() {
+        //let userData;
+        let identityId = this.reqData.userinfo.cognitoIdentityId;
+
+        /*try {
+            userData = await db.queryById(USERINFO_TABLE_NAME, identityId);
+            console.log(userData);
+        }
+        catch(err){ //new user
+            userData = {
+                id: identityId,
+                restaurants: []
+            }
+        }*/
+
+        try {
+            //scan table Restaurant (bug: must merged into dynamodb.js)
+            //let restaurant_id = this.reqData.params.restaurant_id.toString();
+            var params = {
+                TableName: TABLE_NAME,
+                //ProjectionExpression: "#yr, title, info.rating",
+                FilterExpression: "#a1.#a2 = :b",
+                ExpressionAttributeNames: {
+                    "#a1": "restaurantControl",
+                    "#a2": "owner"
+                },
+                ExpressionAttributeValues: {
+                     ":b": identityId 
+                },
+                ReturnConsumedCapacity: "TOTAL"
+            };
+            let dataArray = await db.scanDataByFilter(params);
+            console.log(dataArray);
+            dataArray.map(obj => {
+                delete obj.restaurantControl;
+            });
+
+            return JSONAPI.makeJSONAPI(this.reqData.paths[3], dataArray);   
+        }catch(err) {
+            console.log("==restaurant get err!!==");
+            console.log(err);
+            throw err;
+        } 
+    }
+
+    /*async get() {
         try {
             let msg = await db.scan(TABLE_NAME);
             msg.map(obj => {
@@ -63,7 +105,7 @@ class Restaurant {
             console.log(err);
             throw err;
         }
-    }
+    }*/
 
     async getByID() {
         try {
@@ -78,6 +120,9 @@ class Restaurant {
 
     async create(payload) {
         let controlData;
+        //let userData;
+        let identityId = this.reqData.userinfo.cognitoIdentityId;
+
         try {
             controlData = await db.queryById(CONTROL_TABLE_NAME, "RestaurantsMaxID");
         }
@@ -90,13 +135,25 @@ class Restaurant {
             }
         }
 
+        /*try {
+            userData = await db.queryById(USERINFO_TABLE_NAME, identityId);
+            console.log("======1=======");
+            console.log(userData);
+        }
+        catch(err){ //new user
+            userData = {
+                id: identityId,
+                restaurants: []
+            }
+        }*/
+
         try {
             let data = JSONAPI.parseJSONAPI(payload);
             data.restaurantControl = JSON.parse(JSON.stringify(new RestaurantControl()));   //bug
             let restaurant_id = this.getNewID(controlData);
 
             data.id = restaurant_id;
-           // data.owner = this.reqData.userinfo.cognitoIdentityId;
+            data.restaurantControl.owner = identityId;
 
             //update restaurant
             await db.post(TABLE_NAME, data);
@@ -104,11 +161,11 @@ class Restaurant {
             //update control data
             controlData.value = restaurant_id
             await db.put(CONTROL_TABLE_NAME, controlData);
-
-            //update user data
-            //let userData = await db.queryById(USERINFO_TABLE_NAME, data.owner);
-            //console.log(userData);
 			
+            //update user data
+            //userData.restaurants.push(restaurant_id);
+            //await db.post(USERINFO_TABLE_NAME, userData);
+
             //output
             delete data.restaurantControl;
             let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], data);

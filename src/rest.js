@@ -39,7 +39,7 @@ function makeReqData(req) {
 		//fake user info
 		reqData.userinfo.cognitoAuthenticationProvider = "jumi.co";
 		reqData.userinfo.cognitoAuthenticationType = "authenticated";
-		reqData.userinfo.cognitoIdentityId = 'us-east-1:4dff44c5-29e8-4c1d-a751-8c013c088d02';
+		reqData.userinfo.cognitoIdentityId = 'us-east-1:db063670-27cb-42a8-a6da-97fe436af727';
 		reqData.userinfo.cognitoIdentityPoolId = 'us-east-1:4ad17068-f8a4-4fed-aaf7-55e7e9a2e7ac';		
     }
     else {
@@ -182,8 +182,8 @@ class Rest {
 		}
 		else {
 			await this.app.get(uri, action, {
-				//authorizationType: 'AWS_IAM',
-				//invokeWithCredentials: true,
+				authorizationType: 'AWS_IAM',
+				invokeWithCredentials: true,
 				success: { code: 200 }
 			});
 		}
@@ -210,8 +210,8 @@ class Rest {
 		}
 		else {
 			await this.app.post(uri, action, {
-				//authorizationType: 'AWS_IAM',
-				//invokeWithCredentials: true,
+				authorizationType: 'AWS_IAM',
+				invokeWithCredentials: true,
 				success: { code: 201 }
 			});
 		}
@@ -238,8 +238,8 @@ class Rest {
 		}
 		else {
 			await this.app.patch(uri, action, {
-				//authorizationType: 'AWS_IAM',
-				//invokeWithCredentials: true,
+				authorizationType: 'AWS_IAM',
+				invokeWithCredentials: true,
 				success: { code: 200 }
 			});
 		}
@@ -266,8 +266,8 @@ class Rest {
 		}
 		else {
 			await this.app.delete(uri, action, {
-				//authorizationType: 'AWS_IAM',
-				//invokeWithCredentials: true,
+				authorizationType: 'AWS_IAM',
+				invokeWithCredentials: true,
 				success: { code: 204 }
 			});
 		}
