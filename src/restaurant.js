@@ -9,10 +9,6 @@ import { sprintf } from 'sprintf-js';
 
 const TABLE_NAME = "Restaurants";
 let CONTROL_TABLE_NAME = "Control";
-//if(process.env.NODE_ENV == 'development'){
-	CONTROL_TABLE_NAME = "Control-dev";
-//}
-
 const USERINFO_TABLE_NAME = "Users";
 
 function RestaurantControl() {
