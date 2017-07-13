@@ -1,5 +1,6 @@
 let ApiBuilder = require('claudia-api-builder');
 //import { makeInfo } from './image.js';
+let authorizer = require('./authorizer');
 
 let DEBUG = 0;
 if(process.env.NODE_ENV == 'development'){
@@ -54,7 +55,6 @@ function makeReqData(req) {
 		reqData.userinfo.cognitoIdentityPoolId = req.context.cognitoIdentityPoolId;
     }
     reqData.body = req.body;
-	console.log(reqData);
 
     return reqData;
 }
@@ -168,6 +168,7 @@ class Rest {
 		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
+				await authorizer.permissionCheck(reqData);
 				let resultMsg = await callback(reqData);
 				return self.responseOK(res, resultMsg);
 			}
@@ -196,6 +197,7 @@ class Rest {
 		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
+				await authorizer.permissionCheck(reqData);
 				let resultMsg = await callback(reqData);
 				return self.responseOK(res, resultMsg);
 			}
@@ -224,6 +226,7 @@ class Rest {
 		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
+				await authorizer.permissionCheck(reqData);
 				let resultMsg = await callback(reqData);
 				return self.responseOK(res, resultMsg);
 			}
@@ -252,6 +255,7 @@ class Rest {
 		let action = async (req, res) => {
 			let reqData = makeReqData(req);
 			try {
+				await authorizer.permissionCheck(reqData);
 				await callback(reqData);
 				return self.responseOK(res, "");
 			}

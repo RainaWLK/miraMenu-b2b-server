@@ -45,19 +45,7 @@ class Restaurant {
     }
 
     async get() {
-        //let userData;
         let identityId = this.reqData.userinfo.cognitoIdentityId;
-
-        /*try {
-            userData = await db.queryById(USERINFO_TABLE_NAME, identityId);
-            console.log(userData);
-        }
-        catch(err){ //new user
-            userData = {
-                id: identityId,
-                restaurants: []
-            }
-        }*/
 
         try {
             //scan table Restaurant (bug: must merged into dynamodb.js)
@@ -116,7 +104,7 @@ class Restaurant {
 
     async create(payload) {
         let controlData;
-        //let userData;
+        let userData;
         let identityId = this.reqData.userinfo.cognitoIdentityId;
 
         try {
@@ -131,7 +119,7 @@ class Restaurant {
             }
         }
 
-        /*try {
+        try {
             userData = await db.queryById(USERINFO_TABLE_NAME, identityId);
             console.log("======1=======");
             console.log(userData);
@@ -141,7 +129,7 @@ class Restaurant {
                 id: identityId,
                 restaurants: []
             }
-        }*/
+        }
 
         try {
             let data = JSONAPI.parseJSONAPI(payload);
@@ -159,8 +147,8 @@ class Restaurant {
             await db.put(CONTROL_TABLE_NAME, controlData);
 			
             //update user data
-            //userData.restaurants.push(restaurant_id);
-            //await db.post(USERINFO_TABLE_NAME, userData);
+            userData.restaurants.push(restaurant_id);
+            await db.post(USERINFO_TABLE_NAME, userData);
 
             //output
             delete data.restaurantControl;
