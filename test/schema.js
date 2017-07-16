@@ -45,8 +45,6 @@ function getSchema(method, URI){
 function checkSchema(res, method, URI) {
   let responseSchema = getSchema(method, URI);
 
-  res.should.have.status(200);
-
   if(responseSchema != '') {
       res.body.should.be.validWithSchema(responseSchema);
   }

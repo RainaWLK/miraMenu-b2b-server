@@ -11,4 +11,4 @@ chai.use(chaiHttp);
 
 exports.chai = chai;
 //exports.server = 'http://localhost:8081';
-exports.server = 'https://3rispme45c.execute-api.us-east-1.amazonaws.com/latest';
+exports.server = 'https://aoboid0wkl.execute-api.us-east-1.amazonaws.com/production';

@@ -9,3 +9,16 @@
     "module": "build/app"
   }
 }
+
+//develop
+{
+  "lambda": {
+    "role": "myrestaurant-executor",
+    "name": "myrestaurant-dev",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "42oh9r8qcg",
+    "module": "build/app"
+  }
+}

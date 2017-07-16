@@ -1,4 +1,5 @@
 import CommonTest from './common.js';
+let _ = require('lodash');
 
 let sampleData = {
     "type": "restaurants",
@@ -6,7 +7,7 @@ let sampleData = {
         "social": {
             "facebook": "htttps://www.facebook.com/testraman"
         },
-        "photos": {},
+        "photo": {},
         "location": {
             "continent": "asia",
             "country": "japan",
@@ -16,9 +17,7 @@ let sampleData = {
             "tel": "012-3345678",
             "state": "tokyo"
         },
-        "menus": {},
         "category": "japanese",
-        "branch_ids": [],
         "name": "啾咪拉麵",
         "desc": "This is a auto test data: Raman"
     }
@@ -28,49 +27,42 @@ let sample = {"data": sampleData};
 
 function restaurantTest() {
   let URI = '/restaurants';
+  let URI_ID = URI+"/{restaurant_id}";
   let op = new CommonTest(URI);
+  let id;
 
   describe(URI+' test', () => {
-
     describe('CRUD test', () => {
-      let id;
-      it('set data: POST ' + URI, (done) => {
-        let input = sample;
 
-        op.checkOperation('POST', URI, input).then((res) => {
-          id = res.body.data.id;
-          done(); 
-        }).catch(err => {
-          done(err);
-        });
-      });
+    it('set data: POST ' + URI, async () => {
+      let input = _.cloneDeep(sample);
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.social.facebook = "囧";
 
-      it('check data saved: GET '+URI, (done) => {
-        op.checkOperation('GET', URI, null, null).then((res) => {
-          res.body.data.should.include.something.that.have.deep.property('id', id);
-          done();
-        }).catch(err => {
-          done(err);
-        });
-      });
+      let res = await op.checkOperation('POST', URI, input, output);
+      id = res.body.data.id;
+      URI_ID = URI+"/"+id;
+    });
 
-      it('delete data: DELETE '+URI, (done) => {
-	 let URI_ID = URI + "/" +id;
-        op.checkOperation('DELETE', URI_ID, null).then((res) => {          
-          done();
-        }).catch(err => {
-          done(err);
-        });
-      });
+    it('check data saved: GET '+URI, async () => {
+      let output = _.cloneDeep(sample);
+      output.data.id = id;
+      //output.data.attributes.location.tel = "012-3345678";
+      //output.data.attributes.desc = "囧";
 
-      it('check data deleted: GET '+URI, (done) => {
-        op.checkOperation('GET', URI, null, null).then((res) => {
-          res.body.data.should.not.include.something.that.have.deep.property('id', id);
-          done();
-        }).catch(err => {
-          done(err);
-        })
-      });
+      let res = await op.checkOperation('GET', URI, null, null);
+      //res.body.data.should.include.something.that.have.deep.property('id', id);
+      res.body.data.should.include.something.that.deep.equal(output.data);
+    });
+
+    it('delete data: DELETE '+URI_ID, async () => {
+      await op.checkOperation('DELETE', URI_ID, null, "");
+
+      //check
+      let res = await op.pureOperation('GET', URI_ID, null);
+      res.should.have.status(404);
+    });
+
 
     });
   });
@@ -83,64 +75,50 @@ function restaurantByIDTest() {
   let id;
 
   describe(URI+'/{id} test', () => {
-    it('set data: POST ' + URI, (done) => {
-        let input = sample;
+    it('set data: POST ' + URI, async () => {
+      let input = _.cloneDeep(sample);
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.social.facebook = "囧";
+      let res = await op.checkOperation('POST', URI, input, output);
+      id = res.body.data.id;
+      URI_ID = URI+"/"+id;
+    });
 
-        op.checkOperation('POST', URI, input).then((res) => {
-          id = res.body.data.id;
-	   URI_ID = URI+"/"+id;
-          done(); 
-        }).catch(err => {
-          done(err);
-        });
-      });
+    it('check data saved: GET '+URI_ID, async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
 
-    it('check data saved: GET '+URI_ID, (done) => {
-      op.checkOperation('GET', URI_ID, null, null).then((res) => {
-        res.body.data.should.have.deep.property('id', id);
-        done();
-      }).catch(err => {
-        done(err);
-      });
+      let res = await op.checkOperation('GET', URI_ID, null, output);
+      res.body.data.should.have.deep.property('id', id);
     });
 	
-    it('set data: PATCH ' + URI_ID, (done) => {
-	let input = sample;
-	input.data.attributes.social["twitch"] = "https://www.twitch.tv/HNRT";
+    it('set data: PATCH ' + URI_ID, async () => {
+      let input = _.cloneDeep(sample);
+	    input.data.attributes.social["twitch"] = "https://www.twitch.tv/HNRT";
 
-        op.checkOperation('PATCH', URI_ID, input).then((res) => {
-          done(); 
-        }).catch(err => {
-          done(err);
-        });
-    });
-	
-    it('check data saved: GET '+URI_ID, (done) => {
-      op.checkOperation('GET', URI_ID, null, null).then((res) => {
-        res.body.data.should.have.deep.property('id', id);
-	 res.body.data.should.have.deep.property('attributes.social.twitch', 'https://www.twitch.tv/HNRT');
-        done();
-      }).catch(err => {
-        done(err);
-      });
+      let res = await op.checkOperation('PATCH', URI_ID, input, input);
+      res.body.data.should.have.deep.property('id', id);
+
+      //check
+      res = await op.checkOperation('GET', URI_ID, null, input);
+      res.body.data.should.have.deep.property('id', id);
     });
 
-    it('delete data: DELETE '+URI_ID, (done) => {
-      op.checkOperation('DELETE', URI_ID, null).then((res) => {
-        return op.pureOperation('GET', URI_ID, null);
-        res.should.have.status(404);
-      }).then((res) => {
-        done();
-      }).catch(err => {
-        done(err);
-      });
+    it('delete data: DELETE '+URI_ID, async () => {
+      await op.checkOperation('DELETE', URI_ID, null, "");
+
+      //check
+      let res = await op.pureOperation('GET', URI_ID, null);
+      res.should.have.status(404);
     });
+
 
   });
 }
 
+
 function go() {
-  restaurantTest();
   restaurantByIDTest();
+  restaurantTest();
 };
 exports.go = go;

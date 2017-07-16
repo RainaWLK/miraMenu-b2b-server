@@ -1,5 +1,6 @@
 let env = require('./enviroment.js');
 let schemaTest = require('./schema.js');
+let _ = require('lodash');
 let chai = env.chai;
 
 class CommonTest {
@@ -36,64 +37,56 @@ class CommonTest {
     return req;
   }
 
-  checkOperation(op ,uri, input, expectOutput) {
-    return new Promise((resolve, reject) => {
+  async checkOperation(op ,uri, input, expectOutput) {
+    try{
       console.log("======================");
       console.log(op + " " + uri);
-      this.sendRequest(op, uri, input).end((err, res) => {
-        if(err) {
-          //console.log(err);
-          reject(err);
+
+      let res = await this.sendRequest(op, uri, input);
+      let output = _.cloneDeep(res.body);
+      console.log("=="+op+"==");
+      console.log(output);
+
+      res.statusCode.should.within(200,210);
+      schemaTest.checkSchema(res, op, this.orgURI);
+
+      if(expectOutput) {
+        if(Array.isArray(expectOutput)) {
+          for(let row in expectOutput) {
+            for(let i in expectOutput[i]) {
+              output[row].should.have.property(i).eql(expectOutput[i]);
+            }
+          }
         }
         else {
-          console.log("=="+op+"==");
-          console.log(res.body);
-
-          try {
-            //console.log("checkSchema:"+this.orgURI);
-            schemaTest.checkSchema(res, op, this.orgURI);
+          if((typeof output.data == 'object')&&
+            (typeof output.data.id != 'undefined')){
+            delete output.data.id;
           }
-          catch(err) {
-            reject(err);
-            return;
-          }
-          
-
-          if(expectOutput) {
-            if(Array.isArray(expectOutput)) {
-              for(let row in expectOutput) {
-                for(let i in expectOutput[i]) {
-                  res.body[row].should.have.property(i).eql(expectOutput[i]);
-                }
-              }
-            }
-            else {
-              for(let i in expectOutput[i]) {
-                res.body.should.have.property(i).eql(expectOutput[i]);
-              }            
-            }
-
-          }
-          resolve(res);
+          output.should.deep.equal(expectOutput);         
         }
-      });
-    });
+
+      }
+
+      return res;
+    }
+    catch(err){
+      //console.log("checkOperation err");
+      //console.log(err);
+      throw err;
+    }
   }
 
-  pureOperation(op ,uri, input) {
-    return new Promise((resolve, reject) => {
-      this.sendRequest(op, uri, input).end((err, res) => {
-        if(err) {
-          //console.log(err);
-          resolve(err);
-        }
-        else {
-          console.log("=囧="+op+"=囧=");
-          console.log(res.body);
-          resolve(res);
-        }
-      });
-    });
+  async pureOperation(op ,uri, input) {
+    try{
+      let res = await this.sendRequest(op, uri, input);
+      console.log("=囧="+op+"=囧=");
+      console.log(res.body);
+      return res;
+    }
+    catch(err){
+      return err;
+    }
   }
 }
 
