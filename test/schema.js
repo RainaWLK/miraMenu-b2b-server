@@ -54,7 +54,7 @@ function checkSchema(res, method, URI) {
 
 before(done => {
   // load first instance manually
-  fs.readFile('./test/schema.json', (err, data) => {
+  fs.readFile('./test/Project_X_API_schema.json', (err, data) => {
     mySchema = JSON.parse(data.toString());
     //console.log(mySchema);
     chai.ajv.addSchema(mySchema, "test_schema");
