@@ -64,7 +64,7 @@ class Branches {
                 //table
                 let tableArray = [];
                 for(let table_id in obj.tables){
-                    tableArray.push(table_id);
+                    tableArray.push(obj.tables[table_id]);
                 }
                 obj.tables = tableArray;
             });
@@ -85,7 +85,7 @@ class Branches {
             //table
             let tableArray = [];
             for(let table_id in data.tables){
-                tableArray.push(table_id);
+                tableArray.push(data.tables[table_id]);
             }
             data.tables = tableArray;
 
