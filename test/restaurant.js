@@ -1,6 +1,8 @@
 import CommonTest from './common.js';
 let _ = require('lodash');
 
+let URI = '/restaurants';
+
 let sampleData = {
     "type": "restaurants",
     "attributes": {
@@ -26,7 +28,6 @@ let sampleData = {
 let sample = {"data": sampleData};
 
 function restaurantTest() {
-  let URI = '/restaurants';
   let URI_ID = URI+"/{restaurant_id}";
   let op = new CommonTest(URI);
   let id;
@@ -34,54 +35,41 @@ function restaurantTest() {
   describe(URI+' test', () => {
     describe('CRUD test', () => {
 
-    it('set data: POST ' + URI, async () => {
-      let input = _.cloneDeep(sample);
-      let output = _.cloneDeep(sample);
-      //output.data.attributes.social.facebook = "囧";
+      before(async () => {
+        id = await prepareTest();
+        URI_ID = URI+"/"+id;
+        return;
+      });
 
-      let res = await op.checkOperation('POST', URI, input, output);
-      id = res.body.data.id;
-      URI_ID = URI+"/"+id;
-    });
+      it('check data saved: GET '+URI, async () => {
+        let output = _.cloneDeep(sample);
+        output.data.id = id;
+        //output.data.attributes.location.tel = "012-3345678";
+        //output.data.attributes.desc = "囧";
 
-    it('check data saved: GET '+URI, async () => {
-      let output = _.cloneDeep(sample);
-      output.data.id = id;
-      //output.data.attributes.location.tel = "012-3345678";
-      //output.data.attributes.desc = "囧";
+        let res = await op.checkOperation('GET', URI, null, null);
+        //res.body.data.should.include.something.that.have.deep.property('id', id);
+        res.body.data.should.include.something.that.deep.equal(output.data);
+      });
 
-      let res = await op.checkOperation('GET', URI, null, null);
-      //res.body.data.should.include.something.that.have.deep.property('id', id);
-      res.body.data.should.include.something.that.deep.equal(output.data);
-    });
-
-    it('delete data: DELETE '+URI_ID, async () => {
-      await op.checkOperation('DELETE', URI_ID, null, "");
-
-      //check
-      let res = await op.pureOperation('GET', URI_ID, null);
-      res.should.have.status(404);
-    });
-
-
+      after(async () => {
+        await cleanTest(id);
+        return;
+      });
     });
   });
 }
 
 function restaurantByIDTest() {
-  let URI = '/restaurants';
   let URI_ID = URI+"/{restaurant_id}";
   let op = new CommonTest(URI_ID);
   let id;
 
   describe(URI+'/{id} test', () => {
     it('set data: POST ' + URI, async () => {
-      let input = _.cloneDeep(sample);
-      let output = _.cloneDeep(sample);
-      //output.data.attributes.social.facebook = "囧";
-      let res = await op.checkOperation('POST', URI, input, output);
-      id = res.body.data.id;
+      id = await prepareTest();
       URI_ID = URI+"/"+id;
+      return;
     });
 
     it('check data saved: GET '+URI_ID, async () => {
@@ -104,21 +92,45 @@ function restaurantByIDTest() {
       res.body.data.should.have.deep.property('id', id);
     });
 
+
     it('delete data: DELETE '+URI_ID, async () => {
-      await op.checkOperation('DELETE', URI_ID, null, "");
-
-      //check
-      let res = await op.pureOperation('GET', URI_ID, null);
-      res.should.have.status(404);
+      await cleanTest(id);
+      return;
     });
-
 
   });
 }
 
+async function prepareTest(){
+  let op = new CommonTest(URI);
+  let id;
+  let input = _.cloneDeep(sample);
+  let output = _.cloneDeep(sample);
+
+  //output.data.attributes.social.facebook = "囧";
+  let res = await op.checkOperation('POST', URI, input, output);
+  id = res.body.data.id;
+  return id;
+}
+
+async function cleanTest(id){
+  let op = new CommonTest();
+  let URI_ID = URI+"/"+id;
+
+  await op.checkOperation('DELETE', URI_ID, null, "");
+
+  //check
+  let res = await op.pureOperation('GET', URI_ID, null);
+  res.should.have.status(404);
+  return;
+}
 
 function go() {
   restaurantByIDTest();
   restaurantTest();
 };
+
 exports.go = go;
+exports.prepareTest = prepareTest;
+exports.cleanTest = cleanTest;
+
