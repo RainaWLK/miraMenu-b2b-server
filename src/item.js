@@ -160,7 +160,7 @@ class Items {
             //output
             let outputBuf = menusData.items[item_id];
             outputBuf.id = this.branchID+item_id;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
             return output;   
         }
         catch(err) {
@@ -192,7 +192,7 @@ class Items {
             //output
             let outputBuf = dbOutput.items[item_id];
             outputBuf.id = this.branchID+item_id;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
             return output;
         }
         catch(err) {

@@ -6,6 +6,8 @@ import { cloneDeep } from 'lodash';
 const TABLE_NAME = "Branches";
 const RESTAURANT_TABLE_NAME = "Restaurants";
 
+const TYPE_NAME = "branches";
+
 function BranchControl() {
     //contructor() {
         //this.branchesMaxID = "0";
@@ -69,7 +71,7 @@ class Branches {
                 obj.tables = tableArray;
             });
 
-            return JSONAPI.makeJSONAPI(this.reqData.paths[3], dataArray);            
+            return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);            
         }catch(err) {
             console.log("==branch get err!!==");
             console.log(err);
@@ -89,7 +91,7 @@ class Branches {
             }
             data.tables = tableArray;
 
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[3], data);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
             return output;
         }catch(err) {
             throw err;
@@ -118,7 +120,7 @@ class Branches {
 
             //output
             delete data.branchControl;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[3], data);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
             return output;   
         }
         catch(err) {
@@ -148,7 +150,7 @@ class Branches {
 
             //output
             delete dbOutput.branchControl;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[3], dbOutput);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
             return output;   
         }catch(err) {
             console.log(err);

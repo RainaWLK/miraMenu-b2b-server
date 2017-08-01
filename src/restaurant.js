@@ -11,6 +11,8 @@ const TABLE_NAME = "Restaurants";
 let CONTROL_TABLE_NAME = "Control";
 const USERINFO_TABLE_NAME = "Users";
 
+const TYPE_NAME = "restaurants";
+
 function RestaurantControl() {
     //contructor() {
         this.branchesMaxID = "s0";
@@ -69,7 +71,7 @@ class Restaurant {
                 delete obj.restaurantControl;
             });
 
-            return JSONAPI.makeJSONAPI(this.reqData.paths[3], dataArray);   
+            return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);   
         }catch(err) {
             console.log("==restaurant get err!!==");
             console.log(err);
@@ -95,7 +97,7 @@ class Restaurant {
         try {
             let data = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
             delete data.restaurantControl;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], data);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
             return output;
         }catch(err) {
             throw err;
@@ -152,7 +154,7 @@ class Restaurant {
 
             //output
             delete data.restaurantControl;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], data);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
             return output;    
         }catch(err) {
             throw err;
@@ -174,7 +176,7 @@ class Restaurant {
 
             //output
             delete dbOutput.restaurantControl;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[1], dbOutput);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
             return output;
         }catch(err) {
             console.log(err);

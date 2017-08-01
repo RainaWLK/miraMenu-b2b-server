@@ -167,7 +167,7 @@ class Menus {
             //output
             let outputBuf = menusData.menus[menu_id];
             outputBuf.id = this.branchID+menu_id;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
             return output;   
         }
         catch(err) {
@@ -199,7 +199,7 @@ class Menus {
             //output
             let outputBuf = dbOutput.menus[menu_id];
             outputBuf.id = this.branchID+menu_id;
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputBuf);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
             return output;
         }
         catch(err) {

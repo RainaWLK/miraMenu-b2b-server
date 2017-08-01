@@ -6,6 +6,8 @@ import { sprintf } from 'sprintf-js';
 const TABLE_NAME = "Branches";
 const RESTAURANT_TABLE_NAME = "Restaurants";
 
+const TYPE_NAME = "tables";
+
 /*function TableControl() {
     //contructor() {
         //this.branchesMaxID = "0";
@@ -52,7 +54,7 @@ class Tables {
             /*dataArray.map(obj => {
                 delete obj.branchControl;
             });*/
-            return JSONAPI.makeJSONAPI(this.reqData.paths[5], dataArray);            
+            return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);            
         }catch(err) {
             console.log("==branch get err!!==");
             console.log(err);
@@ -73,7 +75,7 @@ class Tables {
             }
             data.id = branchFullID+this.reqData.params.table_id;
 
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], data);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
             return output;
         }catch(err) {
             throw err;
@@ -105,7 +107,7 @@ class Tables {
             let outputRawData = dbOutput.tables[table_id];
             outputRawData.id = branchFullID+table_id;
 
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputRawData);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputRawData);
             return output;
         }
         catch(err) {
@@ -138,7 +140,7 @@ class Tables {
             let outputRawData = dbOutput.tables[table_id];
             outputRawData.id = branchFullID+table_id;
 
-            let output = JSONAPI.makeJSONAPI(this.reqData.paths[5], outputRawData);
+            let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputRawData);
             return output;
         }
         catch(err) {
