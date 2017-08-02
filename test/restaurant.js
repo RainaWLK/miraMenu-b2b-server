@@ -121,7 +121,8 @@ async function cleanTest(id){
 
   //check
   let res = await op.pureOperation('GET', URI_ID, null);
-  res.should.have.status(404);
+  //res.should.have.status(404);
+  res.statusCode.should.eql(404);
   return;
 }
 

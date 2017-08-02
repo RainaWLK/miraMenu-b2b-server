@@ -1,15 +1,26 @@
 let env = require('./enviroment.js');
 let schemaTest = require('./schema.js');
 let _ = require('lodash');
+let request = require('supertest');
+
 let chai = env.chai;
+
+//aws
+let aws4  = require('aws4');
+
+
 
 class CommonTest {
   constructor(OrgURI) {
     this.orgURI = OrgURI;
   }
 
+  setAWSCredentials(){
+    
+  }
+
   sendRequest(op, uri, body) {
-    let req = chai.request(env.server);
+    let req = request(env.server);
 
     switch(op) {
       case 'GET':
@@ -28,11 +39,36 @@ class CommonTest {
         req = req.delete(uri);
         break;
     }
+    
+    //aws
+    let opts = {
+      method: op,
+      hostname: 'aoboid0wkl.execute-api.us-east-1.amazonaws.com',
+      path: '/development'+uri,
+      service: 'execute-api',
+      region: 'us-east-1'
+    };
+    if((typeof body !== 'undefined')&&(body !== null)){
+      opts.headers = {
+        'Content-Type': 'application/json'
+      };
+      opts.body = JSON.stringify(body);
+    }
 
-    //req = req.set('mx-api-token', env.token);
-    if(typeof body != 'undefined'){
+
+    aws4.sign(opts, env.credentials);
+    //console.log("======sign======");
+    //console.log(opts);
+    req = req.set('Host', opts.headers['Host']);
+    req = req.set('X-Amz-Date', opts.headers['X-Amz-Date']);
+    req = req.set('Authorization', opts.headers.Authorization);
+    req = req.set('X-amz-security-token', opts.headers['X-Amz-Security-Token']);
+  
+    if((typeof body !== 'undefined')&&(body !== null)){
+      req = req.set('Content-type', opts.headers['Content-Type']);
       req = req.send(body);
     }
+    //console.log(req);
 
     return req;
   }
@@ -71,8 +107,8 @@ class CommonTest {
       return res;
     }
     catch(err){
-      //console.log("checkOperation err");
-      //console.log(err);
+      console.log("checkOperation err");
+      console.log(err);
       throw err;
     }
   }

@@ -132,7 +132,7 @@ async function cleanTest(idArray){
 
   //check
   let res = await op.pureOperation('GET', URI_ID, null);
-  res.should.have.status(404);
+  res.statusCode.should.eql(404);
 
   //delete parent
   await restaurantTest.cleanTest("r"+idArray.r);
