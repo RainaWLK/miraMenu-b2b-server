@@ -1,6 +1,7 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
+let Tables = require('./table.js');
 import { cloneDeep } from 'lodash';
 
 const TABLE_NAME = "Branches";
@@ -66,7 +67,7 @@ class Branches {
                 //table
                 let tableArray = [];
                 for(let table_id in obj.tables){
-                    tableArray.push(obj.tables[table_id]);
+                    tableArray.push(table_id);
                 }
                 obj.tables = tableArray;
             });
@@ -87,7 +88,7 @@ class Branches {
             //table
             let tableArray = [];
             for(let table_id in data.tables){
-                tableArray.push(data.tables[table_id]);
+                tableArray.push(table_id);
             }
             data.tables = tableArray;
 
@@ -111,6 +112,24 @@ class Branches {
 
             data.id = control.restaurant_id+control.branch_id;
 
+            //table
+            let tableFunc = new Tables.main(this.reqData);
+            let tableObj = {};
+            let tableArray = [];
+            for(let i in data.tables){
+                let tableData = data.tables[i];
+
+                let table_id = tableFunc.getNewID(data);
+                if(typeof tableData.id != 'undefined'){
+                    delete tableData.id;
+                }
+                tableObj[table_id] = tableData;
+
+                tableArray.push(id);
+                data.branchControl.tablesMaxID = table_id;
+            }
+            data.tables = tableObj;
+
             await db.post(TABLE_NAME, data);
 
             //update restaurant
@@ -119,6 +138,7 @@ class Branches {
             await db.put(RESTAURANT_TABLE_NAME, restaurantData);
 
             //output
+            data.tables = tableArray;
             delete data.branchControl;
             let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
             return output;   
@@ -145,10 +165,18 @@ class Branches {
             //copy control data
             data.branchControl = cloneDeep(branchData.branchControl);
 
+            //copy table data
+            data.tables = cloneDeep(branchData.tables);
+
             //update
             let dbOutput = await db.put(TABLE_NAME, data);
 
             //output
+            let tableArray = [];
+            for(let table_id in dbOutput.tables){
+                tableArray.push(table_id);
+            }
+            dbOutput.tables = tableArray;
             delete dbOutput.branchControl;
             let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
             return output;   

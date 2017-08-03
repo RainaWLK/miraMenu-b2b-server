@@ -90,7 +90,7 @@ class Tables {
             let data = JSONAPI.parseJSONAPI(payload);
             let table_id = this.getNewID(branchData);
  
-            //data.id = table_id;
+            data.id = table_id;
             //migration
             if(typeof branchData.tables == 'undefined'){
                 branchData.tables = {};

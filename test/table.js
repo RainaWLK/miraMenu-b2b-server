@@ -13,7 +13,7 @@ let sampleData = {
       "name": "Table 001",
       "table_desc": "1號桌",
       "availability": true,
-      "no_seat": 6,
+      "total_seat": 6,
       "type": "square",
       "occupied": false,
       "tag": [
@@ -43,8 +43,8 @@ function tableTest() {
       before(async () => {
         idArray = await prepareTest();
         
-        URI_ID = URI+"/"+"s"+idArray.s;
-        fullid = "r"+idArray.r+"s"+idArray.s;
+        URI_ID = URI+"/"+"t"+idArray.t;
+        fullid = "r"+idArray.r+"s"+idArray.s+"t"+idArray.t;
         return;
       });
 
@@ -76,12 +76,12 @@ function tableByIDTest() {
     op = new CommonTest(URI_ID);
   });
 
-  describe('/restaurants/{restaurant_id}/branches/{branch_id} test', () => {
+  describe(URI_ID+' test', () => {
     it('set data: POST ' + URI, async () => {
       idArray = await prepareTest();
 
-      URI_ID = URI+"/"+"s"+idArray.s;
-      fullid = "r"+idArray.r+"s"+idArray.s;
+      URI_ID = URI+"/"+"t"+idArray.t;
+      fullid = "r"+idArray.r+"s"+idArray.s+"t"+idArray.t;
       return;
     });
 
@@ -94,17 +94,17 @@ function tableByIDTest() {
       res.body.data.should.have.deep.property('id', fullid);
     });
 
-    /*it('set data: PATCH ' + URI_ID, async () => {
+    it('set data: PATCH ' + URI_ID, async () => {
       let input = _.cloneDeep(sample);
-	    input.data.attributes.social["twitch"] = "https://www.twitch.tv/HNRT";
-
+      input.data.attributes['total_seat'] = 200;
+          
       let res = await op.checkOperation('PATCH', URI_ID, input, input);
       res.body.data.should.have.deep.property('id', fullid);
 
       //check
       res = await op.checkOperation('GET', URI_ID, null, input);
       res.body.data.should.have.deep.property('id', fullid);
-    });*/
+    });
 	
     it('delete data: DELETE '+URI_ID, async () => {
       await cleanTest(idArray);
@@ -139,7 +139,7 @@ async function cleanTest(idArray){
 
   //check
   let res = await op.pureOperation('GET', URI_ID, null);
-  res.should.have.status(404);
+  res.statusCode.should.eql(404);
 
   //delete parent
   await branchTest.cleanTest(idArray);
@@ -148,7 +148,7 @@ async function cleanTest(idArray){
 
 function go() {
     tableByIDTest();
-    //tableTest();
+    tableTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;
