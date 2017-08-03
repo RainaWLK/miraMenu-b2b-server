@@ -1631,7 +1631,7 @@
       }
     }
   ],
-  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/memus/{menu_id}": [
+  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}": [
     {
       "meta": {
         "type": "response",
@@ -1693,7 +1693,7 @@
       }
     }
   ],
-  "[PATCH]/restaurants/{restaurant_id}/branches/{branch_id}/memus/{menu_id}": [
+  "[PATCH]/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}": [
     {
       "meta": {
         "type": "response",
@@ -1818,6 +1818,254 @@
     }
   ],
   "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/menus": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "menu_desc": {
+                    "type": "string"
+                  },
+                  "menu_cat": {
+                    "type": "string"
+                  },
+                  "menu_availability": {
+                    "type": "boolean"
+                  },
+                  "items": {
+                    "type": "array"
+                  },
+                  "menu_hours": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "menu_desc",
+                  "menu_cat",
+                  "menu_availability"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/menus/{menu_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "menu_desc": {
+                    "type": "string"
+                  },
+                  "menu_cat": {
+                    "type": "string"
+                  },
+                  "menu_availability": {
+                    "type": "boolean"
+                  },
+                  "items": {
+                    "type": "array"
+                  },
+                  "menu_hours": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "menu_desc",
+                  "menu_cat",
+                  "menu_availability"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[PATCH]/restaurants/{restaurant_id}/menus/{menu_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "menu_desc": {
+                    "type": "string"
+                  },
+                  "menu_cat": {
+                    "type": "string"
+                  },
+                  "menu_availability": {
+                    "type": "boolean"
+                  },
+                  "items": {
+                    "type": "array"
+                  },
+                  "menu_hours": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "menu_desc",
+                  "menu_cat",
+                  "menu_availability"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/menus": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "menu_desc": {
+                      "type": "string"
+                    },
+                    "menu_cat": {
+                      "type": "string"
+                    },
+                    "menu_availability": {
+                      "type": "boolean"
+                    },
+                    "items": {
+                      "type": "array"
+                    },
+                    "menu_hours": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "menu_desc",
+                    "menu_cat",
+                    "menu_availability"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "type",
+                "attributes"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/menus": [
     {
       "meta": {
         "type": "response",
@@ -2189,6 +2437,418 @@
     }
   ],
   "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/items": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "item_desc": {
+                    "type": "string"
+                  },
+                  "item_cat": {
+                    "type": "string"
+                  },
+                  "item_availability": {
+                    "type": "boolean"
+                  },
+                  "item_hours": {
+                    "type": "string"
+                  },
+                  "photo": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimeType": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "width",
+                            "height"
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "desc",
+                        "mimeType",
+                        "size",
+                        "title"
+                      ]
+                    }
+                  },
+                  "ar": {
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "name",
+                  "item_desc",
+                  "item_cat",
+                  "item_availability"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/items/{item_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "item_desc": {
+                    "type": "string"
+                  },
+                  "item_cat": {
+                    "type": "string"
+                  },
+                  "item_availability": {
+                    "type": "boolean"
+                  },
+                  "item_hours": {
+                    "type": "string"
+                  },
+                  "photo": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimeType": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "width",
+                            "height"
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "desc",
+                        "mimeType",
+                        "size",
+                        "title"
+                      ]
+                    }
+                  },
+                  "ar": {
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "name",
+                  "item_desc",
+                  "item_cat",
+                  "item_availability"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[PATCH]/restaurants/{restaurant_id}/items/{item_id}": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "item_desc": {
+                    "type": "string"
+                  },
+                  "item_cat": {
+                    "type": "string"
+                  },
+                  "item_availability": {
+                    "type": "boolean"
+                  },
+                  "item_hours": {
+                    "type": "string"
+                  },
+                  "photo": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimeType": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "width",
+                            "height"
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "desc",
+                        "mimeType",
+                        "size",
+                        "title"
+                      ]
+                    }
+                  },
+                  "ar": {
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "name",
+                  "item_desc",
+                  "item_cat",
+                  "item_availability"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "attributes"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[GET]/restaurants/{restaurant_id}/items": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "item_desc": {
+                      "type": "string"
+                    },
+                    "item_cat": {
+                      "type": "string"
+                    },
+                    "item_availability": {
+                      "type": "boolean"
+                    },
+                    "item_hours": {
+                      "type": "string"
+                    },
+                    "photo": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "desc": {
+                            "type": "string"
+                          },
+                          "mimeType": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "object",
+                            "properties": {
+                              "width": {
+                                "type": "number"
+                              },
+                              "height": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "width",
+                              "height"
+                            ]
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "desc",
+                          "mimeType",
+                          "size",
+                          "title"
+                        ]
+                      }
+                    },
+                    "ar": {
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "item_desc",
+                    "item_cat",
+                    "item_availability"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "type",
+                "attributes"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/items": [
     {
       "meta": {
         "type": "response",

@@ -15,8 +15,34 @@ class CommonTest {
     this.orgURI = OrgURI;
   }
 
-  setAWSCredentials(){
-    
+  setAWSCredentials(req, op, uri, body){
+    let opts = {
+      method: op,
+      hostname: env.aws.host,
+      path: env.aws.stage+uri,
+      service: 'execute-api',
+      region: env.aws.region
+    };
+    if((typeof body !== 'undefined')&&(body !== null)){
+      opts.headers = {
+        'Content-Type': 'application/json'
+      };
+      opts.body = JSON.stringify(body);
+    }
+
+    aws4.sign(opts, env.aws.credentials);
+    //console.log("======sign======");
+    //console.log(opts);
+    req = req.set('Host', opts.headers['Host']);
+    req = req.set('X-Amz-Date', opts.headers['X-Amz-Date']);
+    req = req.set('Authorization', opts.headers.Authorization);
+    req = req.set('X-amz-security-token', opts.headers['X-Amz-Security-Token']);
+
+    if((typeof body !== 'undefined')&&(body !== null)){
+      req = req.set('Content-type', opts.headers['Content-Type']);
+    }
+
+    return req;
   }
 
   sendRequest(op, uri, body) {
@@ -41,31 +67,9 @@ class CommonTest {
     }
     
     //aws
-    let opts = {
-      method: op,
-      hostname: 'aoboid0wkl.execute-api.us-east-1.amazonaws.com',
-      path: '/development'+uri,
-      service: 'execute-api',
-      region: 'us-east-1'
-    };
-    if((typeof body !== 'undefined')&&(body !== null)){
-      opts.headers = {
-        'Content-Type': 'application/json'
-      };
-      opts.body = JSON.stringify(body);
-    }
+    req = this.setAWSCredentials(req, op, uri, body);
 
-
-    aws4.sign(opts, env.credentials);
-    //console.log("======sign======");
-    //console.log(opts);
-    req = req.set('Host', opts.headers['Host']);
-    req = req.set('X-Amz-Date', opts.headers['X-Amz-Date']);
-    req = req.set('Authorization', opts.headers.Authorization);
-    req = req.set('X-amz-security-token', opts.headers['X-Amz-Security-Token']);
-  
     if((typeof body !== 'undefined')&&(body !== null)){
-      req = req.set('Content-type', opts.headers['Content-Type']);
       req = req.send(body);
     }
     //console.log(req);

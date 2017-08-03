@@ -8,12 +8,32 @@ chai.use(require('chai-ajv-json-schema'));
 chai.use(require('chai-things'));
 
 exports.chai = chai;
-//exports.server = 'http://localhost:8081';
-exports.server = 'https://aoboid0wkl.execute-api.us-east-1.amazonaws.com/development';
+
 
 //aws
-exports.credentials = { 
-    accessKeyId: 'ASIAJ2DAI5PD5F3DTNMQ',
-    secretAccessKey: 'o8az/ILIfokBm1GOy4AghUuGweaCDKp9v/BjvTwa',
-    sessionToken: 'AgoGb3JpZ2luED8aCXVzLWVhc3QtMSKAAgFTZF2GCjYQ3u9d/1SYXkk7pXn3Yq2iZu6PV/FmXPuW3zc3247sWEM34k8zKms3HcjUNn2cKrstroDc+9DURr0xYw9Gfo4ttD5bXOCAySyfe09OtfIUAneKOkm+BLcEop7S3N0ubniRdpb5WuChdIXJa6g1R3efwasipPyQVdz7///ZCztd7BG9m4RQZhSwhIhnM3SNV5o8zCom+awM06kjO5mbKYmREsBzm40AjQz3xOsPJP750RVQaiukBBSuNGB66fIbpuBEBHKFG3fIj3iqmBMeDELGNbwwOs99XwAOerI6lkKdLSM5JQMgmhYdSJOx0yt2TKv7HhH/xlejdjUqrwUI1P//////////ARAAGgw1NTI5NTAyNjIyODgiDGGr8MIZUfu7qFtIhSqDBZ/uim1geeMcz/hT+olqB/moWAeSVY7e4NoWW9KfVgBXAhUTIV39cZbv78bA0Ddui7FUR08YFqiS2CGdaeyuwlGGYLyJvFQVcHx/wjRPEc5W+Oqo9h9VJd9LkjA133TTotHVKIjqQUUDssSAvxUep163LnZ38nq5qTVzgtFTEqsZT/ljAHjBHPSp00a6qQBUp/pyjMyyEKTS2IaJz76+ym8sHd/eSAWAPtLFzBrUD8OYlJVO21EX2EY8QcDDTF+sBQM3LvKwVinwLwML0sH5hIZcArhedaFh8Vz5IU08Ss4L0/quc5LsyKabawEmTvVRsR6ctvB5KFIjeDsCyRQZSRCZeaD+Vyb/V2wtHVwdizDyCfTK7HJwlugyWGd8KfzxlUYsGo5EQ2AaCxus+knDjgjXmODok/YeTviggy7lPRTdQOH8+Xc1EQ4tET7HNahiuTbxKPzARUIfXv0yJlWB1ch19rJOknC/vuTimrBCkL6oYjMlA46Op4yl4fyrpWxXGHNBm0OEd19QY8GD1R/8rEdVGG+i6Ru+kMxWT9SVFYuw94jQSzsGhVCMq4d5ok9xEnn9hBiL+xpgleoO2/kL+ux0AqQptKv6F9i7NJhCk2pTyQ1Bxc9C0TCzILxszjAX482MO9z32emidUewKowvw7euuqg9Q2b9+BqYoLzvZuG4MqAHImvKgkIm6y+vROO11LqLcWZPQUK6ToouNOusDCBj5C9op7X6xgZsQo9tE0fJIF3BxgQ3YdVtKHYPS2xevN5zFKhrRQaWWhRRlPAqyqECJGyoULqLQmmZpyENWE2gs82Bx6uSr0zYrOErZrmozOzJY1J8z3r3vS9pucMBzKAXY2MwudqGzAU='
-};
+let aws = {
+  region: 'us-east-1',
+  host: 'aoboid0wkl.execute-api.us-east-1.amazonaws.com',
+  //stage: 'development',
+  stage: 'auth',
+  //credentials: { 
+  //  accessKeyId: 'ASIAJEJDSVKVHO5XXC2A',
+  //  secretAccessKey: 'klp4D0fEITXLKc7dQPp8a5lOlxuRQbFLz4rIpMIc',
+  //  sessionToken: 'AgoGb3JpZ2luEFEaCXVzLWVhc3QtMSKAAhbNLpn5rK6u6RYSi0GpaMYHPCcp0ro2LsoQIg9kNk92WFLZnWiR/bQAJ74sLythAnSp8LYCVTG2V5exCM1NubBf+45heJQNwLkBPqTrag6+8JXOsoX45EpKYO8rwSzYNu4hZ5oA4LDG4aodFwgkzdnMI0Ii3068SjWbX7gUaCUpY2NDYB0gTrjbObL4bl6UM7vRcY/4lpFhPPfkD8hWKVkwnuhxPK7/gV9TuNEAoJMqptpAU9PToHzCObSuEAbXPM1fDXPMWYBjP+2VZUfM+2X7/nlRWTvyY7TqO3jGFXckEG6mEd3Dnz2MHS9zmZ6KAqUN7dhhEXxA6f9mhMsrmvcqrwUI5///////////ARAAGgw1NTI5NTAyNjIyODgiDPsCv34eda/NPB7VGyqDBdkMMELoUvarLknwzw+fZWRWYOSJGZx2BRLeFbsCee7tt9iQqHE56q2THcv3ID6kSOVZAkU9zlyyS9RPyABYEifYiwUDYvI1af+h/aPAzFiXe08js0IOpALs5jC0qEvaSQuozCgbanYymu58Qj4YBt3fyvwxdI8LAx2TF8GsV1M5KbqD7ziXnTNK7koW70pcrg6KhbQTndvwQl034fP16u6PHxRbbCSjdTuunCm8XYolvU5j2AGBu28vg96kp3cfaC5KQguQcen6Xh6C1oVHZWa0k/U1pifoEZ3ANNgq3bnCUku/DyqbY7BOM1o0Ip+PEfIUnZtzvmnlcQD3kEaEoyq4ynxBeUrAYqPcK1AiWgskP8rQy1g7jvWV20MtYBycFujIiv14iRKnj1A6sFoX7LR5y0lECK0oHbpQUohSXmIs3krQfzlRRRrlB8K7fGmcklZSBdLEWmcheoZiFfZciAo0fDc7RsGuF3T7f65sFFez26x+viZIIZ2PPJX1itVS+koSn5RPsmb/XGUZCKQC/5RDn8NRtDY2lSNyeAZZnBm0VRqVM485HJSoUUMI7Op+bsqqTkrW6TBIAX/0Zzsf7659umRPNv/68cQGH+5OeIeoubJwhk/KogJ8l/I17x/AQ71QNYXodqyJdhaUt4X4XyqcC+Ie6tqCgciqrH2ah6LfdYDV9ul5NfyBSU4SsUtOSuN2b0JmuYg+uy7xLWYUFsqoROfW+grgEokoyx+FDzjM1FxNma7fhromkbs+vPJwC6tZjGDZayHfziePQym2UQJdy/ZgVMicG3xaEbLPMoFTVHbsK0w3LVmBDz/S+u0cO7limAczBwFDgpRHnEBjirHJZOIwnOqKzAU='
+  //},
+  credentials: {},
+  cognito: {
+    cognito_user_pool_id: "us-east-1_kNIvkACXW",
+    congito_client_id: '5bkbb4foiaickvetk89ucq4p2c',    //cognito app client id
+    aws_identity_pool_id: 'us-east-1:4ad17068-f8a4-4fed-aaf7-55e7e9a2e7ac'  //federate identity pool
+  },
+  account: {
+    username: 'eee',
+    password: '12345678'
+  }
+}
+
+exports.aws = aws;
+exports.server = 'https://'+aws.host+'/'+aws.stage;
+//exports.server = 'http://localhost:8081';
+
