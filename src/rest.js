@@ -100,7 +100,8 @@ class Rest {
 		this.app = null
 
 		if(DEBUG) {
-		    let express = require('express');
+			let express = require('express');
+			let cors = require('cors');
 		    let bodyParser = require('body-parser');
 		    let db = require('./dynamodb.js');
 			let path = require('path');
@@ -108,6 +109,8 @@ class Rest {
 		    this.app = express();
 		    this.app.use(bodyParser.json({limit: '50mb'}));
 			//this.app.use(bodyParser.raw({limit: '50mb'}));
+			this.app.use(cors());
+			this.app.options("*", cors());
 			this.app.use("/", express.static(path.join(__dirname, '../www')));
 
 		    let server = this.app.listen(8081, () => {

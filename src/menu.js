@@ -1,13 +1,21 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
+let Utils = require('./utils.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
+let S3 = require('./s3');
 
 const BRANCH_TABLE_NAME = "Branches";
 const RESTAURANT_TABLE_NAME = "Restaurants";
 const TABLE_NAME = "Menus";
 
 const TYPE_NAME = "menus";
+
+const PHOTO_TMP_TABLE_NAME = "photo_tmp";
+
+function MenuControl() {
+  this.photoMaxID = "p000";
+}
 
 class Menus {
     constructor(reqData){
@@ -73,12 +81,14 @@ class Menus {
         for(let menu_id in restaurantMenuData) {
             let data = restaurantMenuData[menu_id];
             data.id = this.restaurantID+menu_id;
+            data.photos = Utils.objToArray(data.photos);
             dataArray.push(data);
         }
 
         for(let menu_id in branchMenuData) {
             let data = branchMenuData[menu_id];
             data.id = this.branchID+menu_id;
+            data.photos = Utils.objToArray(data.photos);
             dataArray.push(data);
         }
 

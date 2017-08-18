@@ -3,6 +3,7 @@ let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
 let Tables = require('./table.js');
 import { cloneDeep } from 'lodash';
+let S3 = require('./s3');
 
 const TABLE_NAME = "Branches";
 const RESTAURANT_TABLE_NAME = "Restaurants";
@@ -34,14 +35,6 @@ class Branches {
 
         return "s"+maxID.toString();
     }
-
-    /*getNewID(restaurantData) {
-        console.log('==getNewID==');
-        console.log(restaurantData);
-        let maxID = parseInt(restaurantData.restaurantControl.branchesMaxID, 16) + 1;
-        console.log(maxID);
-        return maxID.toString();
-    }*/
 
     async get() {
         try {

@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MyUpload</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  //
+  // initialize
+  //var UPLOAD_SITE = "https://vuregbibtj.execute-api.us-east-1.amazonaws.com/latest/s3?key=";
+  //var UPLOAD_SITE = "https://wyq60tx4ui.execute-api.us-east-1.amazonaws.com/latest/restaurants/";
+  //var UPLOAD_SITE = "http://localhost:8081/restaurants/20170003/pictures";
+  let UPLOAD_SITE = "http://localhost:8081/restaurants/r20170041/items/i002/photos";
+  let selectedFile;
+
+  $(document).ready(() => {
+    Init();
+
+    $("#submitbutton").on('click', () => {
+      for(let i in selectedFile){
+        getPresignedUrl(selectedFile[i]);
+      }
+    });
+  });
+
+  function Init() {
+    var fileselect = document.getElementById("fileselect");
+    var filedrag = document.getElementById("filedrag");
+    var submitbutton = document.getElementById("submitbutton");
+
+    // file select
+    fileselect.addEventListener("change", FileSelectHandler, false);
+
+    // is XHR2 available?
+    var xhr = new XMLHttpRequest();
+    if (xhr.upload) {
+    
+      // file drop
+      //filedrag.addEventListener("dragover", FileDragHover, false);
+      //filedrag.addEventListener("dragleave", FileDragHover, false);
+      //filedrag.addEventListener("drop", FileSelectHandler, false);
+      //filedrag.style.display = "block";
+      
+      // remove submit button
+      //submitbutton.style.display = "none";
+    }
+
+  }
+
+  function FileSelectHandler(e) {
+    // cancel event and hover styling
+    //FileDragHover(e);
+
+    // fetch FileList object
+    var files = e.target.files || e.dataTransfer.files;
+
+    // process all File objects
+    selectedFile = new Array();
+    for (var i = 0, f; f = files[i]; i++) {
+      selectedFile.push(f);
+      ParseFile(f);
+    }
+    $("#submitbutton").prop('disabled', false);
+
+  }
+
+  function getPresignedUrl(file){
+    /*let body = {
+      "data": {
+        "type": "photos",
+        "attributes": {
+          "title": "steak",
+          "desc": "prime rib-eye",
+          "mimetype": file.type,
+          "size": {
+            "width": 1664,
+            "height": 2496
+          },
+          "filesize": file.size
+        }
+      }
+    };*/
+    let body = {
+      "data": {
+        "type": "photos",
+        "attributes": {
+          "mimetype": file.type
+        }
+      }
+    };
+
+    $.ajax({
+      url: UPLOAD_SITE,
+      type: "POST",
+      dataType: "json",
+      contentType: "application/json; charset=uth-8",
+      data: JSON.stringify(body)
+    }).done(res => {
+      let signedrequest = res.data.attributes.signedrequest;
+      console.log(signedrequest);
+      UploadRawFile(file, signedrequest);
+    }).fail(err => {
+      console.log(err);
+    });
+  }
+
+  function UploadRawFile(file, url) {
+    console.log("UploadRawFile");
+
+    var xhr = new XMLHttpRequest();
+    if (xhr.upload && 
+    (file.type == "image/jpeg" || file.type == "image/png")) {
+      //var path = UPLOAD_SITE + file.name + ".json";
+      // start upload
+      xhr.open("PUT", url, true);
+      xhr.setRequestHeader("Content-Type", file.type);
+  
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        var arrayBuffer = reader.result;
+        xhr.send(arrayBuffer);
+      }
+
+      reader.readAsArrayBuffer(file);
+    }
+
+  }
+
+  // output file information
+  function ParseFile(file) {
+    $("#filename").html(file.name);
+    $("#filetype").html(file.type);
+    $("#filesize").html(file.size);
+  }
+
+</script>
+</head>
+<body>
+
+  <fieldset>
+  <legend>HTML File Upload</legend>
+
+  <div>
+    <label for="resource_id">id:</label>
+    <input type="text" id="resource_id"></input>
+  </div>
+
+  <div>
+    <label for="upload_path">Upload to:</label>
+    <input type="text" id="upload_path" style="width:1000px"></input>
+  </div>
+
+  <div>
+    <label for="fileselect">Files to upload:</label>
+    <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+    <!--<div id="filedrag">or drop files here</div>-->
+  </div>
+
+  <div>
+    <button id="submitbutton" type="submit" disabled>Upload Files</button>
+  </div>
+
+  </fieldset>
+
+  <div>
+    filename:<span id="filename"></span><br>
+    size:<span id="filesize"></span><br>
+    type:<span id="filetype"></span><br>
+  </div>
+
+</body>
+</html>

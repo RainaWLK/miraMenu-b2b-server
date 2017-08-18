@@ -39,6 +39,7 @@
     "chai-json-schema": "^1.4.0",
     "chai-things": "^0.2.0",
     "claudia": "^2.14.0",
+    "cors": "^2.8.4",
     "cross-env": "^4.0.0",
     "express": "^4.15.0",
     "mocha": "^3.2.0",

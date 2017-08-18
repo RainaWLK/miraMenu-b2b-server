@@ -404,46 +404,162 @@ api.delete('/restaurants/{restaurant_id}/items/{item_id}', async (req) => {
 });
 
 
-/*api.bGet('/restaurants/{restaurant_id}/pictures/{picture_id}',  async(req) => {
+/*api.bGet('/restaurants/{restaurant_id}/photos/{photo_id}',  async(req) => {
     let cmdObj = new Restaurant.main(req);
-    console.log("pictures/{picture_id}");
+    console.log("photos/{photo_id}");
 	console.log(req);
     try{
-	    return await cmdObj.getPicture();
+	    return await cmdObj.getPhoto();
     }
     catch(err){
         throw 404;
     }
 });*/
 
-api.get('/restaurants/{restaurant_id}/pictures/{picture_id}/info', async (req) => {
+api.get('/restaurants/{restaurant_id}/photos/{photo_id}', async (req) => {
     let cmdObj = new Restaurant.main(req);
-    console.log("pictures/{picture_id}/info");
+    console.log("photos/{photo_id}/info");
 	console.log(req);
     try{
-        return await cmdObj.getPictureInfo();
+        return await cmdObj.getPhotoInfo();
     }
     catch(err){
         throw err;
     }
 });
 
-/*api.bPost('/restaurants/{restaurant_id}/pictures',  async(req) => {
+/*api.bPost('/restaurants/{restaurant_id}/photos',  async(req) => {
     let cmdObj = new Restaurant(req);
 
     try{
-        return await cmdObj.addPicture(req.body, req.binaryBody);
+        return await cmdObj.addPhoto(req.body, req.binaryBody);
     }
     catch(err){
         throw err;
     }
 });*/
 
-api.delete('/restaurants/{restaurant_id}/pictures', async (req) => {
+api.delete('/restaurants/{restaurant_id}/photos', async (req) => {
     let cmdObj = new Restaurant.main(req);
 
     try{
-        return await cmdObj.deletePicture();
+        return await cmdObj.deletePhoto();
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+//============
+
+api.get('/restaurants/{restaurant_id}/items/{item_id}/photos/{photo_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getPhotoInfoByID();
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.patch('/restaurants/{restaurant_id}/items/{item_id}/photos/{photo_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.updatePhotoInfo(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.delete('/restaurants/{restaurant_id}/items/{item_id}/photos/{photo_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.deletePhoto();
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+
+api.get('/restaurants/{restaurant_id}/items/{item_id}/photos', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getPhotoInfo(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.post('/restaurants/{restaurant_id}/items/{item_id}/photos', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.addPhoto(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+//=============
+
+api.get('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos/{photo_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getPhotoInfoByID();
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.patch('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos/{photo_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.updatePhotoInfo(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.delete('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos/{photo_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.deletePhoto();
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+
+api.get('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getPhotoInfo(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.post('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.addPhoto(req.body);
     }
     catch(err){
         throw err;

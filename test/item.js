@@ -10,13 +10,16 @@ let sampleData = {
   "type": "items",
   "attributes": {
       "name": "food 01",
-      "item_desc": "milk",
-      "item_cat": "common breakfast",
+      "desc": "milk",
+      "category": "common breakfast",
       "list_price": "99.99",
-      "tag": "...",
-      "photo": [],
+      "sale_price": "80",
+      "tag": ["...."],
+      "note": ["zzzzz"],
+      "photos": [],
       "nutrition": "366 cal",
-      "item_availability": true,
+      "availability": true,
+      "ingredients": "fish, zzz",
       "inventory": "Sufficient"
   }
 }
@@ -130,7 +133,7 @@ async function prepareTest(){
 async function cleanTest(idArray){
   let op = new CommonTest();
   let URI_ID = '/restaurants/'+'r'+idArray.r+'/branches/'+'s'+idArray.s+'/items/'+'i'+idArray.i;
-
+console.log(URI_ID);
   await op.checkOperation('DELETE', URI_ID, null, "");
 
   //check

@@ -3,7 +3,7 @@ let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
-//let S3 = require('./s3');
+let S3 = require('./s3');
 
 //import { makeInfo } from './image.js';
 

@@ -76,15 +76,18 @@
                       }
                     }
                   },
-                  "photo": {
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -96,24 +99,28 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
+                          }
                         },
                         "title": {
                           "type": "string"
                         },
                         "url": {
-                          "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
                         }
                       },
                       "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
+                        "mimetype"
                       ]
                     }
                   }
@@ -216,15 +223,18 @@
                       }
                     }
                   },
-                  "photo": {
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -236,24 +246,28 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
+                          }
                         },
                         "title": {
                           "type": "string"
                         },
                         "url": {
-                          "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
                         }
                       },
                       "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
+                        "mimetype"
                       ]
                     }
                   }
@@ -358,15 +372,18 @@
                         }
                       }
                     },
-                    "photo": {
+                    "photos": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
+                          "id": {
+                            "type": "string"
+                          },
                           "desc": {
                             "type": "string"
                           },
-                          "mimeType": {
+                          "mimetype": {
                             "type": "string"
                           },
                           "size": {
@@ -378,24 +395,28 @@
                               "height": {
                                 "type": "number"
                               }
-                            },
-                            "required": [
-                              "width",
-                              "height"
-                            ]
+                            }
                           },
                           "title": {
                             "type": "string"
                           },
                           "url": {
-                            "type": "string"
+                            "type": "object",
+                            "properties": {
+                              "original": {
+                                "type": "string"
+                              },
+                              "small": {
+                                "type": "string"
+                              },
+                              "medium": {
+                                "type": "string"
+                              }
+                            }
                           }
                         },
                         "required": [
-                          "desc",
-                          "mimeType",
-                          "size",
-                          "title"
+                          "mimetype"
                         ]
                       }
                     }
@@ -496,15 +517,18 @@
                       }
                     }
                   },
-                  "photo": {
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -516,24 +540,28 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
+                          }
                         },
                         "title": {
                           "type": "string"
                         },
                         "url": {
-                          "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
                         }
                       },
                       "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
+                        "mimetype"
                       ]
                     }
                   }
@@ -648,15 +676,18 @@
                   "branch_hours": {
                     "type": "string"
                   },
-                  "photo": {
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -668,24 +699,28 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
+                          }
                         },
                         "title": {
                           "type": "string"
                         },
                         "url": {
-                          "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
                         }
                       },
                       "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
+                        "mimetype"
                       ]
                     }
                   },
@@ -699,9 +734,6 @@
                     "type": "array"
                   },
                   "tag": {
-                    "type": "array"
-                  },
-                  "tables": {
                     "type": "array"
                   },
                   "details": {
@@ -727,6 +759,9 @@
                   },
                   "minimum_order": {
                     "type": "string"
+                  },
+                  "tables": {
+                    "type": "array"
                   }
                 },
                 "required": [
@@ -739,8 +774,7 @@
                   "capacity",
                   "branch_hours",
                   "level",
-                  "rating",
-                  "tables"
+                  "rating"
                 ]
               }
             },
@@ -750,10 +784,7 @@
               "attributes"
             ]
           }
-        },
-        "required": [
-          "data"
-        ]
+        }
       }
     }
   ],
@@ -846,15 +877,18 @@
                   "branch_hours": {
                     "type": "string"
                   },
-                  "photo": {
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -866,24 +900,28 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
+                          }
                         },
                         "title": {
                           "type": "string"
                         },
                         "url": {
-                          "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
                         }
                       },
                       "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
+                        "mimetype"
                       ]
                     }
                   },
@@ -897,9 +935,6 @@
                     "type": "array"
                   },
                   "tag": {
-                    "type": "array"
-                  },
-                  "tables": {
                     "type": "array"
                   },
                   "details": {
@@ -925,6 +960,9 @@
                   },
                   "minimum_order": {
                     "type": "string"
+                  },
+                  "tables": {
+                    "type": "array"
                   }
                 },
                 "required": [
@@ -937,8 +975,7 @@
                   "capacity",
                   "branch_hours",
                   "level",
-                  "rating",
-                  "tables"
+                  "rating"
                 ]
               }
             },
@@ -948,10 +985,7 @@
               "attributes"
             ]
           }
-        },
-        "required": [
-          "data"
-        ]
+        }
       }
     }
   ],
@@ -1046,15 +1080,18 @@
                     "branch_hours": {
                       "type": "string"
                     },
-                    "photo": {
+                    "photos": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
+                          "id": {
+                            "type": "string"
+                          },
                           "desc": {
                             "type": "string"
                           },
-                          "mimeType": {
+                          "mimetype": {
                             "type": "string"
                           },
                           "size": {
@@ -1066,24 +1103,28 @@
                               "height": {
                                 "type": "number"
                               }
-                            },
-                            "required": [
-                              "width",
-                              "height"
-                            ]
+                            }
                           },
                           "title": {
                             "type": "string"
                           },
                           "url": {
-                            "type": "string"
+                            "type": "object",
+                            "properties": {
+                              "original": {
+                                "type": "string"
+                              },
+                              "small": {
+                                "type": "string"
+                              },
+                              "medium": {
+                                "type": "string"
+                              }
+                            }
                           }
                         },
                         "required": [
-                          "desc",
-                          "mimeType",
-                          "size",
-                          "title"
+                          "mimetype"
                         ]
                       }
                     },
@@ -1097,9 +1138,6 @@
                       "type": "array"
                     },
                     "tag": {
-                      "type": "array"
-                    },
-                    "tables": {
                       "type": "array"
                     },
                     "details": {
@@ -1125,6 +1163,9 @@
                     },
                     "minimum_order": {
                       "type": "string"
+                    },
+                    "tables": {
+                      "type": "array"
                     }
                   },
                   "required": [
@@ -1137,8 +1178,7 @@
                     "capacity",
                     "branch_hours",
                     "level",
-                    "rating",
-                    "tables"
+                    "rating"
                   ]
                 }
               },
@@ -1242,15 +1282,18 @@
                   "branch_hours": {
                     "type": "string"
                   },
-                  "photo": {
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -1262,24 +1305,28 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
+                          }
                         },
                         "title": {
                           "type": "string"
                         },
                         "url": {
-                          "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
                         }
                       },
                       "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
+                        "mimetype"
                       ]
                     }
                   },
@@ -1293,9 +1340,6 @@
                     "type": "array"
                   },
                   "tag": {
-                    "type": "array"
-                  },
-                  "tables": {
                     "type": "array"
                   },
                   "details": {
@@ -1321,6 +1365,9 @@
                   },
                   "minimum_order": {
                     "type": "string"
+                  },
+                  "tables": {
+                    "type": "array"
                   }
                 },
                 "required": [
@@ -1333,8 +1380,7 @@
                   "capacity",
                   "branch_hours",
                   "level",
-                  "rating",
-                  "tables"
+                  "rating"
                 ]
               }
             },
@@ -1344,10 +1390,7 @@
               "attributes"
             ]
           }
-        },
-        "required": [
-          "data"
-        ]
+        }
       }
     }
   ],
@@ -2127,315 +2170,6 @@
       }
     }
   ],
-  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}": [
-    {
-      "meta": {
-        "type": "response",
-        "title": null
-      },
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "item_desc": {
-                    "type": "string"
-                  },
-                  "item_cat": {
-                    "type": "string"
-                  },
-                  "item_availability": {
-                    "type": "boolean"
-                  },
-                  "item_hours": {
-                    "type": "string"
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "desc": {
-                          "type": "string"
-                        },
-                        "mimeType": {
-                          "type": "string"
-                        },
-                        "size": {
-                          "type": "object",
-                          "properties": {
-                            "width": {
-                              "type": "number"
-                            },
-                            "height": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "url": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
-                      ]
-                    }
-                  },
-                  "ar": {
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "name",
-                  "item_desc",
-                  "item_cat",
-                  "item_availability"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "type",
-              "attributes"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      }
-    }
-  ],
-  "[PATCH]/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}": [
-    {
-      "meta": {
-        "type": "response",
-        "title": null
-      },
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "item_desc": {
-                    "type": "string"
-                  },
-                  "item_cat": {
-                    "type": "string"
-                  },
-                  "item_availability": {
-                    "type": "boolean"
-                  },
-                  "item_hours": {
-                    "type": "string"
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "desc": {
-                          "type": "string"
-                        },
-                        "mimeType": {
-                          "type": "string"
-                        },
-                        "size": {
-                          "type": "object",
-                          "properties": {
-                            "width": {
-                              "type": "number"
-                            },
-                            "height": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "url": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
-                      ]
-                    }
-                  },
-                  "ar": {
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "name",
-                  "item_desc",
-                  "item_cat",
-                  "item_availability"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "type",
-              "attributes"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      }
-    }
-  ],
-  "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/items": [
-    {
-      "meta": {
-        "type": "response",
-        "title": null
-      },
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "attributes": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "item_desc": {
-                      "type": "string"
-                    },
-                    "item_cat": {
-                      "type": "string"
-                    },
-                    "item_availability": {
-                      "type": "boolean"
-                    },
-                    "item_hours": {
-                      "type": "string"
-                    },
-                    "photo": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "desc": {
-                            "type": "string"
-                          },
-                          "mimeType": {
-                            "type": "string"
-                          },
-                          "size": {
-                            "type": "object",
-                            "properties": {
-                              "width": {
-                                "type": "number"
-                              },
-                              "height": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "width",
-                              "height"
-                            ]
-                          },
-                          "title": {
-                            "type": "string"
-                          },
-                          "url": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "desc",
-                          "mimeType",
-                          "size",
-                          "title"
-                        ]
-                      }
-                    },
-                    "ar": {
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "name",
-                    "item_desc",
-                    "item_cat",
-                    "item_availability"
-                  ]
-                }
-              },
-              "required": [
-                "id",
-                "type",
-                "attributes"
-              ]
-            }
-          }
-        }
-      }
-    }
-  ],
   "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/items": [
     {
       "meta": {
@@ -2461,27 +2195,48 @@
                   "name": {
                     "type": "string"
                   },
-                  "item_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "item_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "item_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
                   "item_hours": {
                     "type": "string"
                   },
-                  "photo": {
+                  "list_price": {
+                    "type": "string"
+                  },
+                  "sale_price": {
+                    "type": "string"
+                  },
+                  "ingredients": {
+                    "type": "string"
+                  },
+                  "nutrition": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array"
+                  },
+                  "note": {
+                    "type": "array"
+                  },
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -2493,358 +2248,52 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "url": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
-                      ]
-                    }
-                  },
-                  "ar": {
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "name",
-                  "item_desc",
-                  "item_cat",
-                  "item_availability"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "type",
-              "attributes"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      }
-    }
-  ],
-  "[GET]/restaurants/{restaurant_id}/items/{item_id}": [
-    {
-      "meta": {
-        "type": "response",
-        "title": null
-      },
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "item_desc": {
-                    "type": "string"
-                  },
-                  "item_cat": {
-                    "type": "string"
-                  },
-                  "item_availability": {
-                    "type": "boolean"
-                  },
-                  "item_hours": {
-                    "type": "string"
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "desc": {
-                          "type": "string"
-                        },
-                        "mimeType": {
-                          "type": "string"
-                        },
-                        "size": {
-                          "type": "object",
-                          "properties": {
-                            "width": {
-                              "type": "number"
-                            },
-                            "height": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "url": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
-                      ]
-                    }
-                  },
-                  "ar": {
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "name",
-                  "item_desc",
-                  "item_cat",
-                  "item_availability"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "type",
-              "attributes"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      }
-    }
-  ],
-  "[PATCH]/restaurants/{restaurant_id}/items/{item_id}": [
-    {
-      "meta": {
-        "type": "response",
-        "title": null
-      },
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "item_desc": {
-                    "type": "string"
-                  },
-                  "item_cat": {
-                    "type": "string"
-                  },
-                  "item_availability": {
-                    "type": "boolean"
-                  },
-                  "item_hours": {
-                    "type": "string"
-                  },
-                  "photo": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "desc": {
-                          "type": "string"
-                        },
-                        "mimeType": {
-                          "type": "string"
-                        },
-                        "size": {
-                          "type": "object",
-                          "properties": {
-                            "width": {
-                              "type": "number"
-                            },
-                            "height": {
-                              "type": "number"
-                            }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "url": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
-                      ]
-                    }
-                  },
-                  "ar": {
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "name",
-                  "item_desc",
-                  "item_cat",
-                  "item_availability"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "type",
-              "attributes"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      }
-    }
-  ],
-  "[GET]/restaurants/{restaurant_id}/items": [
-    {
-      "meta": {
-        "type": "response",
-        "title": null
-      },
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "attributes": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "item_desc": {
-                      "type": "string"
-                    },
-                    "item_cat": {
-                      "type": "string"
-                    },
-                    "item_availability": {
-                      "type": "boolean"
-                    },
-                    "item_hours": {
-                      "type": "string"
-                    },
-                    "photo": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "desc": {
-                            "type": "string"
-                          },
-                          "mimeType": {
-                            "type": "string"
-                          },
-                          "size": {
-                            "type": "object",
-                            "properties": {
-                              "width": {
-                                "type": "number"
-                              },
-                              "height": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "width",
-                              "height"
-                            ]
-                          },
-                          "title": {
-                            "type": "string"
-                          },
-                          "url": {
-                            "type": "string"
                           }
                         },
-                        "required": [
-                          "desc",
-                          "mimeType",
-                          "size",
-                          "title"
-                        ]
-                      }
-                    },
-                    "ar": {
-                      "type": "array"
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "mimetype"
+                      ]
                     }
-                  },
-                  "required": [
-                    "name",
-                    "item_desc",
-                    "item_cat",
-                    "item_availability"
-                  ]
-                }
-              },
-              "required": [
-                "id",
-                "type",
-                "attributes"
-              ]
-            }
+                  }
+                },
+                "required": [
+                  "name",
+                  "desc",
+                  "category",
+                  "availability",
+                  "list_price",
+                  "photos"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "attributes"
+            ]
           }
-        }
+        },
+        "required": [
+          "data"
+        ]
       }
     }
   ],
@@ -2873,27 +2322,48 @@
                   "name": {
                     "type": "string"
                   },
-                  "item_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "item_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "item_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
                   "item_hours": {
                     "type": "string"
                   },
-                  "photo": {
+                  "list_price": {
+                    "type": "string"
+                  },
+                  "sale_price": {
+                    "type": "string"
+                  },
+                  "ingredients": {
+                    "type": "string"
+                  },
+                  "nutrition": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array"
+                  },
+                  "note": {
+                    "type": "array"
+                  },
+                  "photos": {
                     "type": "array",
                     "items": {
                       "type": "object",
                       "properties": {
+                        "id": {
+                          "type": "string"
+                        },
                         "desc": {
                           "type": "string"
                         },
-                        "mimeType": {
+                        "mimetype": {
                           "type": "string"
                         },
                         "size": {
@@ -2905,36 +2375,39 @@
                             "height": {
                               "type": "number"
                             }
-                          },
-                          "required": [
-                            "width",
-                            "height"
-                          ]
+                          }
                         },
                         "title": {
                           "type": "string"
                         },
                         "url": {
-                          "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
                         }
                       },
                       "required": [
-                        "desc",
-                        "mimeType",
-                        "size",
-                        "title"
+                        "mimetype"
                       ]
                     }
-                  },
-                  "ar": {
-                    "type": "array"
                   }
                 },
                 "required": [
                   "name",
-                  "item_desc",
-                  "item_cat",
-                  "item_availability"
+                  "desc",
+                  "category",
+                  "availability",
+                  "list_price",
+                  "photos"
                 ]
               }
             },
@@ -2948,6 +2421,110 @@
         "required": [
           "data"
         ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "mimetype": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "signedrequest": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "object",
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "mimetype",
+                  "filename",
+                  "signedrequest"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/items/{item_id}/photos": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "mimetype": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "signedrequest": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "object",
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "mimetype",
+                  "filename",
+                  "signedrequest"
+                ]
+              }
+            }
+          }
+        }
       }
     }
   ]

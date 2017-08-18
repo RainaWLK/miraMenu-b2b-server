@@ -1,7 +1,7 @@
 function parseID(input){
     let result = {};
     let typeArray = input.match(/[^0-9a-fA-F]/g);
-    let pattern = new RegExp(/[^rstmi]/);
+    let pattern = new RegExp(/[^rstmip]/);
 
     let tail = input.length
     for(let i = 0; i < typeArray.length; i++){

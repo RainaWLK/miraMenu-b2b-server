@@ -21,10 +21,10 @@ before('login', async () => {
     return;
 });
 
-//restaurantTest.go();
-//branchTest.go();
-//tableTest.go();
-//menuTest.go();
-//menuTest_restaurant.go();
-//itemTest.go();
+restaurantTest.go();
+branchTest.go();
+tableTest.go();
+menuTest.go();
+menuTest_restaurant.go();
+itemTest.go();
 itemTest_restaurant.go();
