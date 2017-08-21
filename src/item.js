@@ -12,15 +12,7 @@ const TABLE_NAME = "Menus";
 const TYPE_NAME = "items";
 
 const PHOTO_TMP_TABLE_NAME = "photo_tmp";
-/*function TableControl() {
-    //contructor() {
-        //this.branchesMaxID = "0";
-        //this.branch_ids = [];
-        this.restaurant_id = "0";
-        this.branch_id = "0";
-        this.table_id = "0";
-    //}
-}*/
+
 function ItemControl() {
   this.photoMaxID = "p000";
 }

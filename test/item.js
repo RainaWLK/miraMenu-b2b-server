@@ -95,7 +95,7 @@ function itemByIDTest() {
 
     it('set data: PATCH ' + URI_ID, async () => {
 			let input = _.cloneDeep(sample);
-	    input.data.attributes.item_desc = "泡麵";
+	    input.data.attributes.desc = "泡麵";
 
       let res = await op.checkOperation('PATCH', URI_ID, input, input);
       res.body.data.should.have.deep.property('id', fullid);

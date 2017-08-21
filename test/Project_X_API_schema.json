@@ -1713,13 +1713,62 @@
                   },
                   "menu_hours": {
                     "type": "string"
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimetype": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "mimetype"
+                      ]
+                    }
                   }
                 },
                 "required": [
                   "name",
                   "menu_desc",
                   "menu_cat",
-                  "menu_availability"
+                  "menu_availability",
+                  "photos"
                 ]
               }
             },
@@ -1775,13 +1824,62 @@
                   },
                   "menu_hours": {
                     "type": "string"
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimetype": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "mimetype"
+                      ]
+                    }
                   }
                 },
                 "required": [
                   "name",
                   "menu_desc",
                   "menu_cat",
-                  "menu_availability"
+                  "menu_availability",
+                  "photos"
                 ]
               }
             },
@@ -1839,13 +1937,62 @@
                     },
                     "menu_hours": {
                       "type": "string"
+                    },
+                    "photos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "desc": {
+                            "type": "string"
+                          },
+                          "mimetype": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "object",
+                            "properties": {
+                              "width": {
+                                "type": "number"
+                              },
+                              "height": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "object",
+                            "properties": {
+                              "original": {
+                                "type": "string"
+                              },
+                              "small": {
+                                "type": "string"
+                              },
+                              "medium": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "required": [
+                          "mimetype"
+                        ]
+                      }
                     }
                   },
                   "required": [
                     "name",
                     "menu_desc",
                     "menu_cat",
-                    "menu_availability"
+                    "menu_availability",
+                    "photos"
                   ]
                 }
               },
@@ -1899,13 +2046,62 @@
                   },
                   "menu_hours": {
                     "type": "string"
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimetype": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "mimetype"
+                      ]
+                    }
                   }
                 },
                 "required": [
                   "name",
                   "menu_desc",
                   "menu_cat",
-                  "menu_availability"
+                  "menu_availability",
+                  "photos"
                 ]
               }
             },
@@ -1961,13 +2157,62 @@
                   },
                   "menu_hours": {
                     "type": "string"
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimetype": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "mimetype"
+                      ]
+                    }
                   }
                 },
                 "required": [
                   "name",
                   "menu_desc",
                   "menu_cat",
-                  "menu_availability"
+                  "menu_availability",
+                  "photos"
                 ]
               }
             },
@@ -2023,13 +2268,62 @@
                   },
                   "menu_hours": {
                     "type": "string"
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimetype": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "mimetype"
+                      ]
+                    }
                   }
                 },
                 "required": [
                   "name",
                   "menu_desc",
                   "menu_cat",
-                  "menu_availability"
+                  "menu_availability",
+                  "photos"
                 ]
               }
             },
@@ -2087,13 +2381,62 @@
                     },
                     "menu_hours": {
                       "type": "string"
+                    },
+                    "photos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "desc": {
+                            "type": "string"
+                          },
+                          "mimetype": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "object",
+                            "properties": {
+                              "width": {
+                                "type": "number"
+                              },
+                              "height": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "object",
+                            "properties": {
+                              "original": {
+                                "type": "string"
+                              },
+                              "small": {
+                                "type": "string"
+                              },
+                              "medium": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "required": [
+                          "mimetype"
+                        ]
+                      }
                     }
                   },
                   "required": [
                     "name",
                     "menu_desc",
                     "menu_cat",
-                    "menu_availability"
+                    "menu_availability",
+                    "photos"
                   ]
                 }
               },
@@ -2147,13 +2490,62 @@
                   },
                   "menu_hours": {
                     "type": "string"
+                  },
+                  "photos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "mimetype": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "object",
+                          "properties": {
+                            "original": {
+                              "type": "string"
+                            },
+                            "small": {
+                              "type": "string"
+                            },
+                            "medium": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "mimetype"
+                      ]
+                    }
                   }
                 },
                 "required": [
                   "name",
                   "menu_desc",
                   "menu_cat",
-                  "menu_availability"
+                  "menu_availability",
+                  "photos"
                 ]
               }
             },
@@ -2167,6 +2559,110 @@
         "required": [
           "data"
         ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}/photos": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "mimetype": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "signedrequest": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "object",
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "mimetype",
+                  "filename",
+                  "signedrequest"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/menus/{menu_id}/photos": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "mimetype": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "signedrequest": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "object",
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "mimetype",
+                  "filename",
+                  "signedrequest"
+                ]
+              }
+            }
+          }
+        }
       }
     }
   ],

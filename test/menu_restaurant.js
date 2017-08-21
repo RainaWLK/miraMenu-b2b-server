@@ -14,6 +14,7 @@ let sampleData = {
       "menu_cat": "breakfast",
       "menu_availability": true,
       "items": [],
+      "photos": [],
       "menu_hours": "24"
     }
 }
