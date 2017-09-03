@@ -151,3 +151,7 @@ function go() {
 exports.go = go;
 exports.prepareTest = prepareTest;
 exports.cleanTest = cleanTest;
+
+
+//沒item時
+//restaurant menu + branch menu混合

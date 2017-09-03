@@ -28,7 +28,7 @@ let sampleData = {
       "total_table": 50,
       "capacity": 250,
       "branch_hours": "Mon 9:00-12:00, 17:00-23:00; Tue 6:00-9:00, 11:00-13:30, 17:00-23:00",
-      "photo": [],
+      "photos": [],
       "level": 4,
       "rating": 4.5,
       "floor_plan": [

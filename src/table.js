@@ -54,6 +54,13 @@ class Tables {
             /*dataArray.map(obj => {
                 delete obj.branchControl;
             });*/
+
+            //if empty
+            if(dataArray.length == 0){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
             return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);            
         }catch(err) {
             console.log("==branch get err!!==");

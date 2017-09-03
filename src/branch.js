@@ -10,6 +10,9 @@ const RESTAURANT_TABLE_NAME = "Restaurants";
 
 const TYPE_NAME = "branches";
 
+const PHOTO_TMP_TABLE_NAME = "photo_tmp";
+
+
 function BranchControl() {
     //contructor() {
         //this.branchesMaxID = "0";
@@ -19,6 +22,7 @@ function BranchControl() {
         this.tablesMaxID = "t000";
         this.menusMaxID = "m000";
         this.itemsMaxID = "i000";
+        this.photoMaxID = "p000";
         //this.table_ids = [];
     //}
 }
@@ -26,6 +30,11 @@ function BranchControl() {
 class Branches {
     constructor(reqData){
         this.reqData = reqData;
+
+        //id array
+        let id = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
+        this.idArray = Utils.parseID(id);
+        console.log(this.idArray);
     }
 
     getNewID(restaurantData) {
@@ -34,6 +43,17 @@ class Branches {
         let maxID = parseInt(idList.s, 16)+1;
 
         return "s"+maxID.toString();
+    }
+
+    getNewPhotoID(controlData){
+        if(typeof controlData.photoMaxID == 'undefined'){
+            controlData.photoMaxID = "p000";
+        }
+        
+        let idList = Utils.parseID(controlData.photoMaxID);
+        let maxID = parseInt(idList.p, 10)+1;
+
+        return "p"+maxID.toString();
     }
 
     async get() {
@@ -55,6 +75,7 @@ class Branches {
             };
             let dataArray = await db.scanDataByFilter(params);
             dataArray.map(obj => {
+                obj.photos = Utils.objToArray(obj.photos);
                 delete obj.branchControl;
 
                 //table
@@ -64,6 +85,13 @@ class Branches {
                 }
                 obj.tables = tableArray;
             });
+
+            //if empty
+            if(dataArray.length == 0){
+                let err = new Error("not found");
+                err.statusCode = 404;
+                throw err;
+            }
 
             return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);            
         }catch(err) {
@@ -77,6 +105,8 @@ class Branches {
         try {
             let id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
             let data = await db.queryById(TABLE_NAME, id);
+
+            data.photos = Utils.objToArray(data.photos);
             delete data.branchControl;
             //table
             let tableArray = [];
@@ -132,6 +162,7 @@ class Branches {
 
             //output
             data.tables = tableArray;
+            data.photos = Utils.objToArray(data.photos);
             delete data.branchControl;
             let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
             return output;   
@@ -170,6 +201,7 @@ class Branches {
                 tableArray.push(table_id);
             }
             dbOutput.tables = tableArray;
+            dbOutput.photos = Utils.objToArray(dbOutput.photos);
             delete dbOutput.branchControl;
             let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
             return output;   
@@ -193,6 +225,173 @@ class Branches {
         }
 
     }
+
+
+  async getPhotoInfo() {
+    let branch_id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+    let branchData = await db.queryById(TABLE_NAME, branch_id);
+
+    //output
+    let dataArray = [];
+
+    let makePhotoArray = function(source, dest, branch_id){
+        for(let photo_id in source.photos){
+          let photoData = source.photos[photo_id];
+          photoData.id = branch_id+photo_id;
+          dest.push(photoData);
+        }
+        return;
+    }
+
+    makePhotoArray(branchData, dataArray, branch_id);
+
+    //if empty
+    if(dataArray.length == 0){
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
+    }
+
+    return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
+  }
+
+  async getPhotoInfoByID() {
+    try {
+      let branch_id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+      let branchData = await db.queryById(TABLE_NAME, branch_id);
+
+      let photo_id = this.reqData.params.photo_id;
+      let photoData = branchData.photos[photo_id];
+
+      if(typeof photoData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+
+      //output
+      photoData.id = branch_id+photo_id;
+    　let output = JSONAPI.makeJSONAPI("photos", photoData);
+
+      return output;
+    }catch(err) {
+      throw err;
+    }
+  }
+
+  async addPhoto(payload) {
+    try {
+      let branch_id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+      let branchData = await db.queryById(TABLE_NAME, branch_id);
+
+      let inputData = JSONAPI.parseJSONAPI(payload);
+      delete inputData.id;
+      console.log(inputData);
+
+
+      let photo_id = this.getNewPhotoID(branchData.branchControl);
+      console.log(photo_id);
+      let path = Utils.makePath(this.idArray);
+      console.log(path);
+
+      let file_name = `${path}/${photo_id}.jpg`;
+      console.log("file_name="+file_name);
+      branchData.branchControl.photoMaxID = photo_id;
+      console.log("branchData=");
+      console.log(branchData);
+
+      //sign
+      let signedData = await S3.getPresignedURL(file_name, inputData.mimetype);
+      console.log(signedData);
+
+      //update db
+      inputData.id = Utils.makeFullID(this.idArray) + photo_id;
+      inputData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
+      console.log(inputData);
+      let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, inputData);
+      console.log(dbOutput);
+
+      let dbOutput2 = await db.put(TABLE_NAME, branchData);
+
+      //output
+      let outputBuf = {
+        "id": inputData.id,
+        "mimetype": inputData.mimetype,
+        "filename": file_name,
+        "signedrequest": signedData.signedRequest,
+        "url": {
+          "original": signedData.url
+        }
+      };
+
+    　let output = JSONAPI.makeJSONAPI("photos", outputBuf);
+
+      return output;
+    }catch(err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
+  async updatePhotoInfo(payload) {
+    try {
+      let branch_id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+      let branchData = await db.queryById(TABLE_NAME, branch_id);
+      let photo_id = this.reqData.params.photo_id;
+      let photoData = branchData.photos[photo_id];
+      if(typeof photoData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+
+      //update
+      let data = JSONAPI.parseJSONAPI(payload);
+      delete data.id;
+
+      data.url = photoData.url;
+      branchData.photos[photo_id] = data;
+
+      //write back
+      let dbOutput = await db.put(TABLE_NAME, branchData);
+
+      //output
+      let outputBuf = dbOutput.photos[photo_id];
+      outputBuf.id = branch_id+photo_id;
+      let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
+      return output;
+    }catch(err) {
+        throw err;
+    }
+  }
+
+  async deletePhoto() {
+    try {
+      let branch_id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+      let branchData = await db.queryById(TABLE_NAME, branch_id);
+      let photo_id = this.reqData.params.photo_id;
+
+      if(typeof branchData.photos[photo_id] == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+      //delete
+      let file_name = photo_id + ".jpg";
+      let path = Utils.makePath(this.idArray);
+      let msg = await S3.deleteS3Obj(path + "/" + file_name);
+
+      delete branchData.photos[photo_id];
+
+      //write back
+      let dbOutput = await db.put(TABLE_NAME, branchData);
+
+      return dbOutput;
+    }catch(err) {
+        throw err;
+    }
+  }
+
 }
 
 

@@ -1,5 +1,8 @@
 function parseID(input){
   let result = {};
+  if(typeof input == 'undefined'){
+    return result;
+  }
   let typeArray = input.match(/[^0-9a-fA-F]/g);
   let pattern = new RegExp(/[^rstmip]/);
 

@@ -30,10 +30,10 @@ async function permissionCheck(reqData){
     let path = makePathList(reqData.paths);
     console.log("permission check");
 
-    if(path.restaurants == null){
+    //if(path.restaurants == null){
         console.log("skip");
         return;
-    }
+    //}
 
     let userData;
     let identityId = reqData.userinfo.cognitoIdentityId;

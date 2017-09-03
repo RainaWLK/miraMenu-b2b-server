@@ -31,14 +31,14 @@ function getSchema(method, URI){
   let responseSchema = '';
 
   if(Array.isArray(mySchema[schemaPath])){
-	mySchema[schemaPath].map(spec => {
-		if(spec.meta.type == "response"){
-			responseSchema = spec.schema;
-		}
-	});	  
+    mySchema[schemaPath].map(spec => {
+      if(spec.meta.type == "response"){
+        responseSchema = spec.schema;
+      }
+    });	  
   }
 
-  //console.log(responseSchema);
+  console.log(responseSchema);
   return responseSchema;
 }
 

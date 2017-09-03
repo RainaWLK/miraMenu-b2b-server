@@ -14,8 +14,8 @@ exports.chai = chai;
 let aws = {
   region: 'us-east-1',
   host: 'aoboid0wkl.execute-api.us-east-1.amazonaws.com',
-  //stage: 'development',
-  stage: 'auth',
+  stage: 'development',
+  //stage: 'auth',
   //credentials: { 
   //  accessKeyId: 'ASIAJEJDSVKVHO5XXC2A',
   //  secretAccessKey: 'klp4D0fEITXLKc7dQPp8a5lOlxuRQbFLz4rIpMIc',

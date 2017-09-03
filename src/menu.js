@@ -19,24 +19,27 @@ function MenuControl() {
 
 class Menus {
     constructor(reqData){
-        this.reqData = reqData;
+      this.reqData = reqData;
 
-        //store restaurant var
-        this.restaurantTable = RESTAURANT_TABLE_NAME;
-        this.restaurantID = this.reqData.params.restaurant_id;
+      //store restaurant var
+      this.restaurantTable = RESTAURANT_TABLE_NAME;
+      this.restaurantID = this.reqData.params.restaurant_id;
 
-        //parse request
-        this.controlName = "restaurantControl";
-        this.branchID = this.reqData.params.restaurant_id;
-        this.branchTable = RESTAURANT_TABLE_NAME;
-        this.branchQuery = false;
-        if(typeof this.reqData.params.branch_id != 'undefined'){
-            this.branchID = this.restaurantID + this.reqData.params.branch_id;
-            this.branchTable = BRANCH_TABLE_NAME;
-            this.controlName = "branchControl";
+      //parse request
+      this.controlName = "restaurantControl";
+      this.branchID = this.reqData.params.restaurant_id;
+      this.branchTable = RESTAURANT_TABLE_NAME;
+      this.branchQuery = false;
+      if(typeof this.reqData.params.branch_id != 'undefined'){
+          this.branchID = this.restaurantID + this.reqData.params.branch_id;
+          this.branchTable = BRANCH_TABLE_NAME;
+          this.controlName = "branchControl";
 
-            this.branchQuery = true;
-        }
+          this.branchQuery = true;
+      }
+
+      this.menusData = {};
+
       
       //id array
       let id = this.branchID;
@@ -69,6 +72,10 @@ class Menus {
     let maxID = parseInt(idList.p, 10)+1;
 
     return "p"+maxID.toString();
+  }
+
+  async getMenusData(){
+    
   }
 
     async get() {
@@ -169,13 +176,16 @@ class Menus {
             }
 
             //check item existed
-            let validItems = inputData.items.reduce((result, item_id) => {
-                //console.log(item_id);
-                if(typeof menusData.items[item_id] != 'undefined'){
-                    result.push(item_id);
-                }
-                return result;
-            }, []);
+            let validItems = [];
+            if(Array.isArray(inputData.items)) {
+                validItems = inputData.items.reduce((result, item_id) => {
+                    //console.log(item_id);
+                    if(typeof menusData.items[item_id] != 'undefined'){
+                        result.push(item_id);
+                    }
+                    return result;
+                }, []);
+            }
             //console.log(validItems);
             inputData.items = validItems;
 

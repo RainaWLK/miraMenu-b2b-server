@@ -129,7 +129,8 @@
                   "name",
                   "desc",
                   "category",
-                  "location"
+                  "location",
+                  "photos"
                 ]
               }
             },
@@ -276,7 +277,8 @@
                   "name",
                   "desc",
                   "category",
-                  "location"
+                  "location",
+                  "photos"
                 ]
               }
             },
@@ -425,7 +427,8 @@
                     "name",
                     "desc",
                     "category",
-                    "location"
+                    "location",
+                    "photos"
                   ]
                 }
               },
@@ -570,7 +573,8 @@
                   "name",
                   "desc",
                   "category",
-                  "location"
+                  "location",
+                  "photos"
                 ]
               }
             },
@@ -584,6 +588,58 @@
         "required": [
           "data"
         ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/photos": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "mimetype": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "signedrequest": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "object",
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "mimetype",
+                  "filename",
+                  "signedrequest"
+                ]
+              }
+            }
+          }
+        }
       }
     }
   ],
@@ -676,6 +732,45 @@
                   "branch_hours": {
                     "type": "string"
                   },
+                  "level": {
+                    "type": "number"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "floor_plan": {
+                    "type": "array"
+                  },
+                  "tag": {
+                    "type": "array"
+                  },
+                  "details": {
+                    "type": "string"
+                  },
+                  "priority_pass": {
+                    "type": "boolean"
+                  },
+                  "priority_meal": {
+                    "type": "boolean"
+                  },
+                  "guarantee_best_seat": {
+                    "type": "boolean"
+                  },
+                  "welcome_drink": {
+                    "type": "boolean"
+                  },
+                  "appetizer_discount": {
+                    "type": "boolean"
+                  },
+                  "special_event": {
+                    "type": "array"
+                  },
+                  "minimum_order": {
+                    "type": "string"
+                  },
+                  "tables": {
+                    "type": "array"
+                  },
                   "photos": {
                     "type": "array",
                     "items": {
@@ -723,45 +818,6 @@
                         "mimetype"
                       ]
                     }
-                  },
-                  "level": {
-                    "type": "number"
-                  },
-                  "rating": {
-                    "type": "number"
-                  },
-                  "floor_plan": {
-                    "type": "array"
-                  },
-                  "tag": {
-                    "type": "array"
-                  },
-                  "details": {
-                    "type": "string"
-                  },
-                  "priority_pass": {
-                    "type": "boolean"
-                  },
-                  "priority_meal": {
-                    "type": "boolean"
-                  },
-                  "guarantee_best_seat": {
-                    "type": "boolean"
-                  },
-                  "welcome_drink": {
-                    "type": "boolean"
-                  },
-                  "appetizer_discount": {
-                    "type": "boolean"
-                  },
-                  "special_event": {
-                    "type": "array"
-                  },
-                  "minimum_order": {
-                    "type": "string"
-                  },
-                  "tables": {
-                    "type": "array"
                   }
                 },
                 "required": [
@@ -774,7 +830,8 @@
                   "capacity",
                   "branch_hours",
                   "level",
-                  "rating"
+                  "rating",
+                  "photos"
                 ]
               }
             },
@@ -877,6 +934,45 @@
                   "branch_hours": {
                     "type": "string"
                   },
+                  "level": {
+                    "type": "number"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "floor_plan": {
+                    "type": "array"
+                  },
+                  "tag": {
+                    "type": "array"
+                  },
+                  "details": {
+                    "type": "string"
+                  },
+                  "priority_pass": {
+                    "type": "boolean"
+                  },
+                  "priority_meal": {
+                    "type": "boolean"
+                  },
+                  "guarantee_best_seat": {
+                    "type": "boolean"
+                  },
+                  "welcome_drink": {
+                    "type": "boolean"
+                  },
+                  "appetizer_discount": {
+                    "type": "boolean"
+                  },
+                  "special_event": {
+                    "type": "array"
+                  },
+                  "minimum_order": {
+                    "type": "string"
+                  },
+                  "tables": {
+                    "type": "array"
+                  },
                   "photos": {
                     "type": "array",
                     "items": {
@@ -924,45 +1020,6 @@
                         "mimetype"
                       ]
                     }
-                  },
-                  "level": {
-                    "type": "number"
-                  },
-                  "rating": {
-                    "type": "number"
-                  },
-                  "floor_plan": {
-                    "type": "array"
-                  },
-                  "tag": {
-                    "type": "array"
-                  },
-                  "details": {
-                    "type": "string"
-                  },
-                  "priority_pass": {
-                    "type": "boolean"
-                  },
-                  "priority_meal": {
-                    "type": "boolean"
-                  },
-                  "guarantee_best_seat": {
-                    "type": "boolean"
-                  },
-                  "welcome_drink": {
-                    "type": "boolean"
-                  },
-                  "appetizer_discount": {
-                    "type": "boolean"
-                  },
-                  "special_event": {
-                    "type": "array"
-                  },
-                  "minimum_order": {
-                    "type": "string"
-                  },
-                  "tables": {
-                    "type": "array"
                   }
                 },
                 "required": [
@@ -975,7 +1032,8 @@
                   "capacity",
                   "branch_hours",
                   "level",
-                  "rating"
+                  "rating",
+                  "photos"
                 ]
               }
             },
@@ -1080,6 +1138,45 @@
                     "branch_hours": {
                       "type": "string"
                     },
+                    "level": {
+                      "type": "number"
+                    },
+                    "rating": {
+                      "type": "number"
+                    },
+                    "floor_plan": {
+                      "type": "array"
+                    },
+                    "tag": {
+                      "type": "array"
+                    },
+                    "details": {
+                      "type": "string"
+                    },
+                    "priority_pass": {
+                      "type": "boolean"
+                    },
+                    "priority_meal": {
+                      "type": "boolean"
+                    },
+                    "guarantee_best_seat": {
+                      "type": "boolean"
+                    },
+                    "welcome_drink": {
+                      "type": "boolean"
+                    },
+                    "appetizer_discount": {
+                      "type": "boolean"
+                    },
+                    "special_event": {
+                      "type": "array"
+                    },
+                    "minimum_order": {
+                      "type": "string"
+                    },
+                    "tables": {
+                      "type": "array"
+                    },
                     "photos": {
                       "type": "array",
                       "items": {
@@ -1127,45 +1224,6 @@
                           "mimetype"
                         ]
                       }
-                    },
-                    "level": {
-                      "type": "number"
-                    },
-                    "rating": {
-                      "type": "number"
-                    },
-                    "floor_plan": {
-                      "type": "array"
-                    },
-                    "tag": {
-                      "type": "array"
-                    },
-                    "details": {
-                      "type": "string"
-                    },
-                    "priority_pass": {
-                      "type": "boolean"
-                    },
-                    "priority_meal": {
-                      "type": "boolean"
-                    },
-                    "guarantee_best_seat": {
-                      "type": "boolean"
-                    },
-                    "welcome_drink": {
-                      "type": "boolean"
-                    },
-                    "appetizer_discount": {
-                      "type": "boolean"
-                    },
-                    "special_event": {
-                      "type": "array"
-                    },
-                    "minimum_order": {
-                      "type": "string"
-                    },
-                    "tables": {
-                      "type": "array"
                     }
                   },
                   "required": [
@@ -1178,7 +1236,8 @@
                     "capacity",
                     "branch_hours",
                     "level",
-                    "rating"
+                    "rating",
+                    "photos"
                   ]
                 }
               },
@@ -1282,6 +1341,45 @@
                   "branch_hours": {
                     "type": "string"
                   },
+                  "level": {
+                    "type": "number"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "floor_plan": {
+                    "type": "array"
+                  },
+                  "tag": {
+                    "type": "array"
+                  },
+                  "details": {
+                    "type": "string"
+                  },
+                  "priority_pass": {
+                    "type": "boolean"
+                  },
+                  "priority_meal": {
+                    "type": "boolean"
+                  },
+                  "guarantee_best_seat": {
+                    "type": "boolean"
+                  },
+                  "welcome_drink": {
+                    "type": "boolean"
+                  },
+                  "appetizer_discount": {
+                    "type": "boolean"
+                  },
+                  "special_event": {
+                    "type": "array"
+                  },
+                  "minimum_order": {
+                    "type": "string"
+                  },
+                  "tables": {
+                    "type": "array"
+                  },
                   "photos": {
                     "type": "array",
                     "items": {
@@ -1329,45 +1427,6 @@
                         "mimetype"
                       ]
                     }
-                  },
-                  "level": {
-                    "type": "number"
-                  },
-                  "rating": {
-                    "type": "number"
-                  },
-                  "floor_plan": {
-                    "type": "array"
-                  },
-                  "tag": {
-                    "type": "array"
-                  },
-                  "details": {
-                    "type": "string"
-                  },
-                  "priority_pass": {
-                    "type": "boolean"
-                  },
-                  "priority_meal": {
-                    "type": "boolean"
-                  },
-                  "guarantee_best_seat": {
-                    "type": "boolean"
-                  },
-                  "welcome_drink": {
-                    "type": "boolean"
-                  },
-                  "appetizer_discount": {
-                    "type": "boolean"
-                  },
-                  "special_event": {
-                    "type": "array"
-                  },
-                  "minimum_order": {
-                    "type": "string"
-                  },
-                  "tables": {
-                    "type": "array"
                   }
                 },
                 "required": [
@@ -1380,7 +1439,8 @@
                   "capacity",
                   "branch_hours",
                   "level",
-                  "rating"
+                  "rating",
+                  "photos"
                 ]
               }
             },
@@ -1389,6 +1449,58 @@
               "type",
               "attributes"
             ]
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/photos": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "mimetype": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "signedrequest": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "object",
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "mimetype",
+                  "filename",
+                  "signedrequest"
+                ]
+              }
+            }
           }
         }
       }
