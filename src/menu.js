@@ -25,20 +25,23 @@ class Menus {
       this.restaurantTable = RESTAURANT_TABLE_NAME;
       this.restaurantID = this.reqData.params.restaurant_id;
 
+      this.branchQuery = false;
+      if(typeof this.reqData.params.branch_id != 'undefined'){
+        this.branchQuery = true;
+      }
+
       //parse request
       this.controlName = "restaurantControl";
       this.branchID = this.reqData.params.restaurant_id;
       this.branchTable = RESTAURANT_TABLE_NAME;
-      this.branchQuery = false;
-      if(typeof this.reqData.params.branch_id != 'undefined'){
+      
+      if(this.branchQuery){
           this.branchID = this.restaurantID + this.reqData.params.branch_id;
           this.branchTable = BRANCH_TABLE_NAME;
           this.controlName = "branchControl";
-
-          this.branchQuery = true;
       }
 
-      this.menusData = {};
+      this.menusData = this.getMenusData();
 
       
       //id array
@@ -75,7 +78,22 @@ class Menus {
   }
 
   async getMenusData(){
-    
+    let restaurantMenusData = await db.queryById(TABLE_NAME, this.restaurantID);
+    let menusData = restaurantMenusData;
+
+    if(this.branchQuery){
+      let branchMenusData = await db.queryById(TABLE_NAME, this.branchID);
+
+      //merge
+      for(let id in branchMenusData.menus){
+        menusData.menus[id] = branchMenusData.menus[id];
+      }
+      for(let id in branchMenusData.items){
+        menusData.items[id] = branchMenusData.items[id];
+      }
+    }
+
+    return menusData;
   }
 
     async get() {
@@ -154,6 +172,7 @@ class Menus {
         try{
             let branchData = await db.queryById(this.branchTable, this.branchID);   //get branch data    
             let menu_id = this.getNewID(branchData[this.controlName]);
+            let menu_fullID = this.branchID + menu_id;
 
             let menusData;
             //let createNew = false;
@@ -176,7 +195,7 @@ class Menus {
             }
 
             //check item existed
-            let validItems = [];
+            /*let validItems = [];
             if(Array.isArray(inputData.items)) {
                 validItems = inputData.items.reduce((result, item_id) => {
                     //console.log(item_id);
@@ -187,12 +206,12 @@ class Menus {
                 }, []);
             }
             //console.log(validItems);
-            inputData.items = validItems;
+            inputData.items = validItems;*/
 
             let control = new MenuControl();
             inputData.menuControl = JSON.parse(JSON.stringify(control));   //bug
             inputData.photos = {};
-            menusData.menus[menu_id] = inputData; 
+            menusData.menus[menu_fullID] = inputData; 
             //console.log(menusData);
 
             //bug? no fully table rewrite
@@ -209,8 +228,8 @@ class Menus {
             await db.put(this.branchTable, branchData);
 
             //output
-            let outputBuf = menusData.menus[menu_id];
-            outputBuf.id = this.branchID+menu_id;
+            let outputBuf = menusData.menus[menu_fullID];
+            outputBuf.id = menu_fullID;
             outputBuf.photos = Utils.objToArray(outputBuf.photos);
             delete outputBuf.menuControl;
             let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
