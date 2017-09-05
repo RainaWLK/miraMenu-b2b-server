@@ -160,6 +160,8 @@ class Menus {
             let menu_id = this.getNewID(branchData[this.controlName]);
             let fullID = this.branch_fullID + menu_id;
 
+            let dbMenusData = await this.getMenusData();
+
             let menusData;
             //let createNew = false;
             try {
@@ -181,18 +183,18 @@ class Menus {
             }
 
             //check item existed
-            /*let validItems = [];
+            let validItems = [];
             if(Array.isArray(inputData.items)) {
-                validItems = inputData.items.reduce((result, item_id) => {
+                validItems = inputData.items.reduce((result, item_fullID) => {
                     //console.log(item_id);
-                    if(typeof menusData.items[item_id] != 'undefined'){
-                        result.push(item_id);
+                    if(typeof dbMenusData.items[item_fullID] != 'undefined'){
+                        result.push(item_fullID);
                     }
                     return result;
                 }, []);
             }
             //console.log(validItems);
-            inputData.items = validItems;*/
+            inputData.items = validItems;
 
             let control = new MenuControl();
             inputData.menuControl = JSON.parse(JSON.stringify(control));   //bug
