@@ -23,23 +23,25 @@ class Items {
 
       //store restaurant var
       this.restaurantTable = RESTAURANT_TABLE_NAME;
-      this.restaurantID = this.reqData.params.restaurant_id;
+
+      this.branchQuery = false;
+      if(typeof this.reqData.params.branch_id != 'undefined'){
+        this.branchQuery = true;
+      }
 
       //parse request
       this.controlName = "restaurantControl";
-      this.branchID = this.reqData.params.restaurant_id;
+      this.branch_fullID = this.reqData.params.restaurant_id;
       this.branchTable = RESTAURANT_TABLE_NAME;
-      this.branchQuery = false;
-      if(typeof this.reqData.params.branch_id != 'undefined'){
-          this.branchID = this.restaurantID + this.reqData.params.branch_id;
+
+      if(this.branchQuery){
+          this.branch_fullID = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
           this.branchTable = BRANCH_TABLE_NAME;
           this.controlName = "branchControl";
-
-          this.branchQuery = true;
       }
 
       //id array
-      let id = this.branchID;
+      let id = this.branch_fullID;
       if(typeof this.reqData.params.item_id != 'undefined'){
         id += this.reqData.params.item_id;
       }
@@ -70,8 +72,38 @@ class Items {
     return "p"+maxID.toString();
   }
 
+  async getMenusData(){
+    let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
+    let menusData = restaurantMenusData;
+
+    if(this.branchQuery){
+      let branchMenusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+
+      //merge
+      for(let id in branchMenusData.menus){
+        menusData.menus[id] = branchMenusData.menus[id];
+      }
+      for(let id in branchMenusData.items){
+        menusData.items[id] = branchMenusData.items[id];
+      }
+    }
+    console.log(menusData);
+
+    return menusData;
+  }
+
+  output(data, fullID){
+    data.id = fullID;
+    data.photos = Utils.objToArray(data.photos);
+    delete data.itemControl;
+
+    return data;
+  }
+
   async get() {
-      let restaurantMenuItemData = null;
+    let dbMenusData = await this.getMenusData();
+    let itemData = dbMenusData.items;
+      /*let restaurantMenuItemData = null;
       let restaurantItemData = null;
       let branchItemData = null;
       try {
@@ -84,17 +116,25 @@ class Items {
 
       if(this.branchQuery){
           try {
-              let branchMenuItemData = await db.queryById(TABLE_NAME, this.branchID);
+              let branchMenuItemData = await db.queryById(TABLE_NAME, this.branch_fullID);
               branchItemData = branchMenuItemData.items;
           }catch(err) {
               //no branch menu
           }           
       }
+*/
+    //output
+    let dataArray = [];
+    
+    for(let item_id in itemData) {
+        console.log(item_id);
 
-      //output
-      let dataArray = [];
-      
-      for(let item_id in restaurantItemData) {
+        let output = this.output(itemData[item_id], item_id);
+
+        dataArray.push(output);
+    }
+
+/*      for(let item_id in restaurantItemData) {
           let data = restaurantItemData[item_id];
           data.id = this.restaurantID+item_id;
           delete data.itemControl;
@@ -104,12 +144,12 @@ class Items {
 
       for(let item_id in branchItemData) {
           let data = branchItemData[item_id];
-          data.id = this.branchID+item_id;
+          data.id = this.branch_fullID+item_id;
           delete data.itemControl;
           data.photos = Utils.objToArray(data.photos);
           dataArray.push(data);
       }
-
+*/
       //if empty
       if(dataArray.length == 0){
           let err = new Error("not found");
@@ -122,19 +162,25 @@ class Items {
 
   async getByID() {
       try {
-          let menusData = await db.queryById(TABLE_NAME, this.branchID);
+        let dbMenusData = await this.getMenusData();
+        let itemData = dbMenusData.items;
+        let fullID = this.branch_fullID + this.reqData.params.item_id;
+        //let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
 
-          let data = menusData.items[this.reqData.params.item_id];
+          let data = itemData[fullID];
           if(typeof data == 'undefined'){
               let err = new Error("not found");
               err.statusCode = 404;
               throw err;
           }
-          data.id = this.branchID+this.reqData.params.item_id;
-          delete data.itemControl;
-          data.photos = Utils.objToArray(data.photos);
 
-          return JSONAPI.makeJSONAPI(TYPE_NAME, data);
+          let output = this.output(data, fullID);
+          return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+          //data.id = fullID;
+          //delete data.itemControl;
+          //data.photos = Utils.objToArray(data.photos);
+
+          //return JSONAPI.makeJSONAPI(TYPE_NAME, data);
       }catch(err) {
           throw err;
       }
@@ -144,20 +190,23 @@ class Items {
       let inputData = JSONAPI.parseJSONAPI(payload);
 
       try{
-          let branchData = await db.queryById(this.branchTable, this.branchID);   //get branch data    
+          let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
           let item_id = this.getNewID(branchData[this.controlName]);
+          let fullID = this.branch_fullID + item_id;          
+
+          let dbMenusData = await this.getMenusData();          
 
           let menusData;
           //let createNew = false;
           try {
-              menusData = await db.queryById(TABLE_NAME, this.branchID);
+              menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
               //createNew = true;
           }
           catch(err){
               //console.log("createNew");
               //init
               menusData = {
-                  "id": this.branchID,
+                  "id": this.branch_fullID,
                   "menus": {},
                   "items": {}
               } 
@@ -167,7 +216,7 @@ class Items {
           let control = new ItemControl();
           inputData.itemControl = JSON.parse(JSON.stringify(control));   //bug
           inputData.photos = {};
-          menusData.items[item_id] = inputData; 
+          menusData.items[fullID] = inputData; 
           //console.log(menusData);
 
           //let msg;
@@ -182,13 +231,17 @@ class Items {
           branchData[this.controlName].itemsMaxID = item_id;
           await db.put(this.branchTable, branchData);
 
+        //output
+        let output = this.output(menusData.items[fullID], fullID);
+        return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+          
           //output
-          let outputBuf = menusData.items[item_id];
-          outputBuf.id = this.branchID+item_id;
-          outputBuf.photos = Utils.objToArray(outputBuf.photos);
-          delete outputBuf.itemControl;
-          let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
-          return output;   
+          //let outputBuf = menusData.items[item_id];
+          //outputBuf.id = this.branch_fullID+item_id;
+          //outputBuf.photos = Utils.objToArray(outputBuf.photos);
+          //delete outputBuf.itemControl;
+          //let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
+          //return output;   
       }
       catch(err) {
           console.log(err);
@@ -199,11 +252,14 @@ class Items {
 
   async updateByID(payload) {
       try{
-          let menusData = await db.queryById(TABLE_NAME, this.branchID);
-          let item_id = this.reqData.params.item_id;
+        let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+        let fullID = this.branch_fullID + this.reqData.params.menu_id;
+
+          //let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+          //let item_id = this.reqData.params.item_id;
 
           //check item existed
-          if(typeof menusData.items[item_id] == 'undefined'){
+          if(typeof menusData.items[fullID] == 'undefined'){
               let err = new Error("not found");
               err.statusCode = 404;
               throw err;
@@ -211,22 +267,26 @@ class Items {
 
           let data = JSONAPI.parseJSONAPI(payload);
           delete data.id;
-          data.itemControl = cloneDeep(menusData.items[item_id].itemControl);
+          data.itemControl = cloneDeep(menusData.items[fullID].itemControl);
 
           //copy photo data
-          data.photos = cloneDeep(menusData.items[item_id].photos);
+          data.photos = cloneDeep(menusData.items[fullID].photos);
 
           menusData.items[item_id] = data;
 
           let dbOutput = await db.put(TABLE_NAME, menusData);
 
+        //output
+        let output = this.output(dbOutput.items[fullID], fullID);
+        return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+ 
           //output
-          let outputBuf = dbOutput.items[item_id];
-          outputBuf.id = this.branchID+item_id;
-          outputBuf.photos = Utils.objToArray(outputBuf.photos);
-          delete outputBuf.itemControl;
-          let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
-          return output;
+          //let outputBuf = dbOutput.items[item_id];
+          //outputBuf.id = this.branch_fullID+item_id;
+          //outputBuf.photos = Utils.objToArray(outputBuf.photos);
+          //delete outputBuf.itemControl;
+          //let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
+          //return output;
       }
       catch(err) {
           throw err;
@@ -235,14 +295,15 @@ class Items {
 
   async deleteByID() {
       try{
-          let menusData = await db.queryById(TABLE_NAME, this.branchID);
+          let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+          let fullID = this.branch_fullID + this.reqData.params.item_id;          
 
-          if(typeof menusData.items[this.reqData.params.item_id] == 'undefined'){
+          if(typeof menusData.items[fullID] == 'undefined'){
               let err = new Error("not found");
               err.statusCode = 404;
               throw err;
           }
-          delete menusData.items[this.reqData.params.item_id];
+          delete menusData.items[fullID];
           //bug: must delete all photos in s3
 
           let msg = await db.put(TABLE_NAME, menusData);
@@ -254,7 +315,10 @@ class Items {
   }
 
   async getPhotoInfo() {
-    let restaurantMenuItemData = null;
+    let dbMenusData = await this.getMenusData();
+    let itemsData = dbMenusData.items;
+
+    /*let restaurantMenuItemData = null;
     let restaurantItemData = null;
     let branchItemData = null;
     try {
@@ -267,12 +331,12 @@ class Items {
 
     if(this.branchQuery){
         try {
-            let branchMenuItemData = await db.queryById(TABLE_NAME, this.branchID);
+            let branchMenuItemData = await db.queryById(TABLE_NAME, this.branch_fullID);
             branchItemData = branchMenuItemData.items;
         }catch(err) {
             //no branch menu
         }           
-    }
+    }*/
 
     //output
     let dataArray = [];
@@ -285,16 +349,20 @@ class Items {
         }
         return;
     }
-    
-    for(let item_id in restaurantItemData) {
+
+    for(let item_fullID in itemsData) {
+      let data = itemsData[item_fullID];
+      makePhotoArray(data, dataArray, this.branch_fullID, item_fullID);
+    }
+/*    for(let item_id in restaurantItemData) {
       let data = restaurantItemData[item_id];
-      makePhotoArray(data, dataArray, this.branchID, item_id);
+      makePhotoArray(data, dataArray, this.branch_fullID, item_id);
     }
 
     for(let item_id in branchItemData) {
       let data = branchItemData[item_id];
-      makePhotoArray(data, dataArray, this.branchID, item_id);
-    }
+      makePhotoArray(data, dataArray, this.branch_fullID, item_id);
+    }*/
 
     //if empty
     if(dataArray.length == 0){
@@ -308,9 +376,12 @@ class Items {
 
   async getPhotoInfoByID() {
     try {
-      let menusData = await db.queryById(TABLE_NAME, this.branchID);
+      let dbMenusData = await this.getMenusData();
+      let fullID = this.branch_fullID + this.reqData.params.item_id;
+      let itemData = dbMenusData.items[fullID];
 
-      let itemData = menusData.items[this.reqData.params.item_id];
+      //let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      //let itemData = menusData.items[this.reqData.params.item_id];
       if(typeof itemData == 'undefined'){
           let err = new Error("not found");
           err.statusCode = 404;
@@ -327,7 +398,7 @@ class Items {
       }
 
       //output
-      photoData.id = this.branchID+this.reqData.params.item_id+photo_id;
+      photoData.id = fullID+photo_id;
     　let output = JSONAPI.makeJSONAPI("photos", photoData);
 
       return output;
@@ -338,7 +409,7 @@ class Items {
 
   async addPhoto(payload) {
     try {
-      let menusData = await db.queryById(TABLE_NAME, this.branchID);
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let item_id = this.reqData.params.item_id;
       let itemData = menusData.items[item_id];
 
@@ -406,7 +477,7 @@ class Items {
   async updatePhotoInfo(payload) {
     try {
       //get photo data
-      let menusData = await db.queryById(TABLE_NAME, this.branchID);
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let item_id = this.reqData.params.item_id;
 
       let itemData = menusData.items[item_id];
@@ -436,7 +507,7 @@ class Items {
 
       //output
       let outputBuf = dbOutput.items[item_id].photos[photo_id];
-      outputBuf.id = this.branchID+item_id+photo_id;
+      outputBuf.id = this.branch_fullID+item_id+photo_id;
       let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
       return output;
     }catch(err) {
@@ -447,7 +518,7 @@ class Items {
   async deletePhoto() {
     try {
       //get photo data
-      let menusData = await db.queryById(TABLE_NAME, this.branchID);
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let item_id = this.reqData.params.item_id;
 
       let itemData = menusData.items[item_id];

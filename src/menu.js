@@ -23,7 +23,6 @@ class Menus {
 
       //store restaurant var
       this.restaurantTable = RESTAURANT_TABLE_NAME;
-      this.restaurantID = this.reqData.params.restaurant_id;
 
       this.branchQuery = false;
       if(typeof this.reqData.params.branch_id != 'undefined'){
@@ -36,7 +35,7 @@ class Menus {
       this.branchTable = RESTAURANT_TABLE_NAME;
       
       if(this.branchQuery){
-          this.branch_fullID = this.restaurantID + this.reqData.params.branch_id;
+          this.branch_fullID = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
           this.branchTable = BRANCH_TABLE_NAME;
           this.controlName = "branchControl";
       }
@@ -78,7 +77,7 @@ class Menus {
   }
 
   async getMenusData(){
-    let restaurantMenusData = await db.queryById(TABLE_NAME, this.restaurantID);
+    let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
     let menusData = restaurantMenusData;
 
     if(this.branchQuery){
@@ -118,7 +117,7 @@ class Menus {
               result.push(item_fullID);
               //console.log("valid!");
           }
-          else if(item_fullID.indexOf(this.restaurantID) == 0) {
+          else if(item_fullID.indexOf(this.reqData.params.restaurant_id) == 0) {
             //restaurant item
             result.push(item_fullID);
             //console.log("valid!");
@@ -300,9 +299,9 @@ class Menus {
     }
 
   async getPhotoInfo() {
-    let restaurantMenuItemData = null;
-    let restaurantMenuData = null;
-    let branchMenuData = null;
+    //let restaurantMenuItemData = null;
+    //let restaurantMenuData = null;
+    //let branchMenuData = null;
 
     let dbMenusData = await this.getMenusData();
     let menuData = dbMenusData.menus;
