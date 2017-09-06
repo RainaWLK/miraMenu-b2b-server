@@ -299,55 +299,29 @@ class Menus {
     }
 
   async getPhotoInfo() {
-    //let restaurantMenuItemData = null;
-    //let restaurantMenuData = null;
-    //let branchMenuData = null;
-
     let dbMenusData = await this.getMenusData();
-    let menuData = dbMenusData.menus;
-    /*try {
-        restaurantMenuItemData = await db.queryById(TABLE_NAME, this.restaurantID);
-        restaurantMenuData = restaurantMenuItemData.menus;
-    }
-    catch(err) {
-        //no restaurant menu
-    }
+    let fullID = this.branch_fullID + this.reqData.params.menu_id;
+    let menuData = dbMenusData.menus[fullID];
 
-    if(this.branchQuery){
-        try {
-            let branchMenuItemData = await db.queryById(TABLE_NAME, this.branch_fullID);
-            branchMenuData = branchMenuItemData.menus;
-        }catch(err) {
-            //no branch menu
-        }           
-    }*/
+    if(typeof menuData == 'undefined'){
+      let err = new Error("not found");
+      err.statusCode = 404;
+      throw err;
+    }
 
     //output
     let dataArray = [];
 
-    let makePhotoArray = function(source, dest, branchID, menu_id){
+    let makePhotoArray = function(source, dest, menu_fullID){
         for(let photo_id in source.photos){
           let photoData = source.photos[photo_id];
-          photoData.id = branchID+menu_id+photo_id;
+          photoData.id = menu_fullID+photo_id;
           dest.push(photoData);
         }
         return;
     }
 
-    for(let menu_fullID in menuData) {
-      let data = menuData[menu_fullID];
-      makePhotoArray(data, dataArray, this.branch_fullID, menu_fullID);
-    }
-
-/*    for(let menu_id in restaurantMenuData) {
-      let data = restaurantMenuData[menu_id];
-      makePhotoArray(data, dataArray, this.branch_fullID, menu_id);
-    }
-
-    for(let menu_id in branchMenuData) {
-      let data = branchMenuData[menu_id];
-      makePhotoArray(data, dataArray, this.branch_fullID, menu_id);
-    }*/
+    makePhotoArray(menuData, dataArray, fullID);
 
     //if empty
     if(dataArray.length == 0){
@@ -364,9 +338,6 @@ class Menus {
       let dbMenusData = await this.getMenusData();
       let fullID = this.branch_fullID + this.reqData.params.menu_id;
       let menuData = dbMenusData.menus[fullID];
-      //let menuData = dbMenusData.menus;
-      //let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-
 
       if(typeof menuData == 'undefined'){
           let err = new Error("not found");
@@ -396,11 +367,9 @@ class Menus {
   async addPhoto(payload) {
     try {
       //let dbMenusData = await this.getMenusData();
-      let fullID = this.branch_fullID + this.reqData.params.menu_id;
-      
+      let fullID = this.branch_fullID + this.reqData.params.menu_id;   
 
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      //let menu_id = this.reqData.params.menu_id;
       let menuData = menusData.menus[fullID];
 
 
