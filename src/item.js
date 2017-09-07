@@ -73,21 +73,33 @@ class Items {
   }
 
   async getMenusData(){
-    let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
-    let menusData = restaurantMenusData;
+    let menusData;
+    try {
+      let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
+      menusData = restaurantMenusData;
+    }
+    catch(err){
+      menusData = {
+        "items": {},
+        "menus": {}
+      };
+    }
 
     if(this.branchQuery){
-      let branchMenusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-
-      //merge
-      for(let id in branchMenusData.menus){
-        menusData.menus[id] = branchMenusData.menus[id];
+      try {
+        let branchMenusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+        //merge
+        for(let id in branchMenusData.menus){
+          menusData.menus[id] = branchMenusData.menus[id];
+        }
+        for(let id in branchMenusData.items){
+          menusData.items[id] = branchMenusData.items[id];
+        }
       }
-      for(let id in branchMenusData.items){
-        menusData.items[id] = branchMenusData.items[id];
+      catch(err) {
+
       }
     }
-    console.log(menusData);
 
     return menusData;
   }

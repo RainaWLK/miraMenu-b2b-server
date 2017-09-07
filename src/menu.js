@@ -77,21 +77,33 @@ class Menus {
   }
 
   async getMenusData(){
-    let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
-    let menusData = restaurantMenusData;
+    let menusData;
+    try {
+      let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
+      menusData = restaurantMenusData;
+    }
+    catch(err){
+      menusData = {
+        "items": {},
+        "menus": {}
+      };
+    }
 
     if(this.branchQuery){
-      let branchMenusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-
-      //merge
-      for(let id in branchMenusData.menus){
-        menusData.menus[id] = branchMenusData.menus[id];
+      try {
+        let branchMenusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+        //merge
+        for(let id in branchMenusData.menus){
+          menusData.menus[id] = branchMenusData.menus[id];
+        }
+        for(let id in branchMenusData.items){
+          menusData.items[id] = branchMenusData.items[id];
+        }
       }
-      for(let id in branchMenusData.items){
-        menusData.items[id] = branchMenusData.items[id];
+      catch(err) {
+
       }
     }
-    console.log(menusData);
 
     return menusData;
   }
@@ -184,7 +196,6 @@ class Menus {
             let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
             let menu_id = this.getNewID(branchData[this.controlName]);
             let fullID = this.branch_fullID + menu_id;
-
             let dbMenusData = await this.getMenusData();
 
             let menusData;
@@ -192,7 +203,6 @@ class Menus {
             try {
                 menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
                 //createNew = true;
-
                 //migration
                 if(typeof menusData.items == 'undefined'){
                     menusData.items = {};
@@ -206,7 +216,6 @@ class Menus {
                     "items": {}
                 } 
             }
-
             //check item existed
             inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
 
