@@ -132,6 +132,26 @@
                   "location",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -280,6 +300,26 @@
                   "location",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -430,6 +470,26 @@
                     "location",
                     "photos"
                   ]
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "fileext": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               },
               "required": [
@@ -576,6 +636,26 @@
                   "location",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -611,31 +691,34 @@
                 "type": "string"
               },
               "attributes": {
-                "type": "object",
-                "properties": {
-                  "mimetype": {
-                    "type": "string"
-                  },
-                  "filename": {
-                    "type": "string"
-                  },
-                  "signedrequest": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "object",
-                    "properties": {
-                      "original": {
-                        "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "object",
+                      "properties": {
+                        "original": {
+                          "type": "string"
+                        }
                       }
                     }
-                  }
-                },
-                "required": [
-                  "mimetype",
-                  "filename",
-                  "signedrequest"
-                ]
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
               }
             }
           }
@@ -833,6 +916,26 @@
                   "rating",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -1035,6 +1138,26 @@
                   "rating",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -1239,6 +1362,26 @@
                     "rating",
                     "photos"
                   ]
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "fileext": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               },
               "required": [
@@ -1442,6 +1585,26 @@
                   "rating",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -1474,31 +1637,34 @@
                 "type": "string"
               },
               "attributes": {
-                "type": "object",
-                "properties": {
-                  "mimetype": {
-                    "type": "string"
-                  },
-                  "filename": {
-                    "type": "string"
-                  },
-                  "signedrequest": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "object",
-                    "properties": {
-                      "original": {
-                        "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "object",
+                      "properties": {
+                        "original": {
+                          "type": "string"
+                        }
                       }
                     }
-                  }
-                },
-                "required": [
-                  "mimetype",
-                  "filename",
-                  "signedrequest"
-                ]
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
               }
             }
           }
@@ -1561,6 +1727,26 @@
                   "type",
                   "occupied"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -1631,6 +1817,26 @@
                   "type",
                   "occupied"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -1703,6 +1909,26 @@
                     "type",
                     "occupied"
                   ]
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "fileext": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               },
               "required": [
@@ -1771,6 +1997,26 @@
                   "type",
                   "occupied"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -1882,6 +2128,26 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -1993,6 +2259,26 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -2106,6 +2392,26 @@
                     "menu_availability",
                     "photos"
                   ]
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "fileext": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               },
               "required": [
@@ -2215,6 +2521,26 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -2326,6 +2652,26 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -2437,6 +2783,26 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -2550,6 +2916,26 @@
                     "menu_availability",
                     "photos"
                   ]
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "fileext": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               },
               "required": [
@@ -2659,6 +3045,26 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -2694,31 +3100,34 @@
                 "type": "string"
               },
               "attributes": {
-                "type": "object",
-                "properties": {
-                  "mimetype": {
-                    "type": "string"
-                  },
-                  "filename": {
-                    "type": "string"
-                  },
-                  "signedrequest": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "object",
-                    "properties": {
-                      "original": {
-                        "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "object",
+                      "properties": {
+                        "original": {
+                          "type": "string"
+                        }
                       }
                     }
-                  }
-                },
-                "required": [
-                  "mimetype",
-                  "filename",
-                  "signedrequest"
-                ]
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
               }
             }
           }
@@ -2746,31 +3155,34 @@
                 "type": "string"
               },
               "attributes": {
-                "type": "object",
-                "properties": {
-                  "mimetype": {
-                    "type": "string"
-                  },
-                  "filename": {
-                    "type": "string"
-                  },
-                  "signedrequest": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "object",
-                    "properties": {
-                      "original": {
-                        "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "object",
+                      "properties": {
+                        "original": {
+                          "type": "string"
+                        }
                       }
                     }
-                  }
-                },
-                "required": [
-                  "mimetype",
-                  "filename",
-                  "signedrequest"
-                ]
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
               }
             }
           }
@@ -2890,6 +3302,26 @@
                   "list_price",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -3017,6 +3449,26 @@
                   "list_price",
                   "photos"
                 ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "fileext": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "required": [
@@ -3052,31 +3504,34 @@
                 "type": "string"
               },
               "attributes": {
-                "type": "object",
-                "properties": {
-                  "mimetype": {
-                    "type": "string"
-                  },
-                  "filename": {
-                    "type": "string"
-                  },
-                  "signedrequest": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "object",
-                    "properties": {
-                      "original": {
-                        "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "object",
+                      "properties": {
+                        "original": {
+                          "type": "string"
+                        }
                       }
                     }
-                  }
-                },
-                "required": [
-                  "mimetype",
-                  "filename",
-                  "signedrequest"
-                ]
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
               }
             }
           }
@@ -3104,31 +3559,134 @@
                 "type": "string"
               },
               "attributes": {
-                "type": "object",
-                "properties": {
-                  "mimetype": {
-                    "type": "string"
-                  },
-                  "filename": {
-                    "type": "string"
-                  },
-                  "signedrequest": {
-                    "type": "string"
-                  },
-                  "url": {
-                    "type": "object",
-                    "properties": {
-                      "original": {
-                        "type": "string"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "object",
+                      "properties": {
+                        "original": {
+                          "type": "string"
+                        }
                       }
                     }
-                  }
-                },
-                "required": [
-                  "mimetype",
-                  "filename",
-                  "signedrequest"
-                ]
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string",
+                      "description": "stream (required)"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/items/{item_id}/resources": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mimetype": {
+                      "type": "string",
+                      "description": "stream (required)"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
               }
             }
           }

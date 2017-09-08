@@ -11,7 +11,7 @@
   //var UPLOAD_SITE = "https://vuregbibtj.execute-api.us-east-1.amazonaws.com/latest/s3?key=";
   //var UPLOAD_SITE = "https://aoboid0wkl.execute-api.us-east-1.amazonaws.com/development/restaurants/r20170041/branches/s1/items/i002/photos";
   //var UPLOAD_SITE = "http://localhost:8081/restaurants/20170003/pictures";
-  let UPLOAD_SITE = "http://localhost:8081/restaurants/r20170041/branches/s1/items/i001/resources";
+  let UPLOAD_SITE = "http://localhost:8081/restaurants/r20170041/branches/s1/items/i002/photos";
   //let UPLOAD_SITE = "http://localhost:8081/restaurants/r20170041/branches/s1/photos";
   let selectedFile;
 
@@ -19,9 +19,7 @@
     Init();
 
     $("#submitbutton").on('click', () => {
-      for(let i in selectedFile){
-        getPresignedUrl(selectedFile[i]);
-      }
+      getPresignedUrl(selectedFile);
     });
   });
 
@@ -49,24 +47,7 @@
 
   }
 
-  function FileSelectHandler(e) {
-    // cancel event and hover styling
-    //FileDragHover(e);
-
-    // fetch FileList object
-    var files = e.target.files || e.dataTransfer.files;
-
-    // process all File objects
-    selectedFile = new Array();
-    for (var i = 0, f; f = files[i]; i++) {
-      selectedFile.push(f);
-      ParseFile(f);
-    }
-    $("#submitbutton").prop('disabled', false);
-
-  }
-
-  function getPresignedUrl(file){
+  function makeRequestBody(file, seq){
     /*let body = {
       "data": {
         "type": "photos",
@@ -83,30 +64,59 @@
       }
     };*/
     let upload_type = UPLOAD_SITE.substring(UPLOAD_SITE.lastIndexOf('/')+1);
-    let fileext = file.name.substring(file.name.lastIndexOf('.')+1);
-    let body;
+    let fileext = "";
+    let dotP = file.name.lastIndexOf('.');
+    if( dotP > 0){
+      fileext = file.name.substring(dotP+1);
+    }
+
+    let result = {
+      "type": upload_type,
+      "attributes": {}
+    }
+    if((typeof seq == 'string')||(typeof seq == 'number')){
+      result.attributes.seq = seq;
+    }
+
     if(upload_type == "photos"){
-      body = {
-        "data": {
-          "type": "photos",
-          "attributes": {
-            "mimetype": file.type
-          }
-        }
-      };
+      result.attributes.mimetype =  file.type
     }
     else {
-      body = {
-        "data": {
-          "type": "resources",
-          "attributes": {
-            "type": "file",
-            "fileExt": fileext
-          }
-        }
-      };      
+      result.attributes.type = "file",
+      result.attributes.fileext = fileext;
     }
-    
+    return result;
+  }
+
+  function FileSelectHandler(e) {
+    // cancel event and hover styling
+    //FileDragHover(e);
+
+    // fetch FileList object
+    var files = e.target.files || e.dataTransfer.files;
+
+    // process all File objects
+    selectedFile = new Array();
+    for (var i = 0, f; f = files[i]; i++) {
+      selectedFile.push(f);
+      showFile(f);
+    }
+    $("#submitbutton").prop('disabled', false);
+
+  }
+
+  function getPresignedUrl(files){
+    let body = {};
+    if(files.length > 1){
+      body.data = [];
+      for(let i in files){
+        body.data.push(makeRequestBody(files[i], i));
+      }
+    }
+    else{
+      body.data = makeRequestBody(files[0]);
+    }
+
     $.ajax({
       url: UPLOAD_SITE,
       type: "POST",
@@ -114,9 +124,17 @@
       contentType: "application/json; charset=uth-8",
       data: JSON.stringify(body)
     }).done(res => {
-      let signedrequest = res.data.attributes.signedrequest;
-      console.log(signedrequest);
-      UploadRawFile(file, signedrequest);
+      if(Array.isArray(res.data)){
+        for(let i in res.data){
+          let signedrequest = res.data[i].attributes.signedrequest;
+          let seq = res.data[i].attributes.seq;
+          UploadRawFile(files[seq], signedrequest);
+        }
+      }
+      else {
+        let signedrequest = res.data.attributes.signedrequest;
+        UploadRawFile(files[0], signedrequest);
+      }
     }).fail(err => {
       console.log(err);
     });
@@ -127,8 +145,6 @@
 
     var xhr = new XMLHttpRequest();
     if (xhr.upload) {
-    //(file.type == "image/jpeg" || file.type == "image/png")) {
-      //var path = UPLOAD_SITE + file.name + ".json";
       // start upload
       xhr.open("PUT", url, true);
       xhr.setRequestHeader("Content-Type", file.type);
@@ -145,8 +161,7 @@
   }
 
   // output file information
-  function ParseFile(file) {
-    console.log(file);
+  function showFile(file) {
     $("#filename").html(file.name);
     $("#filetype").html(file.type);
     $("#filesize").html(file.size);

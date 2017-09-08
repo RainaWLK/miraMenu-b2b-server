@@ -44,3 +44,16 @@ console.log(data);
 
 exports.makeInfo = makeInfo;
 */
+
+function getNewPhotoID(seq){
+  const dateTime = Date.now();
+  const timestamp = Math.floor(dateTime);
+  let id = 'p'+timestamp;
+  if((typeof seq == 'string')||(typeof seq == 'number')){
+    id += '-'+seq;
+  }
+
+  return id;
+}
+
+exports.getNewPhotoID = getNewPhotoID;

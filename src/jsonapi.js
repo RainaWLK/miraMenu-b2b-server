@@ -5,7 +5,7 @@ class dataObj {
     	this.id = id;
     	this.type = "";
         this.attributes = {};
-        this.resources = {};
+        this.resources = [];
     	//this.relationships = {};
         //this.links = {};
     }
@@ -26,8 +26,16 @@ function makeJSONAPI(path, dataList) {
         obj.attributes = orgData;
 
         if(typeof orgData.resources != 'undefined'){
-            obj.resources = _.cloneDeep(orgData.resources);         
+            //obj.resources = _.cloneDeep(orgData.resources);
+            for(let resource_id in orgData.resources){
+                let resourceData = orgData.resources[resource_id];
+                resourceData.id = resource_id;
+                obj.resources.push(resourceData);
+            }
             delete orgData.resources;
+        }
+        if(obj.resources.length == 0){
+            delete obj.resources;
         }
 
         //obj.relationships = {};
@@ -53,14 +61,29 @@ function makeJSONAPI(path, dataList) {
 
 function parseJSONAPI(orgData) {
     let data = orgData.data;
+    let dbData;
+console.log(orgData);
+    let makeSingleData = (jsonApiData) => {
+        let singleData = jsonApiData.attributes;
+        if(typeof data.id != 'undefined')
+            singleData.id = data.id;
+        return singleData;
+    }
 
-    let dbData = data.attributes;
-
-    if(typeof data.id != 'undefined')
-        dbData.id = data.id;
+    if(Array.isArray(data)){
+        dbData = [];
+        for(let i in data){
+            dbData.push(makeSingleData(data[i]));
+        }
+    }
+    else{
+        dbData = makeSingleData(data);
+    }
 
     return dbData;
 }
+
+
 
 exports.makeJSONAPI = makeJSONAPI;
 exports.parseJSONAPI = parseJSONAPI;

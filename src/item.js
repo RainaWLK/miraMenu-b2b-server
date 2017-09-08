@@ -1,6 +1,7 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
+let Image = require('./image.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
@@ -61,27 +62,11 @@ class Items {
       return maxID;
   }
 
-  getNewPhotoID(){
-    /*if(typeof controlData.photoMaxID == 'undefined'){
-      controlData.photoMaxID = "p000";
-    }
-    
-    let idList = Utils.parseID(controlData.photoMaxID);
-    let maxID = parseInt(idList.p, 10)+1;
-
-    return "p"+maxID.toString();*/
-
-    const dateTime = Date.now();
-    const timestamp = Math.floor(dateTime);
-
-    return `p${timestamp}`;
-  }
-
   getNewResourceID(type){
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime);
 
-    return `${type}_${timestamp}`;
+    return `${type}-${timestamp}`;
   }
 
   async getMenusData(){
@@ -350,11 +335,11 @@ class Items {
   }
 
   async addPhoto(payload) {
+    let output;
+
     try {
       let fullID = this.branch_fullID + this.reqData.params.item_id;      
-
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      //let item_id = this.reqData.params.item_id;
       let itemData = menusData.items[fullID];
 
       //check item existed
@@ -364,53 +349,64 @@ class Items {
           throw err;
       }
 
-
       let inputData = JSONAPI.parseJSONAPI(payload);
-      delete inputData.id;
-      console.log(inputData);
-      
-      //migration
-      //if(typeof itemData.itemControl == 'undefined'){
-      //  let control = new ItemControl();
-      //  itemData.itemControl = JSON.parse(JSON.stringify(control));   //bug
-      //}
 
-      //let photo_id = this.getNewPhotoID(itemData.itemControl);
-      let photo_id = this.getNewPhotoID();
-      let path = Utils.makePath(this.idArray);
+      let oneDataProcess = async (oneData, arraySeq) => {
+        let inputSeq = oneData.seq;
+        delete oneData.id;
+        let photo_id = Image.getNewPhotoID(arraySeq);
+        let path = Utils.makePath(this.idArray);
 
-      let file_name = `${path}/photos/${photo_id}.jpg`;
-      console.log("file_name="+file_name);
-      //itemData.itemControl.photoMaxID = photo_id;
-      //console.log("itemData=");
-      //console.log(itemData);
-
-      //sign
-      let signedData = await S3.getPresignedURL(file_name, inputData.mimetype);
-      console.log(signedData);
-
-      //update db
-      inputData.id = Utils.makeFullID(this.idArray) + photo_id;
-      inputData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
-      console.log(inputData);
-      let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, inputData);
-      console.log(dbOutput);
-
-      //menusData.items[fullID] = itemData;
-      //let dbOutput2 = await db.put(TABLE_NAME, menusData);
-
-      //output
-      let outputBuf = {
-        "id": inputData.id,
-        "mimetype": inputData.mimetype,
-        "filename": file_name,
-        "signedrequest": signedData.signedRequest,
-        "url": {
-          "original": signedData.url
+        let fileext = '.jpg';
+        if(oneData.mimetype == 'image/png'){
+          fileext = '.png';
         }
-      };
+ 
+        let file_name = `${path}/photos/${photo_id}${fileext}`;
+        console.log("file_name="+file_name);
+  
+        //sign
+        let signedData = await S3.getPresignedURL(file_name, oneData.mimetype);
+        console.log(signedData);
+  
+        //update db
+        oneData.id = Utils.makeFullID(this.idArray) + photo_id;
+        oneData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
+        delete oneData.seq;
 
-    　let output = JSONAPI.makeJSONAPI("photos", outputBuf);
+        let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, oneData);
+        console.log(dbOutput);
+
+        //output
+        let outputBuf = {
+          "id": oneData.id,
+          "mimetype": oneData.mimetype,
+          "filename": file_name,
+          "signedrequest": signedData.signedRequest,
+          "url": {
+            "original": signedData.url
+          }
+        };
+        if(typeof inputSeq == 'string'){
+          outputBuf.seq = inputSeq;
+        }
+        return outputBuf;
+      }
+
+      let outputBuf;
+      if(Array.isArray(inputData)){
+        let outputBufArray = [];
+        for(let i in inputData){
+          outputBuf = await oneDataProcess(inputData[i], i);
+          outputBufArray.push(outputBuf);
+        }
+      　output = JSONAPI.makeJSONAPI("photos", outputBufArray);
+      }
+      else {
+        outputBuf = await oneDataProcess(inputData);
+        output = JSONAPI.makeJSONAPI("photos", outputBuf);
+      }
+
 
       return output;
     }catch(err) {
@@ -498,10 +494,11 @@ class Items {
   }
 
   async addResource(payload) {
+    let output;
+    let mimetype = "application/octet-stream";
+    
     try {
-      let mimetype = "application/octet-stream";
-      let fullID = this.branch_fullID + this.reqData.params.item_id;      
-
+      let fullID = this.branch_fullID + this.reqData.params.item_id;
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let itemData = menusData.items[fullID];
 
@@ -512,50 +509,62 @@ class Items {
           throw err;
       }
 
-
       let inputData = JSONAPI.parseJSONAPI(payload);
-      delete inputData.id;
-      console.log(inputData);
-      
-      //migration
-      if(typeof itemData.itemControl == 'undefined'){
-        let control = new ItemControl();
-        itemData.itemControl = JSON.parse(JSON.stringify(control));   //bug
+
+      let oneDataProcess = async (oneData, arraySeq) => {
+        let inputSeq = oneData.seq;
+        delete oneData.id;
+        let resource_id = this.getNewResourceID(oneData.type, arraySeq);
+        let path = Utils.makePath(this.idArray);
+  
+        let fileext = "";
+        if((typeof oneData.fileext == 'string') && (oneData.fileext !== "")){
+          fileext = '.'+oneData.fileext;
+        }
+        delete oneData.fileext;
+
+        let file_name = `${path}/resources/${resource_id}${fileext}`;
+        console.log("file_name="+file_name);
+
+        //sign
+        let signedData = await S3.getPresignedURL(file_name, mimetype);
+        console.log(signedData);
+  
+        //update db
+        oneData.id = Utils.makeFullID(this.idArray) + resource_id;
+        oneData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
+        delete oneData.seq;
+
+        let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, oneData);
+        console.log(dbOutput);
+
+        //output
+        let outputBuf = {
+          "id": oneData.id,
+          "mimetype": mimetype,
+          "filename": file_name,
+          "signedrequest": signedData.signedRequest,
+          "url": signedData.url
+        };
+        if(typeof inputSeq == 'string'){
+          outputBuf.seq = inputSeq;
+        }
+        return outputBuf;
       }
 
-      let resource_id = this.getNewResourceID(inputData.type);
-      let path = Utils.makePath(this.idArray);
-
-      let file_name = `${path}/resources/${resource_id}.${inputData.fileExt}`;
-      console.log("file_name="+file_name);
-      //itemData.itemControl.photoMaxID = photo_id;
-      //console.log("itemData=");
-      //console.log(itemData);
-
-      //sign
-      let signedData = await S3.getPresignedURL(file_name, mimetype);
-      console.log(signedData);
-
-      //update db
-      inputData.id = Utils.makeFullID(this.idArray) + resource_id;
-      inputData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
-      console.log(inputData);
-      let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, inputData);
-      console.log(dbOutput);
-
-      //menusData.items[fullID] = itemData;
-      //let dbOutput2 = await db.put(TABLE_NAME, menusData);
-
-      //output
-      let outputBuf = {
-        "id": inputData.id,
-        "mimetype": mimetype,
-        "filename": file_name,
-        "signedrequest": signedData.signedRequest,
-        "data": signedData.url
-      };
-
-    　let output = JSONAPI.makeJSONAPI("resources", outputBuf);
+      let outputBuf;
+      if(Array.isArray(inputData)){
+        let outputBufArray = [];
+        for(let i in inputData){
+          outputBuf = await oneDataProcess(inputData[i], i);
+          outputBufArray.push(outputBuf);
+        }
+        output = JSONAPI.makeJSONAPI("resources", outputBufArray);
+      }
+      else {
+        outputBuf = await oneDataProcess(inputData);
+        output = JSONAPI.makeJSONAPI("resources", outputBuf);
+      }
 
       return output;
     }catch(err) {
