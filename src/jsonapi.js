@@ -1,8 +1,11 @@
+let _ = require('lodash');
+
 class dataObj {
     constructor(id) {
     	this.id = id;
     	this.type = "";
-    	this.attributes = {};
+        this.attributes = {};
+        this.resources = {};
     	//this.relationships = {};
         //this.links = {};
     }
@@ -21,6 +24,11 @@ function makeJSONAPI(path, dataList) {
 
         obj.type = path;
         obj.attributes = orgData;
+
+        if(typeof orgData.resources != 'undefined'){
+            obj.resources = _.cloneDeep(orgData.resources);         
+            delete orgData.resources;
+        }
 
         //obj.relationships = {};
         //obj.links.self = "/"+obj.type+"/"+id;

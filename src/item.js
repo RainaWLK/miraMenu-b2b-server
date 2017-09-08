@@ -61,15 +61,27 @@ class Items {
       return maxID;
   }
 
-  getNewPhotoID(controlData){
-    if(typeof controlData.photoMaxID == 'undefined'){
+  getNewPhotoID(){
+    /*if(typeof controlData.photoMaxID == 'undefined'){
       controlData.photoMaxID = "p000";
     }
     
     let idList = Utils.parseID(controlData.photoMaxID);
     let maxID = parseInt(idList.p, 10)+1;
 
-    return "p"+maxID.toString();
+    return "p"+maxID.toString();*/
+
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime);
+
+    return `p${timestamp}`;
+  }
+
+  getNewResourceID(type){
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime);
+
+    return `${type}_${timestamp}`;
   }
 
   async getMenusData(){
@@ -187,6 +199,7 @@ class Items {
           let control = new ItemControl();
           inputData.itemControl = JSON.parse(JSON.stringify(control));   //bug
           inputData.photos = {};
+          inputData.resources = {};
           menusData.items[fullID] = inputData; 
           //console.log(menusData);
 
@@ -232,6 +245,9 @@ class Items {
         //copy photo data
         data.photos = cloneDeep(menusData.items[fullID].photos);
 
+        //copy resources data
+        data.resources = cloneDeep(menusData.items[fullID].resources);
+
         menusData.items[fullID] = data;
 
         let dbOutput = await db.put(TABLE_NAME, menusData);
@@ -257,6 +273,7 @@ class Items {
           }
           delete menusData.items[fullID];
           //bug: must delete all photos in s3
+          //bug: must delete all resources in s3
 
           let msg = await db.put(TABLE_NAME, menusData);
           return msg;
@@ -353,19 +370,20 @@ class Items {
       console.log(inputData);
       
       //migration
-      if(typeof itemData.itemControl == 'undefined'){
-        let control = new ItemControl();
-        itemData.itemControl = JSON.parse(JSON.stringify(control));   //bug
-      }
+      //if(typeof itemData.itemControl == 'undefined'){
+      //  let control = new ItemControl();
+      //  itemData.itemControl = JSON.parse(JSON.stringify(control));   //bug
+      //}
 
-      let photo_id = this.getNewPhotoID(itemData.itemControl);
+      //let photo_id = this.getNewPhotoID(itemData.itemControl);
+      let photo_id = this.getNewPhotoID();
       let path = Utils.makePath(this.idArray);
 
-      let file_name = `${path}/${photo_id}.jpg`;
+      let file_name = `${path}/photos/${photo_id}.jpg`;
       console.log("file_name="+file_name);
-      itemData.itemControl.photoMaxID = photo_id;
-      console.log("itemData=");
-      console.log(itemData);
+      //itemData.itemControl.photoMaxID = photo_id;
+      //console.log("itemData=");
+      //console.log(itemData);
 
       //sign
       let signedData = await S3.getPresignedURL(file_name, inputData.mimetype);
@@ -378,8 +396,8 @@ class Items {
       let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, inputData);
       console.log(dbOutput);
 
-      menusData.items[fullID] = itemData;
-      let dbOutput2 = await db.put(TABLE_NAME, menusData);
+      //menusData.items[fullID] = itemData;
+      //let dbOutput2 = await db.put(TABLE_NAME, menusData);
 
       //output
       let outputBuf = {
@@ -478,6 +496,111 @@ class Items {
         throw err;
     }
   }
+
+  async addResource(payload) {
+    try {
+      let mimetype = "application/octet-stream";
+      let fullID = this.branch_fullID + this.reqData.params.item_id;      
+
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      let itemData = menusData.items[fullID];
+
+      //check item existed
+      if(typeof itemData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+
+
+      let inputData = JSONAPI.parseJSONAPI(payload);
+      delete inputData.id;
+      console.log(inputData);
+      
+      //migration
+      if(typeof itemData.itemControl == 'undefined'){
+        let control = new ItemControl();
+        itemData.itemControl = JSON.parse(JSON.stringify(control));   //bug
+      }
+
+      let resource_id = this.getNewResourceID(inputData.type);
+      let path = Utils.makePath(this.idArray);
+
+      let file_name = `${path}/resources/${resource_id}.${inputData.fileExt}`;
+      console.log("file_name="+file_name);
+      //itemData.itemControl.photoMaxID = photo_id;
+      //console.log("itemData=");
+      //console.log(itemData);
+
+      //sign
+      let signedData = await S3.getPresignedURL(file_name, mimetype);
+      console.log(signedData);
+
+      //update db
+      inputData.id = Utils.makeFullID(this.idArray) + resource_id;
+      inputData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
+      console.log(inputData);
+      let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, inputData);
+      console.log(dbOutput);
+
+      //menusData.items[fullID] = itemData;
+      //let dbOutput2 = await db.put(TABLE_NAME, menusData);
+
+      //output
+      let outputBuf = {
+        "id": inputData.id,
+        "mimetype": mimetype,
+        "filename": file_name,
+        "signedrequest": signedData.signedRequest,
+        "data": signedData.url
+      };
+
+    　let output = JSONAPI.makeJSONAPI("resources", outputBuf);
+
+      return output;
+    }catch(err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
+  async deleteResource() {
+    try {
+      //get resource data
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      let fullID = this.branch_fullID + this.reqData.params.item_id;
+      let resource_id = this.reqData.params.resource_id;
+
+      let itemData = menusData.items[fullID];
+      if(typeof itemData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+      if(typeof itemData.resources[resource_id] == 'undefined'){
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
+      }
+
+      //delete
+      if(itemData.resources[resource_id].type == 'file'){
+        let msg = await S3.deleteS3Obj(S3.urlToPath(itemData.resources[resource_id].url));
+      }
+      delete itemData.resources[resource_id];
+
+      //write back
+      menusData.items[fullID] = itemData;
+      let dbOutput = await db.put(TABLE_NAME, menusData);
+
+      return dbOutput;
+    }catch(err) {
+        throw err;
+    }
+  }
+
 }
+
+
 
 exports.main = Items;

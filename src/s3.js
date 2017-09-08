@@ -7,6 +7,16 @@ const BUCKET = "meshphoto";
 
 const s3 = new AWS.S3(s3options);
 
+function urlToPath(url){
+	let server = `https://${BUCKET}.s3.amazonaws.com/`;
+	let result = null;
+	if(url.indexOf(server) >= 0){
+		result = url.substring(server.length);
+	}
+	console.log(result);
+	return result;
+}
+
 
 async function getS3Obj(file){
 	var params = {
@@ -88,7 +98,7 @@ function getPresignedURL(file, fileType){
 
 }
 
-
+exports.urlToPath = urlToPath;
 exports.getS3Obj = getS3Obj;
 exports.uploadToS3 = uploadToS3;
 exports.deleteS3Obj = deleteS3Obj;

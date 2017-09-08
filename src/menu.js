@@ -65,15 +65,19 @@ class Menus {
         return maxID;
     }
 
-  getNewPhotoID(controlData){
-    if(typeof controlData.photoMaxID == 'undefined'){
+  getNewPhotoID(){
+    /*if(typeof controlData.photoMaxID == 'undefined'){
       controlData.photoMaxID = "p000";
     }
     
     let idList = Utils.parseID(controlData.photoMaxID);
     let maxID = parseInt(idList.p, 10)+1;
 
-    return "p"+maxID.toString();
+    return "p"+maxID.toString();*/
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime);
+
+    return `p${timestamp}`;
   }
 
   async getMenusData(){
@@ -222,6 +226,7 @@ class Menus {
             let control = new MenuControl();
             inputData.menuControl = JSON.parse(JSON.stringify(control));   //bug
             inputData.photos = {};
+            inputData.resources = {};
             menusData.menus[fullID] = inputData; 
             //console.log(menusData);
 
@@ -272,6 +277,9 @@ class Menus {
 
         //copy photo data
         inputData.photos = cloneDeep(menusData.menus[fullID].photos);
+
+        //copy resources data
+        inputData.resources = cloneDeep(menusData.items[fullID].resources);
 
         menusData.menus[fullID] = inputData;
 
@@ -395,19 +403,19 @@ class Menus {
       console.log(inputData);
       
       //migration
-      if(typeof menuData.menuControl == 'undefined'){
-        let control = new MenuControl();
-        menuData.menuControl = JSON.parse(JSON.stringify(control));   //bug
-      }
+      //if(typeof menuData.menuControl == 'undefined'){
+      //  let control = new MenuControl();
+      //  menuData.menuControl = JSON.parse(JSON.stringify(control));   //bug
+      //}
 
-      let photo_id = this.getNewPhotoID(menuData.menuControl);
+      let photo_id = this.getNewPhotoID();
       let path = Utils.makePath(this.idArray);
 
-      let file_name = `${path}/${photo_id}.jpg`;
+      let file_name = `${path}/photos/${photo_id}.jpg`;
       console.log("file_name="+file_name);
-      menuData.menuControl.photoMaxID = photo_id;
-      console.log("menuData=");
-      console.log(menuData);
+      //menuData.menuControl.photoMaxID = photo_id;
+      //console.log("menuData=");
+      //console.log(menuData);
 
       //sign
       let signedData = await S3.getPresignedURL(file_name, inputData.mimetype);
@@ -420,8 +428,8 @@ class Menus {
       let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, inputData);
       console.log(dbOutput);
 
-      menusData.menus[fullID] = menuData;
-      let dbOutput2 = await db.put(TABLE_NAME, menusData);
+      //menusData.menus[fullID] = menuData;
+      //let dbOutput2 = await db.put(TABLE_NAME, menusData);
 
       //output
       let outputBuf = {

@@ -132,6 +132,8 @@ class Branches {
             control.restaurant_id = this.reqData.params.restaurant_id.toString();
             control.branch_id = branch_id;
             data.branchControl = JSON.parse(JSON.stringify(control));   //bug
+            data.photos = {};
+            data.resources = {};
 
             data.id = control.restaurant_id+control.branch_id;
 
@@ -188,6 +190,12 @@ class Branches {
 
             //copy control data
             data.branchControl = cloneDeep(branchData.branchControl);
+
+            //copy photo data
+            data.photos = cloneDeep(branchData.photos);
+        
+            //copy resources data
+            data.resources = cloneDeep(branchData.resources);
 
             //copy table data
             data.tables = cloneDeep(branchData.tables);
@@ -294,7 +302,7 @@ class Branches {
       let path = Utils.makePath(this.idArray);
       console.log(path);
 
-      let file_name = `${path}/${photo_id}.jpg`;
+      let file_name = `${path}/photos/${photo_id}.jpg`;
       console.log("file_name="+file_name);
       branchData.branchControl.photoMaxID = photo_id;
       console.log("branchData=");

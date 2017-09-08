@@ -157,6 +157,7 @@ class Restaurant {
             data.id = restaurant_id;
             data.restaurantControl.owner = identityId;
             data.photos = {};
+            data.resources = {};
 
             //update restaurant
             await db.post(TABLE_NAME, data);
@@ -188,6 +189,12 @@ class Restaurant {
 
             //copy control data
             data.restaurantControl = cloneDeep(restaurantData.restaurantControl);
+
+            //copy photo data
+            data.photos = cloneDeep(restaurantData.photos);
+            
+            //copy resources data
+            data.resources = cloneDeep(restaurantData.resources);
 
             //update
             let dbOutput = await db.put(TABLE_NAME, data);
@@ -291,7 +298,7 @@ class Restaurant {
       let path = Utils.makePath(this.idArray);
       console.log(path);
 
-      let file_name = `${path}/${photo_id}.jpg`;
+      let file_name = `${path}/photos/${photo_id}.jpg`;
       console.log("file_name="+file_name);
       restaurantData.restaurantControl.photoMaxID = photo_id;
       console.log("restaurantData=");

@@ -749,4 +749,28 @@ api.post('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/phot
     }
 });
 
+//=========================================
+api.post('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.addResource(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.delete('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources/{resource_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.deleteResource(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+
 module.exports = api.app;

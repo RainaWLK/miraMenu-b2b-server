@@ -155,3 +155,4 @@ exports.cleanTest = cleanTest;
 
 //沒item時
 //restaurant menu + branch menu混合
+//沒restaurant menu，只有branch menu時

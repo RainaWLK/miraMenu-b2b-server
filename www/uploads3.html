@@ -9,10 +9,10 @@
   //
   // initialize
   //var UPLOAD_SITE = "https://vuregbibtj.execute-api.us-east-1.amazonaws.com/latest/s3?key=";
-  //var UPLOAD_SITE = "https://wyq60tx4ui.execute-api.us-east-1.amazonaws.com/latest/restaurants/";
+  //var UPLOAD_SITE = "https://aoboid0wkl.execute-api.us-east-1.amazonaws.com/development/restaurants/r20170041/branches/s1/items/i002/photos";
   //var UPLOAD_SITE = "http://localhost:8081/restaurants/20170003/pictures";
-  let UPLOAD_SITE = "http://localhost:8081/restaurants/r201700317/branches/s1/items/i002/photos";
-  //let UPLOAD_SITE = "http://localhost:8081/restaurants/r20170041/branches/s2/photos";
+  let UPLOAD_SITE = "http://localhost:8081/restaurants/r20170041/branches/s1/items/i001/resources";
+  //let UPLOAD_SITE = "http://localhost:8081/restaurants/r20170041/branches/s1/photos";
   let selectedFile;
 
   $(document).ready(() => {
@@ -82,15 +82,31 @@
         }
       }
     };*/
-    let body = {
-      "data": {
-        "type": "photos",
-        "attributes": {
-          "mimetype": file.type
+    let upload_type = UPLOAD_SITE.substring(UPLOAD_SITE.lastIndexOf('/')+1);
+    let fileext = file.name.substring(file.name.lastIndexOf('.')+1);
+    let body;
+    if(upload_type == "photos"){
+      body = {
+        "data": {
+          "type": "photos",
+          "attributes": {
+            "mimetype": file.type
+          }
         }
-      }
-    };
-
+      };
+    }
+    else {
+      body = {
+        "data": {
+          "type": "resources",
+          "attributes": {
+            "type": "file",
+            "fileExt": fileext
+          }
+        }
+      };      
+    }
+    
     $.ajax({
       url: UPLOAD_SITE,
       type: "POST",
@@ -110,8 +126,8 @@
     console.log("UploadRawFile");
 
     var xhr = new XMLHttpRequest();
-    if (xhr.upload && 
-    (file.type == "image/jpeg" || file.type == "image/png")) {
+    if (xhr.upload) {
+    //(file.type == "image/jpeg" || file.type == "image/png")) {
       //var path = UPLOAD_SITE + file.name + ".json";
       // start upload
       xhr.open("PUT", url, true);
@@ -126,11 +142,11 @@
 
       reader.readAsArrayBuffer(file);
     }
-
   }
 
   // output file information
   function ParseFile(file) {
+    console.log(file);
     $("#filename").html(file.name);
     $("#filetype").html(file.type);
     $("#filesize").html(file.size);
