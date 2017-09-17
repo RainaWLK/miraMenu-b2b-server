@@ -3,7 +3,7 @@ function parseID(input){
   if(typeof input == 'undefined'){
     return result;
   }
-  let typeArray = input.match(/[^0-9a-fA-F]/g);
+  let typeArray = input.match(/[^0-9a-fA-F\-]/g);
   let pattern = new RegExp(/[^rstmip]/);
 
   let tail = input.length;
@@ -89,8 +89,32 @@ function objToArray(obj){
     return resultArray;
 }
 
+function getURI(URI, idArray){
+  let path = URI;
+  if(typeof idArray.r != 'undefined'){
+    path = URI.replace('{restaurant_id}', idArray.r);
+  }
+  if(typeof idArray.s != 'undefined'){
+    path = URI.replace('{branch_id}', idArray.s);
+  }
+  if(typeof idArray.t != 'undefined'){
+    path = URI.replace('{table_id}', idArray.t);
+  }
+  if(typeof idArray.m != 'undefined'){
+    path = URI.replace('{menu_id}', idArray.m);
+  }  
+  if(typeof idArray.i != 'undefined'){
+    path = URI.replace('{item_id}', idArray.i);
+  }
+  if(typeof idArray.p != 'undefined'){
+    path = URI.replace('{photo_id}', idArray.p);
+  }
+  return path;
+}
+
 
 exports.parseID = parseID;
 exports.makePath = makePath;
 exports.makeFullID = makeFullID;
 exports.objToArray = objToArray;
+exports.getURI = getURI;

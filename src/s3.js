@@ -59,12 +59,14 @@ async function deleteS3Obj(file){
 		Bucket: BUCKET,
 		Key: file
 	};
-
+console.log(params);
 	try {
 		let msg = await s3.deleteObject(params).promise();
-		//res.setHeader("Content-Type", data.ContentType);
+		console.log(msg);
 		return msg;
 	}catch(err){
+		console.log("deleteS3Obj catch");
+		console.log(err);
 		throw err;
 	}
 }
@@ -87,9 +89,14 @@ function getPresignedURL(file, fileType){
 			if(err){
 				reject(err);
 			}
+			let signedRequest = data.toLowerCase();
+			let p = data.indexOf('&x-amz-security-token=');
+			if(p > 0){
+				signedRequest = signedRequest.substring(0, p);
+			}
 
 			let returnData = {
-				"signedRequest": data.toLowerCase(),
+				"signedRequest": signedRequest,
 				"url": `https://${BUCKET}.s3.amazonaws.com/${file}`
 			}
 			resolve(returnData);

@@ -144,9 +144,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -310,9 +307,6 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
-                    },
-                    "fileext": {
                       "type": "string"
                     },
                     "url": {
@@ -482,9 +476,6 @@
                       "type": {
                         "type": "string"
                       },
-                      "fileext": {
-                        "type": "string"
-                      },
                       "url": {
                         "type": "string"
                       }
@@ -648,9 +639,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -682,19 +670,22 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
                       "type": "string"
                     },
@@ -928,9 +919,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -1148,9 +1136,6 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
-                    },
-                    "fileext": {
                       "type": "string"
                     },
                     "url": {
@@ -1374,9 +1359,6 @@
                       "type": {
                         "type": "string"
                       },
-                      "fileext": {
-                        "type": "string"
-                      },
                       "url": {
                         "type": "string"
                       }
@@ -1597,9 +1579,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -1628,19 +1607,22 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
                       "type": "string"
                     },
@@ -1739,9 +1721,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -1827,9 +1806,6 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
-                    },
-                    "fileext": {
                       "type": "string"
                     },
                     "url": {
@@ -1921,9 +1897,6 @@
                       "type": {
                         "type": "string"
                       },
-                      "fileext": {
-                        "type": "string"
-                      },
                       "url": {
                         "type": "string"
                       }
@@ -2007,9 +1980,6 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
-                    },
-                    "fileext": {
                       "type": "string"
                     },
                     "url": {
@@ -2140,9 +2110,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -2269,9 +2236,6 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
-                    },
-                    "fileext": {
                       "type": "string"
                     },
                     "url": {
@@ -2404,9 +2368,6 @@
                       "type": {
                         "type": "string"
                       },
-                      "fileext": {
-                        "type": "string"
-                      },
                       "url": {
                         "type": "string"
                       }
@@ -2531,9 +2492,6 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
-                    },
-                    "fileext": {
                       "type": "string"
                     },
                     "url": {
@@ -2664,9 +2622,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -2793,9 +2748,6 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
-                    },
-                    "fileext": {
                       "type": "string"
                     },
                     "url": {
@@ -2928,9 +2880,6 @@
                       "type": {
                         "type": "string"
                       },
-                      "fileext": {
-                        "type": "string"
-                      },
                       "url": {
                         "type": "string"
                       }
@@ -3057,9 +3006,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -3091,19 +3037,22 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
                       "type": "string"
                     },
@@ -3146,19 +3095,22 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
                       "type": "string"
                     },
@@ -3314,9 +3266,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -3461,9 +3410,6 @@
                     "type": {
                       "type": "string"
                     },
-                    "fileext": {
-                      "type": "string"
-                    },
                     "url": {
                       "type": "string"
                     }
@@ -3495,19 +3441,22 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
                       "type": "string"
                     },
@@ -3550,19 +3499,22 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
                       "type": "string"
                     },
@@ -3605,22 +3557,24 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
-                      "type": "string",
-                      "description": "stream (required)"
+                      "type": "string"
                     },
                     "filename": {
                       "type": "string"
@@ -3633,6 +3587,7 @@
                     }
                   },
                   "required": [
+                    "mimetype",
                     "filename",
                     "signedrequest"
                   ]
@@ -3655,22 +3610,24 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
                     "mimetype": {
-                      "type": "string",
-                      "description": "stream (required)"
+                      "type": "string"
                     },
                     "filename": {
                       "type": "string"
@@ -3683,6 +3640,7 @@
                     }
                   },
                   "required": [
+                    "mimetype",
                     "filename",
                     "signedrequest"
                   ]

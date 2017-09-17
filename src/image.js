@@ -1,3 +1,4 @@
+let S3 = require('./s3');
 /*var mime = require('mime-types')
 import gm from 'gm';
 const im = gm.subClass({ imageMagick: true });
@@ -56,4 +57,25 @@ function getNewPhotoID(seq){
   return id;
 }
 
+async function deletePhotos(urlArray){
+  try{
+    for(let i in urlArray){
+      let url = urlArray[i];
+      let p = url.indexOf('/', 8)+1;  //https://xxxxxxxxx/
+      //let server = url.substring(0, p);
+      let uri = url.substring(p);
+      //let path = Utils.makePath(this.idArray);
+      console.log("DELETE "+uri);
+      let msg = await S3.deleteS3Obj(uri);
+      console.log(msg);
+    }
+    return;
+  }
+  catch(err){
+    console.log(err);
+    throw err;
+  }
+}
+
 exports.getNewPhotoID = getNewPhotoID;
+exports.deletePhotos = deletePhotos;

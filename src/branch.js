@@ -2,6 +2,7 @@ let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
 let Tables = require('./table.js');
+let Image = require('./image.js');
 import { cloneDeep } from 'lodash';
 let S3 = require('./s3');
 
@@ -384,12 +385,15 @@ class Branches {
           err.statusCode = 404;
           throw err;
       }
-      //delete
-      let file_name = photo_id + ".jpg";
-      let path = Utils.makePath(this.idArray);
-      let msg = await S3.deleteS3Obj(path + "/" + file_name);
 
+      //delete
+      await Image.deletePhotos(branchData.photos[photo_id].url);
       delete branchData.photos[photo_id];
+      //let file_name = photo_id + ".jpg";
+      //let path = Utils.makePath(this.idArray);
+      //let msg = await S3.deleteS3Obj(path + "/" + file_name);
+
+      //delete branchData.photos[photo_id];
 
       //write back
       let dbOutput = await db.put(TABLE_NAME, branchData);

@@ -85,7 +85,7 @@ class CommonTest {
       let res = await this.sendRequest(op, uri, input);
       let output = _.cloneDeep(res.body);
       console.log("=="+op+"==");
-      console.log(output);
+      console.log(output.data);
 
       res.statusCode.should.within(200,210);
       schemaTest.checkSchema(res, op, this.orgURI);

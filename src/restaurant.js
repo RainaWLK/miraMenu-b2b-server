@@ -1,6 +1,7 @@
 let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
+let Image = require('./image.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
@@ -381,11 +382,14 @@ class Restaurant {
           throw err;
       }
       //delete
-      let file_name = photo_id + ".jpg";
-      let path = Utils.makePath(this.idArray);
-      let msg = await S3.deleteS3Obj(path + "/" + file_name);
-
+      await Image.deletePhotos(restaurantData.photos[photo_id].url);
       delete restaurantData.photos[photo_id];
+      //delete
+      //let file_name = photo_id + ".jpg";
+      //let path = Utils.makePath(this.idArray);
+      //let msg = await S3.deleteS3Obj(path + "/" + file_name);
+
+      //delete restaurantData.photos[photo_id];
 
       //write back
       let dbOutput = await db.put(TABLE_NAME, restaurantData);

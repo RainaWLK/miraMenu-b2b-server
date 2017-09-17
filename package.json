@@ -8,7 +8,7 @@
   "main": "build/app.js",
   "scripts": {
     "transpile": "babel src -d build",
-    "test": "mocha --compilers js:babel-core/register --require babel-polyfill --timeout 15000",
+    "test": "mocha --compilers js:babel-core/register --require babel-polyfill --timeout 30000",
     "create": "npm run transpile && claudia create --name myrestaurant --region us-east-1 --api-module build/app --version development --no-optional-dependencies",
     "release": "claudia set-version --version auth",
     "deploy": "npm run transpile && claudia update --version development --set-env NODE_ENV=production --no-optional-dependencies",

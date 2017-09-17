@@ -387,7 +387,7 @@ class Items {
             "original": signedData.url
           }
         };
-        if(typeof inputSeq == 'string'){
+        if(typeof inputSeq != 'undefined'){
           outputBuf.seq = inputSeq;
         }
         return outputBuf;
@@ -450,7 +450,7 @@ class Items {
       //output
       let outputBuf = dbOutput.items[fullID].photos[photo_id];
       outputBuf.id = fullID+photo_id;
-      let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
+      let output = JSONAPI.makeJSONAPI("photos", outputBuf);
       return output;
     }catch(err) {
         throw err;
@@ -462,6 +462,7 @@ class Items {
       //get photo data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let fullID = this.branch_fullID + this.reqData.params.item_id;
+      let photo_id = this.reqData.params.photo_id;
 
       let itemData = menusData.items[fullID];
       if(typeof itemData == 'undefined'){
@@ -469,18 +470,15 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
-      let photo_id = this.reqData.params.photo_id;
-
-      //delete
-      let file_name = photo_id + ".jpg";
+      
       if(typeof itemData.photos[photo_id] == 'undefined'){
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
       }
-      let path = Utils.makePath(this.idArray);
-      let msg = await S3.deleteS3Obj(path + "/" + file_name);
 
+      //delete
+      await Image.deletePhotos(itemData.photos[photo_id].url);
       delete itemData.photos[photo_id];
 
       //write back
@@ -546,7 +544,7 @@ class Items {
           "signedrequest": signedData.signedRequest,
           "url": signedData.url
         };
-        if(typeof inputSeq == 'string'){
+        if(typeof inputSeq != 'undefined'){
           outputBuf.seq = inputSeq;
         }
         return outputBuf;
