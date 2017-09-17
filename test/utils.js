@@ -1,21 +1,21 @@
+
 function parseID(input){
   let result = {};
   if(typeof input == 'undefined'){
     return result;
   }
-  let typeArray = input.match(/[^0-9a-fA-F\-]/g);
-  let pattern = new RegExp(/[^rstmip]/);
+  let typeArray = input.match(/res|[rstmip]/g);
+  //res must be the last type
+  let resIndex = typeArray.indexOf('res');
+  if(resIndex > 0){
+    typeArray.length = resIndex+1;
+  }
 
   let tail = input.length;
   for(let i = 0; i < typeArray.length; i++){
     let type = typeArray[i];
 
-    //check
-    if(pattern.test(type)){
-      continue;
-    }
-
-    let start = input.indexOf(type)+1;
+    let start = input.indexOf(type)+type.length;
 
     let end = tail;
     if(i < typeArray.length-1){
@@ -50,6 +50,9 @@ function makeFullID(idArray){
   if(typeof idArray.p != 'undefined'){
     id += `p${idArray.p}`;
   }
+  if(typeof idArray.res != 'undefined'){
+    id += `res${idArray.res}`;
+  }
   console.log(`makeFullID=${id}`);
   return id;
 }
@@ -74,6 +77,9 @@ function makePath(idArray){
   }
   if(typeof idArray.p != 'undefined'){
     path += `/photos/p${idArray.p}`;
+  }
+  if(typeof idArray.res != 'undefined'){
+    path += `/resources/res${idArray.res}`;
   }
   path = path.slice(1);
   return path;
@@ -109,17 +115,34 @@ function getURI(URI, idArray){
   if(typeof idArray.p != 'undefined'){
     path = path.replace('{photo_id}', `p${idArray.p}`);
   }
+  if(typeof idArray.res != 'undefined'){
+    path = path.replace('{resource_id}', `res${idArray.res}`);
+  }
   console.log("====getURI====");
   console.log(path);
   return path;
 }
 
-function _sleep(ms){
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
+function unittest(){
+  let runTest = (testCase) => {
+    console.log("=============================");
+    console.log(testCase);
+    console.log("=============================");
+    let idArray = parseID(testCase);
+    console.log(idArray);
+    let fullID = makeFullID(idArray);
+    console.log(fullID);
+    let path = makePath(idArray);
+    console.log(path);   
+  }
+
+  runTest('r201700700');
+  runTest('r201700700s1');
+  runTest('r201700700i001');
+  runTest('r201700700s1i001');
+  runTest('r201700700s1i001res-file-1505637455303');
+  runTest('r201700700s1res-file-1505637455303');
+  runTest('r201700700res-file-1505637455303');
 }
 
 exports.parseID = parseID;
@@ -127,4 +150,5 @@ exports.makePath = makePath;
 exports.makeFullID = makeFullID;
 exports.objToArray = objToArray;
 exports.getURI = getURI;
-exports._sleep = _sleep;
+
+exports.unittest = unittest;

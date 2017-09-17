@@ -1,21 +1,20 @@
+
 function parseID(input){
   let result = {};
   if(typeof input == 'undefined'){
     return result;
   }
-  let typeArray = input.match(/[^0-9a-fA-F\-]/g);
-  let pattern = new RegExp(/[^rstmip]/);
+  let typeArray = input.match(/res|[rstmip]/g);
+  //res must be the last type
+  let resIndex = typeArray.indexOf('res');
+  if(resIndex > 0){
+    typeArray.length = resIndex+1;
+  }
 
   let tail = input.length;
   for(let i = 0; i < typeArray.length; i++){
     let type = typeArray[i];
-
-    //check
-    if(pattern.test(type)){
-      continue;
-    }
-
-    let start = input.indexOf(type)+1;
+    let start = input.indexOf(type)+type.length;
 
     let end = tail;
     if(i < typeArray.length-1){
@@ -50,6 +49,9 @@ function makeFullID(idArray){
   if(typeof idArray.p != 'undefined'){
     id += `p${idArray.p}`;
   }
+  if(typeof idArray.res != 'undefined'){
+    id += `res${idArray.res}`;
+  }
   console.log(`makeFullID=${id}`);
   return id;
 }
@@ -75,6 +77,9 @@ function makePath(idArray){
   if(typeof idArray.p != 'undefined'){
     path += `/photos/p${idArray.p}`;
   }
+  if(typeof idArray.res != 'undefined'){
+    path += `/resources/res${idArray.res}`;
+  }
   path = path.slice(1);
   return path;
 }
@@ -92,29 +97,57 @@ function objToArray(obj){
 function getURI(URI, idArray){
   let path = URI;
   if(typeof idArray.r != 'undefined'){
-    path = URI.replace('{restaurant_id}', idArray.r);
+    path = path.replace('{restaurant_id}', `r${idArray.r}`);
   }
   if(typeof idArray.s != 'undefined'){
-    path = URI.replace('{branch_id}', idArray.s);
+    path = path.replace('{branch_id}', `s${idArray.s}`);
   }
   if(typeof idArray.t != 'undefined'){
-    path = URI.replace('{table_id}', idArray.t);
+    path = path.replace('{table_id}', `t${idArray.t}`);
   }
   if(typeof idArray.m != 'undefined'){
-    path = URI.replace('{menu_id}', idArray.m);
+    path = path.replace('{menu_id}', `m${idArray.m}`);
   }  
   if(typeof idArray.i != 'undefined'){
-    path = URI.replace('{item_id}', idArray.i);
+    path = path.replace('{item_id}', `i${idArray.i}`);
   }
   if(typeof idArray.p != 'undefined'){
-    path = URI.replace('{photo_id}', idArray.p);
+    path = path.replace('{photo_id}', `p${idArray.p}`);
   }
+  if(typeof idArray.res != 'undefined'){
+    path = path.replace('{resource_id}', `res${idArray.res}`);
+  }
+  console.log("====getURI====");
+  console.log(path);
   return path;
 }
 
+function unittest(){
+  let runTest = (testCase) => {
+    console.log("=============================");
+    console.log(testCase);
+    console.log("=============================");
+    let idArray = parseID(testCase);
+    console.log(idArray);
+    let fullID = makeFullID(idArray);
+    console.log(fullID);
+    let path = makePath(idArray);
+    console.log(path);   
+  }
+
+  runTest('r201700700');
+  runTest('r201700700s1');
+  runTest('r201700700i001');
+  runTest('r201700700s1i001');
+  runTest('r201700700s1i001res-file-1505637455303');
+  runTest('r201700700s1res-file-1505637455303');
+  runTest('r201700700res-file-1505637455303');
+}
 
 exports.parseID = parseID;
 exports.makePath = makePath;
 exports.makeFullID = makeFullID;
 exports.objToArray = objToArray;
 exports.getURI = getURI;
+
+exports.unittest = unittest;

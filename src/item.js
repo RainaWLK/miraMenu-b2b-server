@@ -66,7 +66,7 @@ class Items {
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime);
 
-    return `${type}-${timestamp}`;
+    return `res-${type}-${timestamp}`;
   }
 
   async getMenusData(){
@@ -300,7 +300,7 @@ class Items {
         throw err;
     }
 
-    return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
+    return JSONAPI.makeJSONAPI("photos", dataArray);
   }
 
   async getPhotoInfoByID() {
@@ -491,6 +491,87 @@ class Items {
     }
   }
 
+  async getResources() {
+    let dbMenusData = await this.getMenusData();
+    let fullID = this.branch_fullID + this.reqData.params.item_id;
+    let itemData = dbMenusData.items[fullID];
+
+    if(typeof itemData == 'undefined'){
+      let err = new Error("not found");
+      err.statusCode = 404;
+      throw err;
+    }
+
+    //output
+    let dataArray = [];
+
+    let makeResourceArray = function(source, dest, item_fullID){
+        for(let resource_id in source.resources){
+          let resourceData = source.resources[resource_id];
+          resourceData.id = item_fullID+resource_id;
+          dest.push(resourceData);
+        }
+        return;
+    }
+
+    makeResourceArray(itemData, dataArray, fullID);
+
+    //if empty
+    if(dataArray.length == 0){
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
+    }
+
+    return JSONAPI.makeJSONAPI("resources", dataArray);
+  }
+
+  async getResourceByID() {
+    try {
+      let dbMenusData = await this.getMenusData();
+      let fullID = this.branch_fullID + this.reqData.params.item_id;
+      let itemData = dbMenusData.items[fullID];
+
+      if(typeof itemData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+
+      let resource_id = this.reqData.params.resource_id;
+      let resourceData = itemData.resources[resource_id];
+
+      if(typeof resourceData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+
+      //output
+      resourceData.id = fullID+resource_id;
+    　let output = JSONAPI.makeJSONAPI("resources", resourceData);
+
+      return output;
+    }catch(err) {
+      throw err;
+    }
+  }
+  /*{
+    "data": {
+      "type": "resources",
+      "attributes": [
+        {
+          "type": "language",
+          "default": "zh-tw",
+          "data": {
+            "en-us": "apple",
+            "zh-tw": "蘋果",
+            "jp": "りんご"
+          }
+        }
+      ]
+    }
+  }*/
   async addResource(payload) {
     let output;
     let mimetype = "application/octet-stream";
@@ -499,6 +580,7 @@ class Items {
       let fullID = this.branch_fullID + this.reqData.params.item_id;
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let itemData = menusData.items[fullID];
+      let writeDB = false;
 
       //check item existed
       if(typeof itemData == 'undefined'){
@@ -514,39 +596,52 @@ class Items {
         delete oneData.id;
         let resource_id = this.getNewResourceID(oneData.type, arraySeq);
         let path = Utils.makePath(this.idArray);
+        let outputBuf;
   
-        let fileext = "";
-        if((typeof oneData.fileext == 'string') && (oneData.fileext !== "")){
-          fileext = '.'+oneData.fileext;
-        }
-        delete oneData.fileext;
-
-        let file_name = `${path}/resources/${resource_id}${fileext}`;
-        console.log("file_name="+file_name);
-
-        //sign
-        let signedData = await S3.getPresignedURL(file_name, mimetype);
-        console.log(signedData);
+        if(oneData.type == 'file'){
+          let fileext = "";
+          if((typeof oneData.fileext == 'string') && (oneData.fileext !== "")){
+            fileext = '.'+oneData.fileext;
+          }
+          delete oneData.fileext;
   
-        //update db
-        oneData.id = Utils.makeFullID(this.idArray) + resource_id;
-        oneData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
-        delete oneData.seq;
-
-        let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, oneData);
-        console.log(dbOutput);
-
-        //output
-        let outputBuf = {
-          "id": oneData.id,
-          "mimetype": mimetype,
-          "filename": file_name,
-          "signedrequest": signedData.signedRequest,
-          "url": signedData.url
-        };
-        if(typeof inputSeq != 'undefined'){
-          outputBuf.seq = inputSeq;
+          let file_name = `${path}/resources/${resource_id}${fileext}`;
+          console.log("file_name="+file_name);
+  
+          //sign
+          let signedData = await S3.getPresignedURL(file_name, mimetype);
+          console.log(signedData);
+    
+          //update db
+          oneData.id = Utils.makeFullID(this.idArray) + resource_id;
+          oneData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
+          delete oneData.seq;
+  
+          let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, oneData);
+          console.log(dbOutput);
+  
+          //output
+          outputBuf = {
+            "id": oneData.id,
+            "mimetype": mimetype,
+            "filename": file_name,
+            "signedrequest": signedData.signedRequest,
+            "url": signedData.url
+          };
+          if(typeof inputSeq != 'undefined'){
+            outputBuf.seq = inputSeq;
+          }
         }
+        else if(oneData.type == 'language'){
+          console.log(oneData);
+          itemData.resources[resource_id] = oneData;
+
+          outputBuf = oneData;
+          outputBuf.id = resource_id;
+
+          writeDB = true;
+        }
+
         return outputBuf;
       }
 
@@ -562,6 +657,12 @@ class Items {
       else {
         outputBuf = await oneDataProcess(inputData);
         output = JSONAPI.makeJSONAPI("resources", outputBuf);
+      }
+      
+      //write into db
+      if(writeDB){
+        menusData.items[fullID] = itemData;
+        let dbOutput = await db.put(TABLE_NAME, menusData);
       }
 
       return output;

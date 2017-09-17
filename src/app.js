@@ -9,6 +9,7 @@ let Rest = require('./rest.js');
 
 let api = new Rest.main();
 
+
 api.get('/restaurants/{restaurant_id}', async (req) => {
     let cmdObj = new Restaurant.main(req);
 
@@ -750,11 +751,33 @@ api.post('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/phot
 });
 
 //=========================================
+api.get('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getResources(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
 api.post('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources', async (req) => {
     let cmdObj = new Items.main(req);
 
     try{
         return await cmdObj.addResource(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.get('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources/{resource_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getResourceByID(req.body);
     }
     catch(err){
         throw err;
