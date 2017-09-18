@@ -2,6 +2,7 @@ let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
 let Image = require('./image.js');
+let Resource = require('./resource.js');
 import { cloneDeep } from 'lodash';
 import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
@@ -15,7 +16,7 @@ const TYPE_NAME = "items";
 const PHOTO_TMP_TABLE_NAME = "photo_tmp";
 
 function ItemControl() {
-  this.photoMaxID = "p000";
+  //this.photoMaxID = "p000";
 }
 
 class Items {
@@ -48,6 +49,11 @@ class Items {
       }
       this.idArray = Utils.parseID(id);
       console.log(this.idArray);
+
+      //lang
+      if(typeof reqData.queryString.lang == 'string'){
+        this.lang = reqData.queryString.lang;
+      }
   }
 
   getNewID(controlData) {  //format: i001
@@ -145,6 +151,22 @@ class Items {
             let err = new Error("not found");
             err.statusCode = 404;
             throw err;
+        }
+
+        console.log(data);
+        let rc = new Resource.main(data.resources);
+        //translate
+        for(let i in data){
+          if((typeof data[i] == 'string')&&(data[i].indexOf('resource::') == 0)){
+            let key = data[i].substring(10);
+            console.log(key);
+            if(key.indexOf('res-language-') == 0){
+              let value = rc.getLang(this.lang, key);
+              console.log(value);
+    
+              data[i] = value;
+            }
+          }
         }
 
         let output = this.output(data, fullID);
@@ -639,6 +661,15 @@ class Items {
           outputBuf = oneData;
           outputBuf.id = resource_id;
 
+          //check
+          let defaultLang = oneData.default;
+          if((typeof defaultLang != 'string')||(typeof oneData.data[defaultLang] == 'undefined')){
+            for(let i in oneData.data){ //set the first lang to default
+              oneData.default = i;
+              break;
+            }
+          }
+
           writeDB = true;
         }
 
@@ -669,6 +700,61 @@ class Items {
     }catch(err) {
       console.log(err);
       throw err;
+    }
+  }
+
+  async updateResource(payload) {
+    let inputData = JSONAPI.parseJSONAPI(payload);
+    delete inputData.id;
+
+    if(inputData.type != 'language'){
+      let err = new Error();
+      err.statusCode = 403;
+      throw err; 
+    }
+
+    try {
+      //get photo data
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      let fullID = this.branch_fullID + this.reqData.params.item_id;
+
+      let itemData = menusData.items[fullID];
+      if(typeof itemData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+      let resource_id = this.reqData.params.resource_id;
+      let resourceData = itemData.resources[resource_id];
+      if(typeof resourceData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
+          throw err;
+      }
+
+      //check
+      let defaultLang = inputData.default;
+      if((typeof defaultLang != 'string')||(typeof inputData.data[defaultLang] == 'undefined')){
+        for(let i in inputData.data){ //set the first lang to default
+          inputData.default = i;
+          break;
+        }
+      }
+
+      //update
+      itemData.resources[resource_id] = inputData;
+
+      //write back
+      menusData.items[fullID] = itemData;
+      let dbOutput = await db.put(TABLE_NAME, menusData);
+
+      //output
+      let outputBuf = dbOutput.items[fullID].resources[resource_id];
+      outputBuf.id = fullID+resource_id;
+      let output = JSONAPI.makeJSONAPI("resources", outputBuf);
+      return output;
+    }catch(err) {
+        throw err;
     }
   }
 

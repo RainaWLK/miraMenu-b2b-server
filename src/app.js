@@ -784,7 +784,74 @@ api.get('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resou
     }
 });
 
+api.patch('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources/{resource_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.updateResource(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
 api.delete('/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources/{resource_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.deleteResource(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+//=========================================
+api.get('/restaurants/{restaurant_id}/items/{item_id}/resources', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getResources(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.post('/restaurants/{restaurant_id}/items/{item_id}/resources', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.addResource(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.get('/restaurants/{restaurant_id}/items/{item_id}/resources/{resource_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.getResourceByID(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.patch('/restaurants/{restaurant_id}/items/{item_id}/resources/{resource_id}', async (req) => {
+    let cmdObj = new Items.main(req);
+
+    try{
+        return await cmdObj.updateResource(req.body);
+    }
+    catch(err){
+        throw err;
+    }
+});
+
+api.delete('/restaurants/{restaurant_id}/items/{item_id}/resources/{resource_id}', async (req) => {
     let cmdObj = new Items.main(req);
 
     try{
