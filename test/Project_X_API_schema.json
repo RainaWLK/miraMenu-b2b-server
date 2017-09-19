@@ -33,9 +33,6 @@
                   "location": {
                     "type": "object",
                     "properties": {
-                      "continent": {
-                        "type": "string"
-                      },
                       "country": {
                         "type": "string"
                       },
@@ -51,16 +48,16 @@
                       "address": {
                         "type": "string"
                       },
+                      "zipcode": {
+                        "type": "string"
+                      },
                       "tel": {
                         "type": "string"
                       }
                     },
                     "required": [
-                      "continent",
                       "country",
-                      "state",
                       "city",
-                      "dist",
                       "address",
                       "tel"
                     ]
@@ -72,6 +69,12 @@
                         "type": "string"
                       },
                       "facebook": {
+                        "type": "string"
+                      },
+                      "instagram": {
+                        "type": "string"
+                      },
+                      "twitter": {
                         "type": "string"
                       }
                     }
@@ -132,6 +135,42 @@
                   "location",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -198,9 +237,6 @@
                   "location": {
                     "type": "object",
                     "properties": {
-                      "continent": {
-                        "type": "string"
-                      },
                       "country": {
                         "type": "string"
                       },
@@ -216,16 +252,16 @@
                       "address": {
                         "type": "string"
                       },
+                      "zipcode": {
+                        "type": "string"
+                      },
                       "tel": {
                         "type": "string"
                       }
                     },
                     "required": [
-                      "continent",
                       "country",
-                      "state",
                       "city",
-                      "dist",
                       "address",
                       "tel"
                     ]
@@ -237,6 +273,12 @@
                         "type": "string"
                       },
                       "facebook": {
+                        "type": "string"
+                      },
+                      "instagram": {
+                        "type": "string"
+                      },
+                      "twitter": {
                         "type": "string"
                       }
                     }
@@ -297,6 +339,42 @@
                   "location",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -365,9 +443,6 @@
                     "location": {
                       "type": "object",
                       "properties": {
-                        "continent": {
-                          "type": "string"
-                        },
                         "country": {
                           "type": "string"
                         },
@@ -383,16 +458,16 @@
                         "address": {
                           "type": "string"
                         },
+                        "zipcode": {
+                          "type": "string"
+                        },
                         "tel": {
                           "type": "string"
                         }
                       },
                       "required": [
-                        "continent",
                         "country",
-                        "state",
                         "city",
-                        "dist",
                         "address",
                         "tel"
                       ]
@@ -404,6 +479,12 @@
                           "type": "string"
                         },
                         "facebook": {
+                          "type": "string"
+                        },
+                        "instagram": {
+                          "type": "string"
+                        },
+                        "twitter": {
                           "type": "string"
                         }
                       }
@@ -464,6 +545,42 @@
                     "location",
                     "photos"
                   ]
+                },
+                "i18n": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "default": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "en-us": {
+                            "type": "string"
+                          },
+                          "zh-tw": {
+                            "type": "string"
+                          },
+                          "jp": {
+                            "type": "string"
+                          },
+                          "kr": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "default",
+                      "data"
+                    ]
+                  }
                 },
                 "resources": {
                   "type": "array",
@@ -528,9 +645,6 @@
                   "location": {
                     "type": "object",
                     "properties": {
-                      "continent": {
-                        "type": "string"
-                      },
                       "country": {
                         "type": "string"
                       },
@@ -546,16 +660,16 @@
                       "address": {
                         "type": "string"
                       },
+                      "zipcode": {
+                        "type": "string"
+                      },
                       "tel": {
                         "type": "string"
                       }
                     },
                     "required": [
-                      "continent",
                       "country",
-                      "state",
                       "city",
-                      "dist",
                       "address",
                       "tel"
                     ]
@@ -567,6 +681,12 @@
                         "type": "string"
                       },
                       "facebook": {
+                        "type": "string"
+                      },
+                      "instagram": {
+                        "type": "string"
+                      },
+                      "twitter": {
                         "type": "string"
                       }
                     }
@@ -627,6 +747,42 @@
                   "location",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -717,6 +873,123 @@
       }
     }
   ],
+  "[POST]/restaurants/{restaurant_id}/i18n": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/resources": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "[GET]/restaurants/{restaurant_id}/branches/{branch_id}": [
     {
       "meta": {
@@ -751,9 +1024,6 @@
                   "location": {
                     "type": "object",
                     "properties": {
-                      "continent": {
-                        "type": "string"
-                      },
                       "country": {
                         "type": "string"
                       },
@@ -769,16 +1039,16 @@
                       "address": {
                         "type": "string"
                       },
+                      "zipcode": {
+                        "type": "string"
+                      },
                       "tel": {
                         "type": "string"
                       }
                     },
                     "required": [
-                      "continent",
                       "country",
-                      "state",
                       "city",
-                      "dist",
                       "address",
                       "tel"
                     ]
@@ -793,6 +1063,12 @@
                         "type": "string"
                       },
                       "facebook": {
+                        "type": "string"
+                      },
+                      "instagram": {
+                        "type": "string"
+                      },
+                      "twitter": {
                         "type": "string"
                       }
                     }
@@ -907,6 +1183,42 @@
                   "rating",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -970,9 +1282,6 @@
                   "location": {
                     "type": "object",
                     "properties": {
-                      "continent": {
-                        "type": "string"
-                      },
                       "country": {
                         "type": "string"
                       },
@@ -988,16 +1297,16 @@
                       "address": {
                         "type": "string"
                       },
+                      "zipcode": {
+                        "type": "string"
+                      },
                       "tel": {
                         "type": "string"
                       }
                     },
                     "required": [
-                      "continent",
                       "country",
-                      "state",
                       "city",
-                      "dist",
                       "address",
                       "tel"
                     ]
@@ -1012,6 +1321,12 @@
                         "type": "string"
                       },
                       "facebook": {
+                        "type": "string"
+                      },
+                      "instagram": {
+                        "type": "string"
+                      },
+                      "twitter": {
                         "type": "string"
                       }
                     }
@@ -1126,6 +1441,42 @@
                   "rating",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -1191,9 +1542,6 @@
                     "location": {
                       "type": "object",
                       "properties": {
-                        "continent": {
-                          "type": "string"
-                        },
                         "country": {
                           "type": "string"
                         },
@@ -1209,16 +1557,16 @@
                         "address": {
                           "type": "string"
                         },
+                        "zipcode": {
+                          "type": "string"
+                        },
                         "tel": {
                           "type": "string"
                         }
                       },
                       "required": [
-                        "continent",
                         "country",
-                        "state",
                         "city",
-                        "dist",
                         "address",
                         "tel"
                       ]
@@ -1233,6 +1581,12 @@
                           "type": "string"
                         },
                         "facebook": {
+                          "type": "string"
+                        },
+                        "instagram": {
+                          "type": "string"
+                        },
+                        "twitter": {
                           "type": "string"
                         }
                       }
@@ -1348,6 +1702,42 @@
                     "photos"
                   ]
                 },
+                "i18n": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "default": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "en-us": {
+                            "type": "string"
+                          },
+                          "zh-tw": {
+                            "type": "string"
+                          },
+                          "jp": {
+                            "type": "string"
+                          },
+                          "kr": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "default",
+                      "data"
+                    ]
+                  }
+                },
                 "resources": {
                   "type": "array",
                   "items": {
@@ -1411,9 +1801,6 @@
                   "location": {
                     "type": "object",
                     "properties": {
-                      "continent": {
-                        "type": "string"
-                      },
                       "country": {
                         "type": "string"
                       },
@@ -1429,16 +1816,16 @@
                       "address": {
                         "type": "string"
                       },
+                      "zipcode": {
+                        "type": "string"
+                      },
                       "tel": {
                         "type": "string"
                       }
                     },
                     "required": [
-                      "continent",
                       "country",
-                      "state",
                       "city",
-                      "dist",
                       "address",
                       "tel"
                     ]
@@ -1453,6 +1840,12 @@
                         "type": "string"
                       },
                       "facebook": {
+                        "type": "string"
+                      },
+                      "instagram": {
+                        "type": "string"
+                      },
+                      "twitter": {
                         "type": "string"
                       }
                     }
@@ -1568,6 +1961,42 @@
                   "photos"
                 ]
               },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              },
               "resources": {
                 "type": "array",
                 "items": {
@@ -1654,6 +2083,123 @@
       }
     }
   ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/i18n": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/resources": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "[GET]/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}": [
     {
       "meta": {
@@ -1709,6 +2255,42 @@
                   "type",
                   "occupied"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -1796,6 +2378,42 @@
                   "type",
                   "occupied"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -1886,6 +2504,42 @@
                     "occupied"
                   ]
                 },
+                "i18n": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "default": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "en-us": {
+                            "type": "string"
+                          },
+                          "zh-tw": {
+                            "type": "string"
+                          },
+                          "jp": {
+                            "type": "string"
+                          },
+                          "kr": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "default",
+                      "data"
+                    ]
+                  }
+                },
                 "resources": {
                   "type": "array",
                   "items": {
@@ -1970,6 +2624,42 @@
                   "type",
                   "occupied"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -2099,6 +2789,42 @@
                   "photos"
                 ]
               },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              },
               "resources": {
                 "type": "array",
                 "items": {
@@ -2226,6 +2952,42 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -2357,6 +3119,42 @@
                     "photos"
                   ]
                 },
+                "i18n": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "default": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "en-us": {
+                            "type": "string"
+                          },
+                          "zh-tw": {
+                            "type": "string"
+                          },
+                          "jp": {
+                            "type": "string"
+                          },
+                          "kr": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "default",
+                      "data"
+                    ]
+                  }
+                },
                 "resources": {
                   "type": "array",
                   "items": {
@@ -2482,6 +3280,42 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -2611,6 +3445,42 @@
                   "photos"
                 ]
               },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              },
               "resources": {
                 "type": "array",
                 "items": {
@@ -2738,6 +3608,42 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -2869,6 +3775,42 @@
                     "photos"
                   ]
                 },
+                "i18n": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "default": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "en-us": {
+                            "type": "string"
+                          },
+                          "zh-tw": {
+                            "type": "string"
+                          },
+                          "jp": {
+                            "type": "string"
+                          },
+                          "kr": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "default",
+                      "data"
+                    ]
+                  }
+                },
                 "resources": {
                   "type": "array",
                   "items": {
@@ -2994,6 +3936,42 @@
                   "menu_availability",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -3142,6 +4120,240 @@
       }
     }
   ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}/i18n": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/menus/{menu_id}/i18n": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}/resources": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/menus/{menu_id}/resources": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "seq": {
+                      "type": "string"
+                    },
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "signedrequest": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "mimetype",
+                    "filename",
+                    "signedrequest"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/items": [
     {
       "meta": {
@@ -3254,6 +4466,42 @@
                   "list_price",
                   "photos"
                 ]
+              },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
               },
               "resources": {
                 "type": "array",
@@ -3399,6 +4647,42 @@
                   "photos"
                 ]
               },
+              "i18n": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              },
               "resources": {
                 "type": "array",
                 "items": {
@@ -3543,6 +4827,134 @@
             }
           }
         }
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/i18n": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "[POST]/restaurants/{restaurant_id}/items/{item_id}/i18n": [
+    {
+      "meta": {
+        "type": "response",
+        "title": null
+      },
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "default": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "en-us": {
+                          "type": "string"
+                        },
+                        "zh-tw": {
+                          "type": "string"
+                        },
+                        "jp": {
+                          "type": "string"
+                        },
+                        "kr": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "default",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
       }
     }
   ],
