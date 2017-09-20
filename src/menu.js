@@ -101,6 +101,24 @@ class Menus {
     return menusData;
   }
 
+  async getMenuData(){
+    try{
+      let dbMenusData = await this.getMenusData();
+      let fullID = this.branch_fullID + this.reqData.params.menu_id;
+      let menuData = dbMenusData.menus[fullID];
+
+      if(typeof menuData == 'undefined'){
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
+      }
+      return menuData;
+    }
+    catch(err){
+      throw err;
+    }
+  }
+
   output(data, fullID){
     data.id = fullID;
     data.photos = Utils.objToArray(data.photos);
@@ -572,8 +590,8 @@ class Menus {
         throw err;
       }
 
-      let i18nUtils = new I18n.main(menuData);
-      let output = await i18nUtils.getI18n(fullID);
+      let i18nUtils = new I18n.main(menuData, this.idArray);
+      let output = i18nUtils.getI18n(fullID);
       return output;
     }catch(err) {
       throw err;
@@ -582,7 +600,7 @@ class Menus {
 
   async getI18nByID() {
     try {
-      let dbMenusData = await this.getMenusData();
+      /*let dbMenusData = await this.getMenusData();
       let fullID = this.branch_fullID + this.reqData.params.menu_id;
       let menuData = dbMenusData.menus[fullID];
 
@@ -590,7 +608,8 @@ class Menus {
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
-      }
+      }*/
+      let menuData = await this.getMenuData();
 
       let i18nUtils = new I18n.main(menuData);
       let output = await i18nUtils.getI18nByID(this.reqData.params, fullID);
@@ -677,39 +696,19 @@ class Menus {
       let fullID = this.branch_fullID + this.reqData.params.menu_id;
 
       let menuData = menusData.menus[fullID];
-      if(typeof itemData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
-      }
-      let i18n_id = this.reqData.params.i18n_id;
-      let i18nData = menuData.i18n[i18n_id];
-      if(typeof i18nData == 'undefined'){
+      if(typeof menuData == 'undefined'){
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
       }
 
-      //check
-      let defaultLang = inputData.default;
-      if((typeof defaultLang != 'string')||(typeof inputData.data[defaultLang] == 'undefined')){
-        for(let i in inputData.data){ //set the first lang to default
-          inputData.default = i;
-          break;
-        }
-      }
-
-      //update
-      menuData.i18n[i18n_id] = inputData;
+      let i18nUtils = new I18n.main(menuData, this.idArray);
+      let output = i18nUtils.updateI18n(this.reqData.params, payload);
 
       //write back
       menusData.menus[fullID] = menuData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
-      //output
-      let outputBuf = dbOutput.menus[fullID].i18n[i18n_id];
-      outputBuf.id = fullID+i18n_id;
-      let output = JSONAPI.makeJSONAPI(I18N_TYPE_NAME, outputBuf);
       return output;
     }catch(err) {
         throw err;
@@ -721,7 +720,6 @@ class Menus {
       //get resource data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let fullID = this.branch_fullID + this.reqData.params.menu_id;
-      //let i18n_id = this.reqData.params.i18n_id;
 
       let menuData = menusData.menus[fullID];
       if(typeof menuData == 'undefined'){
@@ -730,7 +728,7 @@ class Menus {
           throw err;
       }
 
-      let i18nUtils = new I18n.main(menuData);
+      let i18nUtils = new I18n.main(itemData, this.idArray);
       let resultData = await i18nUtils.deleteI18n(this.reqData.params);
 
 
