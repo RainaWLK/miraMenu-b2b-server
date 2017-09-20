@@ -109,6 +109,24 @@ class Items {
     return menusData;
   }
 
+  async getItemData(){
+    try{
+      let dbMenusData = await this.getMenusData();
+      let fullID = this.branch_fullID + this.reqData.params.item_id;
+      let itemData = dbMenusData.items[fullID];
+
+      if(typeof itemData == 'undefined'){
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
+      }
+      return itemData;
+    }
+    catch(err){
+      throw err;
+    }
+  }
+
   output(data, fullID){
     data.id = fullID;
     data.photos = Utils.objToArray(data.photos);
@@ -545,6 +563,7 @@ class Items {
         err.statusCode = 404;
         throw err;
       }
+      //let itemData = await this.getItemData();
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
       let output = i18nUtils.getI18n(fullID);
@@ -556,14 +575,15 @@ class Items {
 
   async getI18nByID() {
     try {
-      let dbMenusData = await this.getMenusData();
+      /*let dbMenusData = await this.getMenusData();
       let fullID = this.branch_fullID + this.reqData.params.item_id;
       let itemData = dbMenusData.items[fullID];
       if(typeof itemData == 'undefined'){
         let err = new Error("not found");
         err.statusCode = 404;
         throw err;
-      }
+      }*/
+      let itemData = await this.getItemData();
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
       let output = i18nUtils.getI18nByID(this.reqData.params);
