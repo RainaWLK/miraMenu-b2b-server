@@ -159,6 +159,7 @@ class Restaurant {
             data.restaurantControl.owner = identityId;
             data.photos = {};
             data.resources = {};
+            data.i18n = {};
 
             //update restaurant
             await db.post(TABLE_NAME, data);

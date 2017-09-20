@@ -12,7 +12,7 @@ const RESTAURANT_TABLE_NAME = "Restaurants";
 const TABLE_NAME = "Menus";
 
 const TYPE_NAME = "items";
-const I18N_TYPE_NAME = "i18n";
+
 const RESOURCE_TYPE_NAME = "resources";
 
 const PHOTO_TMP_TABLE_NAME = "photo_tmp";
@@ -129,7 +129,7 @@ class Items {
         let data = itemData[item_id];
 
         //translate
-        let rc = new I18n.main(data.i18n);
+        let rc = new I18n.main(data, this.idArray);
         let header = "i18n::";
         for(let i in data){
           if((typeof data[i] == 'string')&&(data[i].indexOf(header) == 0)){
@@ -174,7 +174,7 @@ class Items {
 
         console.log(data);
         //translate
-        let rc = new I18n.main(data.i18n);
+        let rc = new I18n.main(data, this.idArray);
         let header = "i18n::";
         for(let i in data){
           if((typeof data[i] == 'string')&&(data[i].indexOf(header) == 0)){
@@ -227,6 +227,7 @@ class Items {
           inputData.itemControl = JSON.parse(JSON.stringify(control));   //bug
           inputData.photos = {};
           inputData.resources = {};
+          inputData.i18n = {};
           menusData.items[fullID] = inputData; 
           //console.log(menusData);
 
@@ -545,28 +546,9 @@ class Items {
         throw err;
       }
 
-      //output
-      let dataArray = [];
-
-      let makeI18nArray = function(source, dest, item_fullID){
-          for(let i18n_id in source.i18n){
-            let i18nData = source.i18n[i18n_id];
-            i18nData.id = item_fullID+i18n_id;
-            dest.push(i18nData);
-          }
-          return;
-      }
-
-      makeI18nArray(itemData, dataArray, fullID);
-
-      //if empty
-      if(dataArray.length == 0){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
-      }
-
-      return JSONAPI.makeJSONAPI(I18N_TYPE_NAME, dataArray);
+      let i18nUtils = new I18n.main(itemData, this.idArray);
+      let output = i18nUtils.getI18n(fullID);
+      return output;
     }catch(err) {
       throw err;
     }
@@ -577,33 +559,21 @@ class Items {
       let dbMenusData = await this.getMenusData();
       let fullID = this.branch_fullID + this.reqData.params.item_id;
       let itemData = dbMenusData.items[fullID];
-
       if(typeof itemData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
       }
 
-      let i18n_id = this.reqData.params.i18n_id;
-      let i18nData = itemData.i18n[i18n_id];
-
-      if(typeof i18nData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
-      }
-
-      //output
-      i18nData.id = fullID+i18n_id;
-    　let output = JSONAPI.makeJSONAPI(I18N_TYPE_NAME, i18nData);
-
+      let i18nUtils = new I18n.main(itemData, this.idArray);
+      let output = i18nUtils.getI18nByID(this.reqData.params);
       return output;
     }catch(err) {
       throw err;
     }
   }
 
-  async addI18n() {
+  async addI18n(payload) {
     let output;
 
     try {
@@ -618,47 +588,9 @@ class Items {
           throw err;
       }
 
-      let inputData = JSONAPI.parseJSONAPI(payload);
+      let i18nUtils = new I18n.main(itemData, this.idArray);
+      let output = i18nUtils.addI18n(payload);
 
-      let oneDataProcess = async (oneData, arraySeq) => {
-        let inputSeq = oneData.seq;
-        delete oneData.id;
-        let i18n_id = this.getNewResourceID("i18n", arraySeq);
-        let path = Utils.makePath(this.idArray);
-        let outputBuf;
-
-        console.log(oneData);
-        itemData.i18n[i18n_id] = oneData;
-
-        outputBuf = oneData;
-        outputBuf.id = i18n_id;
-
-        //check
-        let defaultLang = oneData.default;
-        if((typeof defaultLang != 'string')||(typeof oneData.data[defaultLang] == 'undefined')){
-          for(let i in oneData.data){ //set the first lang to default
-            oneData.default = i;
-            break;
-          }
-        }
-
-        return outputBuf;
-      }
-
-      let outputBuf;
-      if(Array.isArray(inputData)){
-        let outputBufArray = [];
-        for(let i in inputData){
-          outputBuf = await oneDataProcess(inputData[i], i);
-          outputBufArray.push(outputBuf);
-        }
-        output = JSONAPI.makeJSONAPI(I18N_TYPE_NAME, outputBufArray);
-      }
-      else {
-        outputBuf = await oneDataProcess(inputData);
-        output = JSONAPI.makeJSONAPI(I18N_TYPE_NAME, outputBuf);
-      }
-      
       //write into db
       menusData.items[fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
@@ -670,7 +602,7 @@ class Items {
     }
   }
 
-  async updateI18n() {
+  async updateI18n(payload) {
     let inputData = JSONAPI.parseJSONAPI(payload);
     delete inputData.id;
 
@@ -685,34 +617,14 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
-      let i18n_id = this.reqData.params.i18n_id;
-      let i18nData = itemData.i18n[i18n_id];
-      if(typeof i18nData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
-      }
 
-      //check
-      let defaultLang = inputData.default;
-      if((typeof defaultLang != 'string')||(typeof inputData.data[defaultLang] == 'undefined')){
-        for(let i in inputData.data){ //set the first lang to default
-          inputData.default = i;
-          break;
-        }
-      }
-
-      //update
-      itemData.i18n[i18n_id] = inputData;
+      let i18nUtils = new I18n.main(itemData, this.idArray);
+      let output = i18nUtils.updateI18n(this.reqData.params, payload);
 
       //write back
       menusData.items[fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
-      //output
-      let outputBuf = dbOutput.items[fullID].i18n[i18n_id];
-      outputBuf.id = fullID+i18n_id;
-      let output = JSONAPI.makeJSONAPI(I18N_TYPE_NAME, outputBuf);
       return output;
     }catch(err) {
         throw err;
@@ -724,7 +636,6 @@ class Items {
       //get resource data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let i18n_id = this.reqData.params.i18n_id;
 
       let itemData = menusData.items[fullID];
       if(typeof itemData == 'undefined'){
@@ -732,17 +643,13 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
-      if(typeof itemData.i18n[i18n_id] == 'undefined'){
-        let err = new Error("not found");
-        err.statusCode = 404;
-        throw err;
-      }
 
-      //delete
-      delete itemData.i18n[i18n_id];
+      let i18nUtils = new I18n.main(itemData, this.idArray);
+      let resultData = i18nUtils.deleteI18n(this.reqData.params);
+
 
       //write back
-      menusData.items[fullID] = itemData;
+      menusData.items[fullID] = resultData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
       return dbOutput;

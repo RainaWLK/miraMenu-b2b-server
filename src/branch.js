@@ -135,6 +135,7 @@ class Branches {
             data.branchControl = JSON.parse(JSON.stringify(control));   //bug
             data.photos = {};
             data.resources = {};
+            data.i18n = {};
 
             data.id = control.restaurant_id+control.branch_id;
 

@@ -5,6 +5,7 @@ class dataObj {
     	this.id = id;
     	this.type = "";
         this.attributes = {};
+        this.i18n = [];
         this.resources = [];
     	//this.relationships = {};
         //this.links = {};
@@ -36,6 +37,19 @@ function makeJSONAPI(path, dataList) {
         }
         if(obj.resources.length == 0){
             delete obj.resources;
+        }
+
+        if(typeof orgData.i18n != 'undefined'){
+            //obj.i18n = _.cloneDeep(orgData.i18n);
+            for(let i18n_id in orgData.i18n){
+                let i18nData = orgData.i18n[i18n_id];
+                i18nData.id = i18n_id;
+                obj.i18n.push(i18nData);
+            }
+            delete orgData.i18n;
+        }
+        if(obj.i18n.length == 0){
+            delete obj.i18n;
         }
 
         //obj.relationships = {};
