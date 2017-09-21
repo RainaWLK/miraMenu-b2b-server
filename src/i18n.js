@@ -1,5 +1,6 @@
 let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
+let _ = require('lodash');
 
 const I18N_TYPE_NAME = "i18n";
 
@@ -14,13 +15,31 @@ class I18n {
   }
 
   getLang(lang, key){
+    console.log("getLang: lang="+lang);
+    console.log(key);
+
+    if(_.isEmpty(this.dbData.i18n)){
+      return "";
+    }
+    
     let i18nData = this.dbData.i18n[key];
     console.log(i18nData);
+
+    if((typeof i18nData != 'object')||(typeof i18nData.data != 'object')){
+      console.log("i18nData.data != object");
+      return "";
+    }
+    console.log("i18nData.data == object");
 
     if(typeof i18nData.data[lang] == 'string'){
       return i18nData.data[lang];
     }
-    return i18nData.data[i18nData.default];
+    else if(typeof i18nData.data[i18nData.default] == 'string') {
+      return i18nData.data[i18nData.default];
+    }
+    else {
+      return "";
+    }
   }
 
   getNewResourceID(type){

@@ -45,11 +45,11 @@ class Items {
       }
 
       //id array
-      let id = this.branch_fullID;
+      this.item_fullID = this.branch_fullID;
       if(typeof this.reqData.params.item_id != 'undefined'){
-        id += this.reqData.params.item_id;
+        this.item_fullID += this.reqData.params.item_id;
       }
-      this.idArray = Utils.parseID(id);
+      this.idArray = Utils.parseID(this.item_fullID);
       console.log(this.idArray);
 
       //lang
@@ -77,43 +77,55 @@ class Items {
     return `res-${type}-${timestamp}`;
   }
 
-  async getMenusData(){
+  async getMenusData(mix){
     let menusData;
-    try {
-      let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
-      menusData = restaurantMenusData;
-    }
-    catch(err){
-      menusData = {
-        "items": {},
-        "menus": {}
-      };
-    }
-
-    if(this.branchQuery){
+    if(mix){
       try {
-        let branchMenusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-        //merge
-        for(let id in branchMenusData.menus){
-          menusData.menus[id] = branchMenusData.menus[id];
+        let restaurantMenusData = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
+        menusData = restaurantMenusData;
+      }
+      catch(err){
+        menusData = {
+          "items": {},
+          "menus": {}
+        };
+      }
+  
+      if(this.branchQuery){
+        try {
+          let branchMenusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+          //merge
+          for(let id in branchMenusData.menus){
+            menusData.menus[id] = branchMenusData.menus[id];
+          }
+          for(let id in branchMenusData.items){
+            menusData.items[id] = branchMenusData.items[id];
+          }
         }
-        for(let id in branchMenusData.items){
-          menusData.items[id] = branchMenusData.items[id];
+        catch(err) {
+  
         }
       }
-      catch(err) {
-
+    }
+    else {
+      try {
+        menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      }
+      catch(err){
+        menusData = {
+          "items": {},
+          "menus": {}
+        };
       }
     }
 
     return menusData;
   }
 
-  async getItemData(){
+  async getItemData(mix){
     try{
-      let dbMenusData = await this.getMenusData();
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let itemData = dbMenusData.items[fullID];
+      let dbMenusData = await this.getMenusData(mix);
+      let itemData = dbMenusData.items[this.item_fullID];
 
       if(typeof itemData == 'undefined'){
         let err = new Error("not found");
@@ -136,7 +148,7 @@ class Items {
   }
 
   async get() {
-    let dbMenusData = await this.getMenusData();
+    let dbMenusData = await this.getMenusData(true);
     let itemData = dbMenusData.items;
 
     //output
@@ -179,7 +191,7 @@ class Items {
 
   async getByID() {
       try {
-        let dbMenusData = await this.getMenusData();
+        /*let dbMenusData = await this.getMenusData(true);
         let itemData = dbMenusData.items;
         let fullID = this.branch_fullID + this.reqData.params.item_id;
 
@@ -188,26 +200,27 @@ class Items {
             let err = new Error("not found");
             err.statusCode = 404;
             throw err;
-        }
+        }*/
+        let itemData = await this.getItemData(true);
 
-        console.log(data);
+        console.log(itemData);
         //translate
-        let rc = new I18n.main(data, this.idArray);
+        let rc = new I18n.main(itemData, this.idArray);
         let header = "i18n::";
-        for(let i in data){
-          if((typeof data[i] == 'string')&&(data[i].indexOf(header) == 0)){
-            let key = data[i].substring(header.length);
+        for(let i in itemData){
+          if((typeof itemData[i] == 'string')&&(itemData[i].indexOf(header) == 0)){
+            let key = itemData[i].substring(header.length);
             console.log(key);
             if(key.indexOf('res-i18n-') == 0){
               let value = rc.getLang(this.lang, key);
               console.log(value);
     
-              data[i] = value;
+              itemData[i] = value;
             }
           }
         }
 
-        let output = this.output(data, fullID);
+        let output = this.output(itemData, this.item_fullID);
         return JSONAPI.makeJSONAPI(TYPE_NAME, output);
       }catch(err) {
           throw err;
@@ -222,7 +235,7 @@ class Items {
           let item_id = this.getNewID(branchData[this.controlName]);
           let fullID = this.branch_fullID + item_id;          
 
-          let dbMenusData = await this.getMenusData();          
+          let dbMenusData = await this.getMenusData(true);          
 
           let menusData;
           //let createNew = false;
@@ -276,30 +289,35 @@ class Items {
       try{
         let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
         let fullID = this.branch_fullID + this.reqData.params.item_id;
+        let itemData = menusData.items[fullID];
 
         //check item existed
-        if(typeof menusData.items[fullID] == 'undefined'){
+        if(typeof itemData == 'undefined'){
             let err = new Error("not found");
             err.statusCode = 404;
             throw err;
         }
+        //let itemData = await this.getItemData(false);
 
         let data = JSONAPI.parseJSONAPI(payload);
         delete data.id;
-        data.itemControl = cloneDeep(menusData.items[fullID].itemControl);
+        data.itemControl = cloneDeep(itemData.itemControl);
 
         //copy photo data
-        data.photos = cloneDeep(menusData.items[fullID].photos);
+        data.photos = cloneDeep(itemData.photos);
+
+        //copy i18n data
+        data.i18n = cloneDeep(itemData.i18n);
 
         //copy resources data
-        data.resources = cloneDeep(menusData.items[fullID].resources);
+        data.resources = cloneDeep(itemData.resources);
 
-        menusData.items[fullID] = data;
+        menusData.items[this.item_fullID] = data;
 
         let dbOutput = await db.put(TABLE_NAME, menusData);
 
         //output
-        let output = this.output(dbOutput.items[fullID], fullID);
+        let output = this.output(dbOutput.items[this.item_fullID], this.item_fullID);
         return JSONAPI.makeJSONAPI(TYPE_NAME, output);
       }
       catch(err) {
@@ -317,7 +335,8 @@ class Items {
               err.statusCode = 404;
               throw err;
           }
-          delete menusData.items[fullID];
+          //let itemData = await this.getItemData(false);
+          delete menusData.items[this.item_fullID];
           //bug: must delete all photos in s3
           //bug: must delete all resources in s3
 
@@ -330,7 +349,7 @@ class Items {
   }
 
   async getPhotoInfo() {
-    let dbMenusData = await this.getMenusData();
+    /*let dbMenusData = await this.getMenusData(true);
     let fullID = this.branch_fullID + this.reqData.params.item_id;
     let itemData = dbMenusData.items[fullID];
 
@@ -338,7 +357,8 @@ class Items {
       let err = new Error("not found");
       err.statusCode = 404;
       throw err;
-    }
+    }*/
+    let itemData = await this.getItemData(true);
 
     //output
     let dataArray = [];
@@ -352,7 +372,7 @@ class Items {
         return;
     }
 
-    makePhotoArray(itemData, dataArray, fullID);
+    makePhotoArray(itemData, dataArray, this.item_fullID);
 
     //if empty
     if(dataArray.length == 0){
@@ -366,7 +386,7 @@ class Items {
 
   async getPhotoInfoByID() {
     try {
-      let dbMenusData = await this.getMenusData();
+      /*let dbMenusData = await this.getMenusData(true);
       let fullID = this.branch_fullID + this.reqData.params.item_id;
       let itemData = dbMenusData.items[fullID];
 
@@ -374,7 +394,8 @@ class Items {
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
-      }
+      }*/
+      let itemData = await this.getItemData(true);
 
       let photo_id = this.reqData.params.photo_id;
       let photoData = itemData.photos[photo_id];
@@ -386,7 +407,7 @@ class Items {
       }
 
       //output
-      photoData.id = fullID+photo_id;
+      photoData.id = this.item_fullID+photo_id;
     　let output = JSONAPI.makeJSONAPI("photos", photoData);
 
       return output;
@@ -399,7 +420,7 @@ class Items {
     let output;
 
     try {
-      let fullID = this.branch_fullID + this.reqData.params.item_id;      
+      /*let fullID = this.branch_fullID + this.reqData.params.item_id;      
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let itemData = menusData.items[fullID];
 
@@ -408,7 +429,8 @@ class Items {
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
-      }
+      }*/
+      let itemData = await this.getItemData(false);
 
       let inputData = JSONAPI.parseJSONAPI(payload);
 
@@ -489,6 +511,8 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
+      //let itemData = await this.getItemData(false);
+
       let photo_id = this.reqData.params.photo_id;
       let photoData = itemData.photos[photo_id];
       if(typeof photoData == 'undefined'){
@@ -505,12 +529,12 @@ class Items {
       itemData.photos[photo_id] = data;
 
       //write back
-      menusData.items[fullID] = itemData;
+      menusData.items[this.item_fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
       //output
-      let outputBuf = dbOutput.items[fullID].photos[photo_id];
-      outputBuf.id = fullID+photo_id;
+      let outputBuf = dbOutput.items[this.item_fullID].photos[photo_id];
+      outputBuf.id = this.item_fullID+photo_id;
       let output = JSONAPI.makeJSONAPI("photos", outputBuf);
       return output;
     }catch(err) {
@@ -523,7 +547,6 @@ class Items {
       //get photo data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let photo_id = this.reqData.params.photo_id;
 
       let itemData = menusData.items[fullID];
       if(typeof itemData == 'undefined'){
@@ -531,7 +554,9 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
+      //let itemData = await this.getItemData(false);
       
+      let photo_id = this.reqData.params.photo_id;
       if(typeof itemData.photos[photo_id] == 'undefined'){
           let err = new Error("not found");
           err.statusCode = 404;
@@ -543,7 +568,7 @@ class Items {
       delete itemData.photos[photo_id];
 
       //write back
-      menusData.items[fullID] = itemData;
+      menusData.items[this.item_fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
       return dbOutput;
@@ -554,7 +579,7 @@ class Items {
 
   async getI18n() {
     try{
-      let dbMenusData = await this.getMenusData();
+      /*let dbMenusData = await this.getMenusData(true);
       let fullID = this.branch_fullID + this.reqData.params.item_id;
       let itemData = dbMenusData.items[fullID];
 
@@ -562,11 +587,11 @@ class Items {
         let err = new Error("not found");
         err.statusCode = 404;
         throw err;
-      }
-      //let itemData = await this.getItemData();
+      }*/
+      let itemData = await this.getItemData(true);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
-      let output = i18nUtils.getI18n(fullID);
+      let output = i18nUtils.getI18n(this.item_fullID);
       return output;
     }catch(err) {
       throw err;
@@ -583,7 +608,7 @@ class Items {
         err.statusCode = 404;
         throw err;
       }*/
-      let itemData = await this.getItemData();
+      let itemData = await this.getItemData(true);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
       let output = i18nUtils.getI18nByID(this.reqData.params);
@@ -607,12 +632,13 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
+      //let itemData = await this.getItemData(false);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
       let output = i18nUtils.addI18n(payload);
 
       //write into db
-      menusData.items[fullID] = itemData;
+      menusData.items[this.item_fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
       return output;
@@ -637,12 +663,13 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
+      //let itemData = await this.getItemData(false);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
       let output = i18nUtils.updateI18n(this.reqData.params, payload);
 
       //write back
-      menusData.items[fullID] = itemData;
+      menusData.items[this.item_fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
       return output;
@@ -663,13 +690,14 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
+      //let itemData = await this.getItemData(false);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
       let resultData = i18nUtils.deleteI18n(this.reqData.params);
 
 
       //write back
-      menusData.items[fullID] = resultData;
+      menusData.items[this.item_fullID] = resultData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
       return dbOutput;
@@ -679,7 +707,7 @@ class Items {
   }
 
   async getResources() {
-    let dbMenusData = await this.getMenusData();
+    /*let dbMenusData = await this.getMenusData(true);
     let fullID = this.branch_fullID + this.reqData.params.item_id;
     let itemData = dbMenusData.items[fullID];
 
@@ -687,7 +715,8 @@ class Items {
       let err = new Error("not found");
       err.statusCode = 404;
       throw err;
-    }
+    }*/
+    let itemData = await this.getItemData(true);
 
     //output
     let dataArray = [];
@@ -701,7 +730,7 @@ class Items {
         return;
     }
 
-    makeResourceArray(itemData, dataArray, fullID);
+    makeResourceArray(itemData, dataArray, this.item_fullID);
 
     //if empty
     if(dataArray.length == 0){
@@ -715,7 +744,7 @@ class Items {
 
   async getResourceByID() {
     try {
-      let dbMenusData = await this.getMenusData();
+      /*let dbMenusData = await this.getMenusData(true);
       let fullID = this.branch_fullID + this.reqData.params.item_id;
       let itemData = dbMenusData.items[fullID];
 
@@ -723,7 +752,8 @@ class Items {
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
-      }
+      }*/
+      let itemData = await this.getItemData(true);
 
       let resource_id = this.reqData.params.resource_id;
       let resourceData = itemData.resources[resource_id];
@@ -735,7 +765,7 @@ class Items {
       }
 
       //output
-      resourceData.id = fullID+resource_id;
+      resourceData.id = this.item_fullID+resource_id;
     　let output = JSONAPI.makeJSONAPI("resources", resourceData);
 
       return output;
@@ -743,28 +773,13 @@ class Items {
       throw err;
     }
   }
-  /*{
-    "data": {
-      "type": "resources",
-      "attributes": [
-        {
-          "type": "language",
-          "default": "zh-tw",
-          "data": {
-            "en-us": "apple",
-            "zh-tw": "蘋果",
-            "jp": "りんご"
-          }
-        }
-      ]
-    }
-  }*/
+
   async addResource(payload) {
     let output;
     let mimetype = "application/octet-stream";
     
     try {
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
+      /*let fullID = this.branch_fullID + this.reqData.params.item_id;
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let itemData = menusData.items[fullID];
 
@@ -773,7 +788,8 @@ class Items {
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
-      }
+      }*/
+      let itemData = await this.getItemData(false);
 
       let inputData = JSONAPI.parseJSONAPI(payload);
 
@@ -847,8 +863,7 @@ class Items {
     try {
       //get resource data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let resource_id = this.reqData.params.resource_id;
+      let fullID = this.branch_fullID + this.reqData.params.item_id;      
 
       let itemData = menusData.items[fullID];
       if(typeof itemData == 'undefined'){
@@ -856,6 +871,9 @@ class Items {
           err.statusCode = 404;
           throw err;
       }
+      //let itemData = await this.getItemData(false);
+
+      let resource_id = this.reqData.params.resource_id;
       if(typeof itemData.resources[resource_id] == 'undefined'){
         let err = new Error("not found");
         err.statusCode = 404;
@@ -869,7 +887,7 @@ class Items {
       delete itemData.resources[resource_id];
 
       //write back
-      menusData.items[fullID] = itemData;
+      menusData.items[this.item_fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
       return dbOutput;
