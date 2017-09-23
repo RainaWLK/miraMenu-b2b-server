@@ -1,7 +1,8 @@
+let _ = require('lodash');
 
 function parseID(input){
   let result = {};
-  if(typeof input == 'undefined'){
+  if(_.isEmpty(input)){
     return result;
   }
   let typeArray = input.match(/res|[rstmip]/g);
@@ -116,6 +117,7 @@ function getURI(URI, idArray){
   }
   if(typeof idArray.res != 'undefined'){
     path = path.replace('{resource_id}', `res${idArray.res}`);
+    path = path.replace('{i18n_id}', `res${idArray.res}`);
   }
   console.log("====getURI====");
   console.log(path);
@@ -135,6 +137,12 @@ function unittest(){
     console.log(path);   
   }
 
+  runTest();
+  runTest({});
+  runTest([]);
+  runTest(0);
+  runTest(1);
+  runTest('');
   runTest('r201700700');
   runTest('r201700700s1');
   runTest('r201700700i001');
@@ -142,6 +150,7 @@ function unittest(){
   runTest('r201700700s1i001res-file-1505637455303');
   runTest('r201700700s1res-file-1505637455303');
   runTest('r201700700res-file-1505637455303');
+  runTest('{restaurant_id}{branch_id}{item_id}'); //bug
 }
 
 exports.parseID = parseID;

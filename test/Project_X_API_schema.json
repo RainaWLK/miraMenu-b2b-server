@@ -884,19 +884,19 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
-                    },
                     "default": {
                       "type": "string"
                     },
@@ -919,16 +919,16 @@
                     }
                   },
                   "required": [
-                    "id",
                     "default",
                     "data"
                   ]
                 }
-              }
-            },
-            "required": [
-              "type"
-            ]
+              },
+              "required": [
+                "id",
+                "type"
+              ]
+            }
           }
         },
         "required": [
@@ -2094,19 +2094,19 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
-                    },
                     "default": {
                       "type": "string"
                     },
@@ -2129,16 +2129,16 @@
                     }
                   },
                   "required": [
-                    "id",
                     "default",
                     "data"
                   ]
                 }
-              }
-            },
-            "required": [
-              "type"
-            ]
+              },
+              "required": [
+                "id",
+                "type"
+              ]
+            }
           }
         },
         "required": [
@@ -4131,19 +4131,19 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
-                    },
                     "default": {
                       "type": "string"
                     },
@@ -4166,16 +4166,16 @@
                     }
                   },
                   "required": [
-                    "id",
                     "default",
                     "data"
                   ]
                 }
-              }
-            },
-            "required": [
-              "type"
-            ]
+              },
+              "required": [
+                "id",
+                "type"
+              ]
+            }
           }
         },
         "required": [
@@ -4195,19 +4195,19 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
-                    },
                     "default": {
                       "type": "string"
                     },
@@ -4230,16 +4230,16 @@
                     }
                   },
                   "required": [
-                    "id",
                     "default",
                     "data"
                   ]
                 }
-              }
-            },
-            "required": [
-              "type"
-            ]
+              },
+              "required": [
+                "id",
+                "type"
+              ]
+            }
           }
         },
         "required": [
@@ -4841,19 +4841,19 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
-                    },
                     "default": {
                       "type": "string"
                     },
@@ -4876,16 +4876,16 @@
                     }
                   },
                   "required": [
-                    "id",
                     "default",
                     "data"
                   ]
                 }
-              }
-            },
-            "required": [
-              "type"
-            ]
+              },
+              "required": [
+                "id",
+                "type"
+              ]
+            }
           }
         },
         "required": [
@@ -4905,19 +4905,19 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "attributes": {
-                "type": "array",
-                "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "attributes": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
-                    },
                     "default": {
                       "type": "string"
                     },
@@ -4940,16 +4940,16 @@
                     }
                   },
                   "required": [
-                    "id",
                     "default",
                     "data"
                   ]
                 }
-              }
-            },
-            "required": [
-              "type"
-            ]
+              },
+              "required": [
+                "id",
+                "type"
+              ]
+            }
           }
         },
         "required": [

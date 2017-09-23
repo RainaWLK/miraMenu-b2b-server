@@ -81,15 +81,22 @@ class CommonTest {
     try{
       console.log("======================");
       console.log(op + " " + uri);
+      if(_.isEmpty(input) === false){
+        console.log(input.data);
+      }
 
       let res = await this.sendRequest(op, uri, input);
       let output = _.cloneDeep(res.body);
-      console.log("=="+op+"==");
-      console.log(output.data);
+      console.log("--------response-----------");
+      console.log(res.statusCode);
+      if(_.isEmpty(output) === false){
+        console.log(output.data);
+      }
+        
 
       res.statusCode.should.within(200,210);
       schemaTest.checkSchema(res, op, this.orgURI);
-
+      console.log("schema check finish");
       if(expectOutput) {
         if(Array.isArray(expectOutput)) {
           for(let row in expectOutput) {

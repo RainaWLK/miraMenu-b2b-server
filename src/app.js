@@ -16,4 +16,9 @@ Menu_API.go(api);
 Item_API.go(api);
 
 
+//for unittest
+//let utils = require('./utils');
+//utils.unittest();
+
+
 module.exports = api.app;

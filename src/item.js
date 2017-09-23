@@ -50,7 +50,6 @@ class Items {
         this.item_fullID += this.reqData.params.item_id;
       }
       this.idArray = Utils.parseID(this.item_fullID);
-      console.log(this.idArray);
 
       //lang
       if(typeof reqData.queryString.lang == 'string'){
@@ -158,26 +157,13 @@ class Items {
         console.log(item_id);
         let data = itemData[item_id];
 
-        //translate
-        let rc = new I18n.main(data, this.idArray);
-        let header = "i18n::";
-        for(let i in data){
-          if((typeof data[i] == 'string')&&(data[i].indexOf(header) == 0)){
-            let key = data[i].substring(header.length);
-            console.log(key);
-            if(key.indexOf('res-i18n-') == 0){
-              let value = rc.getLang(this.lang, key);
-              console.log(value);
-    
-              data[i] = value;
-            }
-          }
-        }
-
         let output = this.output(data, item_id);
 
         dataArray.push(output);
     }
+    //translate
+    let i18n = new I18n.main(itemData, this.idArray);
+    itemData = i18n.translate(this.lang);
 
     //if empty
     if(dataArray.length == 0){
@@ -205,20 +191,8 @@ class Items {
 
         console.log(itemData);
         //translate
-        let rc = new I18n.main(itemData, this.idArray);
-        let header = "i18n::";
-        for(let i in itemData){
-          if((typeof itemData[i] == 'string')&&(itemData[i].indexOf(header) == 0)){
-            let key = itemData[i].substring(header.length);
-            console.log(key);
-            if(key.indexOf('res-i18n-') == 0){
-              let value = rc.getLang(this.lang, key);
-              console.log(value);
-    
-              itemData[i] = value;
-            }
-          }
-        }
+        let i18n = new I18n.main(itemData, this.idArray);
+        itemData = i18n.translate(this.lang);
 
         let output = this.output(itemData, this.item_fullID);
         return JSONAPI.makeJSONAPI(TYPE_NAME, output);

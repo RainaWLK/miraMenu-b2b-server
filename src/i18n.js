@@ -9,9 +9,42 @@ class I18n {
     this.dbData = dbData;
     this.idArray = idArray;
 
-    if(typeof this.dbData.i18n == 'undefined'){
+    if((typeof this.dbData == 'object')&&(typeof this.dbData.i18n == 'undefined')){
       this.dbData.i18n = {};
     }
+  }
+
+  translate(lang){
+    /*if(typeof data == 'undefined'){
+      console.log("data undefined");
+      data = this.dbData;
+    }*/
+
+    let translateElement = (element) => {
+      let header = "i18n::";
+      if((typeof element == 'string')&&(element.indexOf(header) == 0)){
+        let key = element.substring(header.length);
+        if(key.indexOf('res-i18n-') == 0){
+          element = this.getLang(lang, key);
+        }
+      }
+      else if(Array.isArray(element)) {
+        for(let i; i < element.length; i++){
+          element[i] = translateElement(element[i]);
+        }
+      }
+      else if(typeof element == 'object'){
+        for(let i in element){
+          element[i] = translateElement(element[i]);
+        }
+      }
+      return element;
+    }
+
+    for(let i in this.dbData){
+      this.dbData[i] = translateElement(this.dbData[i]);
+    }
+    return this.dbData;
   }
 
   getLang(lang, key){
@@ -23,13 +56,13 @@ class I18n {
     }
     
     let i18nData = this.dbData.i18n[key];
-    console.log(i18nData);
+    if(typeof lang == 'undefined'){
+      lang = i18nData.default;
+    }
 
     if((typeof i18nData != 'object')||(typeof i18nData.data != 'object')){
-      console.log("i18nData.data != object");
       return "";
     }
-    console.log("i18nData.data == object");
 
     if(typeof i18nData.data[lang] == 'string'){
       return i18nData.data[lang];

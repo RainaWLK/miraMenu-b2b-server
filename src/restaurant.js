@@ -29,8 +29,11 @@ class Restaurant {
         this.reqData = reqData;
 
         //id array
-        this.idArray = Utils.parseID(this.reqData.params.restaurant_id);
-        console.log(this.idArray);
+        let id = "";
+        if(typeof this.reqData.params.restaurant_id === 'string'){
+            id += this.reqData.params.restaurant_id;
+        }
+        this.idArray = Utils.parseID(id);
     }
 
 

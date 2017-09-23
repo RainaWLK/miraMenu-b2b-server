@@ -38,7 +38,7 @@ function getSchema(method, URI){
     });	  
   }
 
-  console.log(responseSchema);
+  //console.log(responseSchema);
   return responseSchema;
 }
 

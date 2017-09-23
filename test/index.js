@@ -10,6 +10,7 @@ let itemTest = require('./item.js');
 let itemTest_restaurant = require('./item_restaurant.js');
 let itemTest_photo = require('./item_photo.js');
 let itemTest_resource = require('./item_resource.js');
+let itemTest_i18n = require('./item_i18n.js');
 
 let env = require('./enviroment.js');
 let aws = require('./aws_login');
@@ -30,7 +31,8 @@ before('login', async () => {
 //menuTest.go();
 //menuTest_restaurant.go();
 //menuTest_photo.go();
-//itemTest.go();
-//itemTest_restaurant.go();
+itemTest.go();
+itemTest_restaurant.go();
 //itemTest_photo.go();
-itemTest_resource.go();
+//itemTest_resource.go();
+itemTest_i18n.go();

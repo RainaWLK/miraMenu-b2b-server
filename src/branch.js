@@ -33,9 +33,11 @@ class Branches {
         this.reqData = reqData;
 
         //id array
-        let id = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
+        let id = this.reqData.params.restaurant_id;
+        if(typeof this.reqData.params.branch_id === 'string'){
+            id += this.reqData.params.branch_id;
+        }
         this.idArray = Utils.parseID(id);
-        console.log(this.idArray);
     }
 
     getNewID(restaurantData) {

@@ -24,16 +24,16 @@ let uploadForm = {
 
 let languageForm = {
   "data": {
-      "type": "resources",
+      "type": "i18n",
       "attributes": {
-          "type": "language",
+          "default": "en-us",
           "data": {
               "zh-hant": "蘋果",
               "jp": "りんご",
               "en-us": "apple",
               "kr": "애플"
           },
-          "default": "en-us"
+          
       }
   }
 }
@@ -41,66 +41,6 @@ let languageForm = {
 
 
 function resourceUploadTest() {
-  let op;
-  let parent_idArray;
-  let resource_idArray;
-  let fullid;
-  let resource_fullid;
-  let presigned_url;
-  let download_url;
-
-  before('prepare data', () => {
-    op = new CommonTest(URI_prototype);
-  });
-
-  describe(URI+' test', () => {
-    describe('Resource file upload test', () => {
-
-      before(async () => {
-        parent_idArray = await prepareTest();
-        //console.log(idArray);
-        fullid = utils.makeFullID(parent_idArray);
-        return;
-      });
-
-      it('get presigned url: POST '+URI, async () => {
-        let res = await op.checkOperation('POST', utils.getURI(URI, parent_idArray), uploadForm);
-        resource_idArray = utils.parseID(res.body.data[0].id);
-        presigned_url = res.body.data[0].attributes.signedrequest;
-        download_url = res.body.data[0].attributes.url;
-        resource_fullid = utils.makeFullID(resource_idArray);
-      });      
-
-      it('Upload file', async () => {
-        let res = await photoTest.doUpload(presigned_url, uploadForm.data.attributes[0].mimetype);
-        //console.log(res);
-        res.statusCode.should.eql(200);
-      });
-
-      it('check file upload successed', async () => {
-        let res = await photoTest.doDownload(download_url);
-        //console.log(res);
-        res.statusCode.should.eql(200);
-      });
-
-      it('check photo data in database: GET '+URI, async () => {
-        let myURI_ID = utils.getURI(URI_ID, resource_idArray);
-        
-        //check
-        let res = await op.checkOperation('GET', myURI_ID, null, null);
-        res.body.data.should.have.deep.property('id', resource_fullid);
-      });
-
-      after(async () => {
-        await cleanTest(resource_idArray, download_url);
-        return;
-      });
-
-    });
-  });
-}
-
-function resourceLanguageTest() {
   let op;
   let parent_idArray;
   let resource_idArray;
@@ -189,7 +129,6 @@ async function cleanTest(idArray, photo_url){
 
 function go() {
   resourceUploadTest();
-  //resourceLanguageTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;
