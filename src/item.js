@@ -21,6 +21,21 @@ function ItemControl() {
   //this.photoMaxID = "p000";
 }
 
+let i18nSchema = {
+    "name": "",
+    "desc": "",
+    "category": "",
+    "ingredients": [""],
+    "note": [""],
+    "photos": [
+      {
+        "desc": "",
+        "title": ""
+      }
+    ]
+}
+
+
 class Items {
   constructor(reqData){
       this.reqData = reqData;
@@ -57,16 +72,11 @@ class Items {
       }
   }
 
-  getNewID(controlData) {  //format: i001
-      //migration
-      if(typeof controlData.itemsMaxID == 'undefined'){
-          controlData.itemsMaxID = "i001";
-          //controlData.table_ids = [];
-      }
+  getNewID() {  //format: i001
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime);
 
-      let itemNumID = controlData.itemsMaxID.slice(1);
-      let maxID = sprintf("i%03d", parseInt(itemNumID, 10) + 1);
-      return maxID;
+    return `i${timestamp}`;
   }
 
   getNewResourceID(type){
@@ -154,7 +164,6 @@ class Items {
     let dataArray = [];
     
     for(let item_id in itemData) {
-        console.log(item_id);
         let data = itemData[item_id];
 
         let output = this.output(data, item_id);
@@ -205,48 +214,79 @@ class Items {
       let inputData = JSONAPI.parseJSONAPI(payload);
 
       try{
-          let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
-          let item_id = this.getNewID(branchData[this.controlName]);
-          let fullID = this.branch_fullID + item_id;          
+        let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
+        let item_id = this.getNewID();
+        let fullID = this.branch_fullID + item_id;          
 
-          let dbMenusData = await this.getMenusData(true);          
+        let dbMenusData = await this.getMenusData(true);          
 
-          let menusData;
-          //let createNew = false;
-          try {
-              menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-              //createNew = true;
-          }
-          catch(err){
-              //console.log("createNew");
-              //init
-              menusData = {
-                  "id": this.branch_fullID,
-                  "menus": {},
-                  "items": {}
-              } 
-              //console.log(menusData);
-          }
+        let menusData;
+        try {
+            menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+        }
+        catch(err){
+            //init
+            menusData = {
+                "id": this.branch_fullID,
+                "menus": {},
+                "items": {}
+            }
+        }
 
-          let control = new ItemControl();
-          inputData.itemControl = JSON.parse(JSON.stringify(control));   //bug
-          inputData.photos = {};
-          inputData.resources = {};
-          inputData.i18n = {};
-          menusData.items[fullID] = inputData; 
-          //console.log(menusData);
+        let control = new ItemControl();
+        inputData.itemControl = JSON.parse(JSON.stringify(control));   //bug
+        inputData.photos = {};
+        inputData.resources = {};
+        inputData.i18n = {};
 
-          //let msg;
-          //if(createNew){
-          let msg = await db.post(TABLE_NAME, menusData);
-          //}
-          //else{
-          //    msg = await db.put(TABLE_NAME, menusData);
-          //}
+        //i18n
+        let lang = inputData.language;
+        if(typeof lang == 'undefined'){
+          lang = "en-us";
+        }
+        let makei18n = (schemaData, element, defaultLang) => {
+            console.log(schemaData);  
+            if(typeof element === typeof schemaData){
+              console.log(element+" match");
+              if(typeof element === 'string'){
+                let i18nData = { 
+                    "default": defaultLang,
+                    "data": {}
+                };
+                i18nData.data[defaultLang] = element;
 
-          //update branch
-          branchData[this.controlName].itemsMaxID = item_id;
-          await db.put(this.branchTable, branchData);
+                let i18nUtils = new I18n.main(inputData, this.idArray);
+                let result = i18nUtils.addI18n(i18nData);
+                console.log(result);
+
+                let key = result.data.id;
+                console.log(key);
+                element = "i18n::"+key;
+              }
+              else if(Array.isArray(element)){
+              //  console.log(i+" array");
+                for(let i in element){
+                  element[i] = makei18n(schemaData[0], element[i], defaultLang);
+                }
+              }
+              else if(typeof element === 'object'){
+                console.log(element+" object");
+                for(let i in schemaData){
+                  element[i] = makei18n(schemaData[i], element[i], defaultLang);
+                }
+              }
+            }
+
+          return element;
+        };
+        for(let i in i18nSchema){
+          inputData[i] = makei18n(i18nSchema[i], inputData[i], lang);
+        }
+
+          console.log(inputData);
+
+        menusData.items[fullID] = inputData; 
+        let msg = await db.post(TABLE_NAME, menusData);
 
         //output
         let output = this.output(menusData.items[fullID], fullID);
@@ -607,9 +647,10 @@ class Items {
           throw err;
       }
       //let itemData = await this.getItemData(false);
+      let inputData = JSONAPI.parseJSONAPI(payload);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
-      let output = i18nUtils.addI18n(payload);
+      let output = i18nUtils.addI18n(inputData);
 
       //write into db
       menusData.items[this.item_fullID] = itemData;

@@ -136,9 +136,13 @@ class I18n {
     }
   }
 
-  addI18n(payload) {
+//  ====addi18n======
+//  [ { default: 'en-us',
+//      data: { 'en-us': 'apple', 'zh-tw': '蘋果', jp: 'りんご', kr: '애플' } } ]
+  addI18n(inputData) {
     let output;
-    let inputData = JSONAPI.parseJSONAPI(payload);
+    console.log("====addi18n======");
+    console.log(inputData);
 
     try {
       let oneDataProcess = (oneData, arraySeq) => {

@@ -6,6 +6,11 @@ import { sprintf } from 'sprintf-js';
 
 const USERINFO_TABLE_NAME = "Users";
 
+let DEBUG = 0;
+if(process.env.NODE_ENV == 'development'){
+	DEBUG = 1;
+}
+
 function makePathList(pathArray){
     let path = {};
     let i = 1;
@@ -30,7 +35,7 @@ async function permissionCheck(reqData){
     let path = makePathList(reqData.paths);
     console.log("permission check");
 
-    if(path.restaurants == null){
+    if((DEBUG)||(path.restaurants == null)){
         console.log("skip");
         return;
     }
