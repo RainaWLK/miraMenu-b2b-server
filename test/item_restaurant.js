@@ -19,7 +19,7 @@ let sampleData = {
       "photos": [],
       "nutrition": "366 cal",
       "availability": true,
-      "ingredients": "fish, zzz",
+      "ingredients": ["fish", "zzz"],
       "inventory": "Sufficient"
   }
 }

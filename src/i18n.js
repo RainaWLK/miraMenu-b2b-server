@@ -199,9 +199,7 @@ class I18n {
     }
   }
 
-  updateI18n(params, payload) {
-    let inputData = JSONAPI.parseJSONAPI(payload);
-    delete inputData.id;
+  updateI18n(params, inputData) {
     let fullID = Utils.makeFullID(this.idArray);
 
     try {

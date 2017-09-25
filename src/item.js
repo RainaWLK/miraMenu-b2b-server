@@ -315,20 +315,64 @@ class Items {
         }
         //let itemData = await this.getItemData(false);
 
-        let data = JSONAPI.parseJSONAPI(payload);
-        delete data.id;
-        data.itemControl = _.cloneDeep(itemData.itemControl);
+        let inputData = JSONAPI.parseJSONAPI(payload);
+        delete inputData.id;
+        inputData.itemControl = _.cloneDeep(itemData.itemControl);
+
+        //i18n
+        let lang = inputData.language;
+        delete inputData.language;
+        if(typeof lang == 'undefined'){
+          lang = "en-us";
+        }
+        let i18nUtils = new I18n.main(inputData, this.idArray);
+        let makei18n = (schemaData, element, defaultLang) => {
+            console.log(schemaData);  
+            console.log(element);
+            if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
+              console.log(element+" match");
+              if(typeof element === 'string'){
+                let i18nData = { 
+                    "default": defaultLang,
+                    "data": {}
+                };
+                i18nData.data[defaultLang] = element;
+
+                let result = i18nUtils.addI18n(i18nData);
+                console.log(result);
+
+                let key = result.data.id;
+                console.log(key);
+                element = "i18n::"+key;
+              }
+              else if(Array.isArray(element)){
+                console.log(element+" array");
+                for(let i in element){
+                  element[i] = makei18n(schemaData[0], element[i], defaultLang);
+                }
+              }
+              else if(typeof element === 'object'){
+                console.log(element+" object");
+                for(let i in schemaData){
+                  element[i] = makei18n(schemaData[i], element[i], defaultLang);
+                }
+              }
+            }
+            console.log(element);
+          return element;
+        };
+        for(let i in i18nSchema){
+          inputData[i] = makei18n(i18nSchema[i], inputData[i], lang);
+        }
 
         //copy photo data
-        data.photos = _.cloneDeep(itemData.photos);
-
+        inputData.photos = _.cloneDeep(itemData.photos);
         //copy i18n data
-        data.i18n = _.cloneDeep(itemData.i18n);
-
+        inputData.i18n = _.cloneDeep(itemData.i18n);
         //copy resources data
-        data.resources = _.cloneDeep(itemData.resources);
+        inputData.resources = _.cloneDeep(itemData.resources);
 
-        menusData.items[this.item_fullID] = data;
+        menusData.items[this.item_fullID] = inputData;
 
         let dbOutput = await db.put(TABLE_NAME, menusData);
 
@@ -683,7 +727,7 @@ class Items {
       //let itemData = await this.getItemData(false);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
-      let output = i18nUtils.updateI18n(this.reqData.params, payload);
+      let output = i18nUtils.updateI18n(this.reqData.params, inputData);
 
       //write back
       menusData.items[this.item_fullID] = itemData;
