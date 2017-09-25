@@ -3,7 +3,7 @@ let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
 let Image = require('./image.js');
 let I18n = require('./i18n.js');
-import { cloneDeep } from 'lodash';
+let _ = require('lodash');
 import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
 
@@ -241,12 +241,15 @@ class Items {
 
         //i18n
         let lang = inputData.language;
+        delete inputData.language;
         if(typeof lang == 'undefined'){
           lang = "en-us";
         }
+        let i18nUtils = new I18n.main(inputData, this.idArray);
         let makei18n = (schemaData, element, defaultLang) => {
             console.log(schemaData);  
-            if(typeof element === typeof schemaData){
+            console.log(element);
+            if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
               console.log(element+" match");
               if(typeof element === 'string'){
                 let i18nData = { 
@@ -255,7 +258,6 @@ class Items {
                 };
                 i18nData.data[defaultLang] = element;
 
-                let i18nUtils = new I18n.main(inputData, this.idArray);
                 let result = i18nUtils.addI18n(i18nData);
                 console.log(result);
 
@@ -264,7 +266,7 @@ class Items {
                 element = "i18n::"+key;
               }
               else if(Array.isArray(element)){
-              //  console.log(i+" array");
+                console.log(element+" array");
                 for(let i in element){
                   element[i] = makei18n(schemaData[0], element[i], defaultLang);
                 }
@@ -276,7 +278,7 @@ class Items {
                 }
               }
             }
-
+            console.log(element);
           return element;
         };
         for(let i in i18nSchema){
@@ -315,16 +317,16 @@ class Items {
 
         let data = JSONAPI.parseJSONAPI(payload);
         delete data.id;
-        data.itemControl = cloneDeep(itemData.itemControl);
+        data.itemControl = _.cloneDeep(itemData.itemControl);
 
         //copy photo data
-        data.photos = cloneDeep(itemData.photos);
+        data.photos = _.cloneDeep(itemData.photos);
 
         //copy i18n data
-        data.i18n = cloneDeep(itemData.i18n);
+        data.i18n = _.cloneDeep(itemData.i18n);
 
         //copy resources data
-        data.resources = cloneDeep(itemData.resources);
+        data.resources = _.cloneDeep(itemData.resources);
 
         menusData.items[this.item_fullID] = data;
 

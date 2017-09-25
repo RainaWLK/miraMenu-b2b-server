@@ -3,7 +3,7 @@ let _ = require('lodash');
 class dataObj {
     constructor(id) {
     	this.id = id;
-    	this.type = "";
+        this.type = "";
         this.attributes = {};
         this.i18n = [];
         this.resources = [];
@@ -24,6 +24,10 @@ function makeJSONAPI(path, dataList) {
         let obj = new dataObj(id);
 
         obj.type = path;
+        if(typeof orgData.language === 'string'){
+            obj.language = orgData.language;
+            delete orgData.language;
+        }
         obj.attributes = orgData;
 
         if(typeof orgData.resources != 'undefined'){
@@ -76,11 +80,13 @@ function makeJSONAPI(path, dataList) {
 function parseJSONAPI(orgData) {
     let data = orgData.data;
     let dbData;
-console.log(orgData);
+
     let makeSingleData = (jsonApiData) => {
         let singleData = jsonApiData.attributes;
         if(typeof data.id != 'undefined')
             singleData.id = data.id;
+        if(typeof data.language != 'undefined')
+            singleData.language = data.language;
         return singleData;
     }
 

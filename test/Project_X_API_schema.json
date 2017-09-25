@@ -4373,6 +4373,9 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -4398,7 +4401,7 @@
                     "type": "string"
                   },
                   "ingredients": {
-                    "type": "string"
+                    "type": "array"
                   },
                   "nutrition": {
                     "type": "string"
@@ -4553,6 +4556,9 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -4578,7 +4584,7 @@
                     "type": "string"
                   },
                   "ingredients": {
-                    "type": "string"
+                    "type": "array"
                   },
                   "nutrition": {
                     "type": "string"

@@ -75,11 +75,15 @@ class I18n {
     }
   }
 
-  getNewResourceID(type){
+  getNewResourceID(type, seq){
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime);
 
-    return `res-${type}-${timestamp}`;
+    let id = `res-${type}-${timestamp}`;
+    if((typeof seq == 'string')||(typeof seq == 'number')){
+      id += '-'+seq;
+    }
+    return id;
   }
 
   getI18n(fullID) {
