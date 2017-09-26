@@ -247,16 +247,7 @@ class Items {
         }
         let i18nUtils = new I18n.main(inputData, this.idArray);
         inputData = i18nUtils.makei18n(i18nSchema, inputData, (element) => {
-          let i18nData = { 
-            "default": lang,
-            "data": {}
-          };
-          i18nData.data[lang] = element;
 
-          let result = i18nUtils.addI18n(i18nData);
-          console.log(result);
-          let key = result.data.id;
-          return key;
         });
         console.log(inputData);
 
@@ -298,7 +289,7 @@ class Items {
         if(typeof lang == 'undefined'){
           lang = "en-us";
         }
-        let i18nUtils = new I18n.main(inputData, this.idArray);
+        let i18nUtils = new I18n.main(itemData, this.idArray);
         inputData = i18nUtils.makei18n(i18nSchema, inputData, (element) => {
           /*let i18nData = { 
             "default": lang,

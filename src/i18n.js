@@ -75,14 +75,24 @@ class I18n {
     }
   }
 
-  makei18n(i18nSchema, inputData, translateFunc) {
+  makei18n(i18nSchema, inputData, lang) {
     let makei18nElement = (schemaData, element) => {
       console.log(schemaData);  
       console.log(element);
       if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
         console.log(element+" match");
         if(typeof element === 'string'){
-          let key = translateFunc(element);
+          let i18nData = { 
+            "default": lang,
+            "data": {}
+          };
+          i18nData.data[lang] = element;
+
+          let result = i18nUtils.addI18n(i18nData);
+          console.log(result);
+          let key = result.data.id;
+          //return key;
+          //let key = translateFunc(element);
           console.log(key);
           element = "i18n::"+key;
         }
