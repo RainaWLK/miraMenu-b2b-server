@@ -246,46 +246,19 @@ class Items {
           lang = "en-us";
         }
         let i18nUtils = new I18n.main(inputData, this.idArray);
-        let makei18n = (schemaData, element, defaultLang) => {
-            console.log(schemaData);  
-            console.log(element);
-            if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
-              console.log(element+" match");
-              if(typeof element === 'string'){
-                let i18nData = { 
-                    "default": defaultLang,
-                    "data": {}
-                };
-                i18nData.data[defaultLang] = element;
+        inputData = i18nUtils.makei18n(i18nSchema, inputData, (element) => {
+          let i18nData = { 
+            "default": lang,
+            "data": {}
+          };
+          i18nData.data[lang] = element;
 
-                let result = i18nUtils.addI18n(i18nData);
-                console.log(result);
-
-                let key = result.data.id;
-                console.log(key);
-                element = "i18n::"+key;
-              }
-              else if(Array.isArray(element)){
-                console.log(element+" array");
-                for(let i in element){
-                  element[i] = makei18n(schemaData[0], element[i], defaultLang);
-                }
-              }
-              else if(typeof element === 'object'){
-                console.log(element+" object");
-                for(let i in schemaData){
-                  element[i] = makei18n(schemaData[i], element[i], defaultLang);
-                }
-              }
-            }
-            console.log(element);
-          return element;
-        };
-        for(let i in i18nSchema){
-          inputData[i] = makei18n(i18nSchema[i], inputData[i], lang);
-        }
-
-          console.log(inputData);
+          let result = i18nUtils.addI18n(i18nData);
+          console.log(result);
+          let key = result.data.id;
+          return key;
+        });
+        console.log(inputData);
 
         menusData.items[fullID] = inputData; 
         let msg = await db.post(TABLE_NAME, menusData);
@@ -326,44 +299,19 @@ class Items {
           lang = "en-us";
         }
         let i18nUtils = new I18n.main(inputData, this.idArray);
-        let makei18n = (schemaData, element, defaultLang) => {
-            console.log(schemaData);  
-            console.log(element);
-            if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
-              console.log(element+" match");
-              if(typeof element === 'string'){
-                let i18nData = { 
-                    "default": defaultLang,
-                    "data": {}
-                };
-                i18nData.data[defaultLang] = element;
+        inputData = i18nUtils.makei18n(i18nSchema, inputData, (element) => {
+          /*let i18nData = { 
+            "default": lang,
+            "data": {}
+          };
+          i18nData.data[lang] = element;
 
-                let result = i18nUtils.addI18n(i18nData);
-                console.log(result);
-
-                let key = result.data.id;
-                console.log(key);
-                element = "i18n::"+key;
-              }
-              else if(Array.isArray(element)){
-                console.log(element+" array");
-                for(let i in element){
-                  element[i] = makei18n(schemaData[0], element[i], defaultLang);
-                }
-              }
-              else if(typeof element === 'object'){
-                console.log(element+" object");
-                for(let i in schemaData){
-                  element[i] = makei18n(schemaData[i], element[i], defaultLang);
-                }
-              }
-            }
-            console.log(element);
-          return element;
-        };
-        for(let i in i18nSchema){
-          inputData[i] = makei18n(i18nSchema[i], inputData[i], lang);
-        }
+          let result = i18nUtils.addI18n(i18nData);
+          console.log(result);
+          let key = result.data.id;
+          return key;*/
+        });
+        console.log(inputData);
 
         //copy photo data
         inputData.photos = _.cloneDeep(itemData.photos);

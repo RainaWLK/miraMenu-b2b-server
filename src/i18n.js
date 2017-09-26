@@ -75,6 +75,39 @@ class I18n {
     }
   }
 
+  makei18n(i18nSchema, inputData, translateFunc) {
+    let makei18nElement = (schemaData, element) => {
+      console.log(schemaData);  
+      console.log(element);
+      if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
+        console.log(element+" match");
+        if(typeof element === 'string'){
+          let key = translateFunc(element);
+          console.log(key);
+          element = "i18n::"+key;
+        }
+        else if(Array.isArray(element)){
+          console.log(element+" array");
+          for(let i in element){
+            element[i] = makei18nElement(schemaData[0], element[i]);
+          }
+        }
+        else if(typeof element === 'object'){
+          console.log(element+" object");
+          element = makei18nElement(schemaData, element);
+        }
+      }
+      console.log(element);
+      return element;
+    };
+  
+    for(let i in i18nSchema){
+      inputData[i] = makei18nElement(i18nSchema[i], inputData[i]);
+    }
+    return inputData;
+  }
+
+  //================ CRUD ========================
   getNewResourceID(type, seq){
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime);
