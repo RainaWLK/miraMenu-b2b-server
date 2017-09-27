@@ -239,8 +239,8 @@ class Menus {
                 menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
                 //createNew = true;
                 //migration
-                if(typeof menusData.items == 'undefined'){
-                    menusData.items = {};
+                if(typeof menusData.menus == 'undefined'){
+                    menusData.menus = {};
                 }
             }
             catch(err){

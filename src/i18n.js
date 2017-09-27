@@ -73,7 +73,15 @@ class I18n {
       console.log(element);
       if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
         console.log(element+" match");
+        let translatable = false;
         if(typeof element === 'string'){
+          translatable = true;
+        }
+        //else if((Array.isArray(element))&&(typeof element[0] === 'string')){
+        //  translatable = true;
+        //}
+
+        if(translatable){
           let key = null;
           let header = 'i18n::';
           let i18nData = null;
@@ -115,6 +123,7 @@ class I18n {
 
           if(typeof dbDataElement === 'object'){
             if(Array.isArray(element)){
+
               for(let i in element){
                 element[i] = makei18nElement(schemaData[0], element[i], dbDataElement[i]);
               }
