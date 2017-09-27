@@ -4,7 +4,7 @@ let Utils = require('./utils.js');
 let Image = require('./image.js');
 let I18n = require('./i18n.js');
 let _ = require('lodash');
-import { sprintf } from 'sprintf-js';
+//import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
 
 const BRANCH_TABLE_NAME = "Branches";
@@ -246,10 +246,7 @@ class Items {
           lang = "en-us";
         }
         let i18nUtils = new I18n.main(inputData, this.idArray);
-        inputData = i18nUtils.makei18n(i18nSchema, inputData, (element) => {
-
-        });
-        console.log(inputData);
+        inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
 
         menusData.items[fullID] = inputData; 
         let msg = await db.post(TABLE_NAME, menusData);
@@ -286,22 +283,10 @@ class Items {
         //i18n
         let lang = inputData.language;
         delete inputData.language;
-        if(typeof lang == 'undefined'){
-          lang = "en-us";
+        if(typeof lang === 'string'){
+          let i18nUtils = new I18n.main(itemData, this.idArray);
+          inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
         }
-        let i18nUtils = new I18n.main(itemData, this.idArray);
-        inputData = i18nUtils.makei18n(i18nSchema, inputData, (element) => {
-          /*let i18nData = { 
-            "default": lang,
-            "data": {}
-          };
-          i18nData.data[lang] = element;
-
-          let result = i18nUtils.addI18n(i18nData);
-          console.log(result);
-          let key = result.data.id;
-          return key;*/
-        });
         console.log(inputData);
 
         //copy photo data
@@ -610,7 +595,7 @@ class Items {
       let itemData = await this.getItemData(true);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
-      let output = i18nUtils.getI18nByID(this.reqData.params);
+      let output = i18nUtils.getI18nByID(this.reqData.params.i18n_id);
       return output;
     }catch(err) {
       throw err;
@@ -621,9 +606,8 @@ class Items {
     let output;
 
     try {
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      let itemData = menusData.items[fullID];
+      let itemData = menusData.items[this.item_fullID];
 
       //check item existed
       if(typeof itemData == 'undefined'){
@@ -653,11 +637,9 @@ class Items {
     delete inputData.id;
 
     try {
-      //get photo data
+      //get i18n data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
-
-      let itemData = menusData.items[fullID];
+      let itemData = menusData.items[this.item_fullID];
       if(typeof itemData == 'undefined'){
           let err = new Error("not found");
           err.statusCode = 404;
@@ -666,7 +648,7 @@ class Items {
       //let itemData = await this.getItemData(false);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
-      let output = i18nUtils.updateI18n(this.reqData.params, inputData);
+      let output = i18nUtils.updateI18n(this.reqData.params.i18n_id, inputData);
 
       //write back
       menusData.items[this.item_fullID] = itemData;
@@ -682,9 +664,7 @@ class Items {
     try {
       //get resource data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
-
-      let itemData = menusData.items[fullID];
+      let itemData = menusData.items[this.item_fullID];
       if(typeof itemData == 'undefined'){
           let err = new Error("not found");
           err.statusCode = 404;
@@ -693,7 +673,7 @@ class Items {
       //let itemData = await this.getItemData(false);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
-      let resultData = i18nUtils.deleteI18n(this.reqData.params);
+      let resultData = i18nUtils.deleteI18n(this.reqData.params.i18n_id);
 
 
       //write back

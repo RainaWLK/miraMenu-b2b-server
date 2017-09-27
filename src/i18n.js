@@ -15,22 +15,12 @@ class I18n {
   }
 
   translate(lang){
-    /*if(typeof data == 'undefined'){
-      console.log("data undefined");
-      data = this.dbData;
-    }*/
-
     let translateElement = (element) => {
       let header = "i18n::";
       if((typeof element == 'string')&&(element.indexOf(header) == 0)){
         let key = element.substring(header.length);
         if(key.indexOf('res-i18n-') == 0){
           element = this.getLang(lang, key);
-        }
-      }
-      else if(Array.isArray(element)) {
-        for(let i; i < element.length; i++){
-          element[i] = translateElement(element[i]);
         }
       }
       else if(typeof element == 'object'){
@@ -76,43 +66,87 @@ class I18n {
   }
 
   makei18n(i18nSchema, inputData, lang) {
-    let makei18nElement = (schemaData, element) => {
+    let seq = -1;
+    let makei18nElement = (schemaData, element, dbDataElement) => {
+      seq++;
       console.log(schemaData);  
       console.log(element);
       if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
         console.log(element+" match");
         if(typeof element === 'string'){
-          let i18nData = { 
-            "default": lang,
-            "data": {}
-          };
-          i18nData.data[lang] = element;
+          let key = null;
+          let header = 'i18n::';
+          let i18nData = null;
+          let i18nExisted = false;
 
-          let result = i18nUtils.addI18n(i18nData);
-          console.log(result);
-          let key = result.data.id;
-          //return key;
-          //let key = translateFunc(element);
-          console.log(key);
-          element = "i18n::"+key;
-        }
-        else if(Array.isArray(element)){
-          console.log(element+" array");
-          for(let i in element){
-            element[i] = makei18nElement(schemaData[0], element[i]);
+          //check string existed
+          if((typeof dbDataElement === 'string')&&(dbDataElement.indexOf(header) === 0)){
+            key = dbDataElement.substring(header.length);
+            i18nData = _.cloneDeep(this.dbData.i18n[key]);
+
+            if(typeof i18nData === 'object'){
+              console.log(element+" is existed !!");
+              i18nExisted = true;
+            }
           }
+
+          if(i18nExisted){
+            console.log('element=');
+            console.log(element);
+            i18nData.data[lang] = element;
+            console.log(key + " update");
+            let result = this.updateI18n(key, i18nData);
+          }
+          else {
+            i18nData = {
+              "default": lang,
+              "data": {}
+            };
+            //create new
+            i18nData.data[lang] = element;
+  
+            let result = this.addI18n(i18nData, seq);
+            key = result.data.id;
+          }
+          element = header+key;
         }
         else if(typeof element === 'object'){
           console.log(element+" object");
-          element = makei18nElement(schemaData, element);
+
+          if(typeof dbDataElement === 'object'){
+            if(Array.isArray(element)){
+              for(let i in element){
+                element[i] = makei18nElement(schemaData[0], element[i], dbDataElement[i]);
+              }
+            }
+            else{
+              for(let i in schemaData){
+                element[i] = makei18nElement(schemaData[i], element[i], dbDataElement[i]);
+              }
+            }
+          }
+          else {
+            if(Array.isArray(element)){
+              for(let i in element){
+                element[i] = makei18nElement(schemaData[0], element[i]);
+              }
+            }
+            else{
+              for(let i in schemaData){
+                element[i] = makei18nElement(schemaData[i], element[i]);
+              }
+            }
+          }
         }
       }
       console.log(element);
       return element;
     };
-  
-    for(let i in i18nSchema){
-      inputData[i] = makei18nElement(i18nSchema[i], inputData[i]);
+
+    if((typeof this.dbData === 'object')&&(typeof inputData === 'object')) {
+      for(let i in i18nSchema){  
+        inputData[i] = makei18nElement(i18nSchema[i], inputData[i], this.dbData[i]);
+      }
     }
     return inputData;
   }
@@ -130,9 +164,6 @@ class I18n {
   }
 
   getI18n(fullID) {
-
-    console.log("i18n getI18n");
-    console.log(this.dbData);
     try{
       //output
       let dataArray = [];
@@ -161,9 +192,8 @@ class I18n {
     }
   }
 
-  getI18nByID(params) {
+  getI18nByID(i18n_id) {
     try {
-      let i18n_id = params.i18n_id;
       let i18nData = this.dbData.i18n[i18n_id];
       let fullID = Utils.makeFullID(this.idArray);
 
@@ -186,7 +216,7 @@ class I18n {
 //  ====addi18n======
 //  [ { default: 'en-us',
 //      data: { 'en-us': 'apple', 'zh-tw': '蘋果', jp: 'りんご', kr: '애플' } } ]
-  addI18n(inputData) {
+  addI18n(inputData, seq) {
     let output;
     console.log("====addi18n======");
     console.log(inputData);
@@ -231,7 +261,7 @@ class I18n {
         output = JSONAPI.makeJSONAPI(I18N_TYPE_NAME, outputBufArray);
       }
       else {
-        outputBuf = oneDataProcess(inputData);
+        outputBuf = oneDataProcess(inputData, seq);
         output = JSONAPI.makeJSONAPI(I18N_TYPE_NAME, outputBuf);
       }
       
@@ -242,11 +272,10 @@ class I18n {
     }
   }
 
-  updateI18n(params, inputData) {
+  updateI18n(i18n_id, inputData) {
     let fullID = Utils.makeFullID(this.idArray);
 
     try {
-      let i18n_id = params.i18n_id;
       let i18nData = this.dbData.i18n[i18n_id];
       if(typeof i18nData == 'undefined'){
           let err = new Error("not found");
@@ -277,9 +306,8 @@ class I18n {
     }
   }
 
-  deleteI18n(params) {
+  deleteI18n(i18n_id) {
     try {
-      let i18n_id = params.i18n_id;
 
       if(typeof this.dbData.i18n[i18n_id] == 'undefined'){
         let err = new Error("not found");
