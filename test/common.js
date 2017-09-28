@@ -4,6 +4,7 @@ let _ = require('lodash');
 let request = require('supertest');
 
 let chai = env.chai;
+let expect = chai.expect;
 
 //aws
 let aws4  = require('aws4');
@@ -100,17 +101,29 @@ class CommonTest {
       if(expectOutput) {
         if(Array.isArray(expectOutput)) {
           for(let row in expectOutput) {
-            for(let i in expectOutput[i]) {
+            for(let i in expectOutput[row]) {
               output[row].should.have.property(i).eql(expectOutput[i]);
             }
           }
         }
         else {
-          if((typeof output.data == 'object')&&
-            (typeof output.data.id != 'undefined')){
-            delete output.data.id;
+          if(typeof output.data == 'object') {
+            if(typeof output.data.id != 'undefined'){
+              delete output.data.id;
+            }
+            if(typeof output.data.i18n != 'undefined'){
+              delete output.data.i18n;
+            }
+            if(typeof output.data.resources != 'undefined'){
+              delete output.data.resources;
+            }
+            if(typeof output.data.attributes.photos != 'undefined'){
+              delete output.data.attributes.photos;
+            }
           }
-          output.should.deep.equal(expectOutput);         
+
+          //output.data.should.deep.include(expectOutput.data);
+          expect(output).to.deep.equal(expectOutput);         
         }
 
       }

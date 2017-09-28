@@ -3,7 +3,9 @@ let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
 let Tables = require('./table.js');
 let Image = require('./image.js');
-import { cloneDeep } from 'lodash';
+let I18n = require('./i18n.js');
+let _ = require('lodash');
+//import { cloneDeep } from 'lodash';
 let S3 = require('./s3');
 
 const TABLE_NAME = "Branches";
@@ -28,16 +30,29 @@ function BranchControl() {
     //}
 }
 
+let i18nSchema = {
+    "name": "",
+    "desc": "",
+    "category": "",
+    "details": "",
+    "special_event": [""]
+}
+
 class Branches {
     constructor(reqData){
         this.reqData = reqData;
 
         //id array
-        let id = this.reqData.params.restaurant_id;
+        this.branch_fullID = this.reqData.params.restaurant_id;
         if(typeof this.reqData.params.branch_id === 'string'){
-            id += this.reqData.params.branch_id;
+            this.branch_fullID += this.reqData.params.branch_id;
         }
-        this.idArray = Utils.parseID(id);
+        this.idArray = Utils.parseID(this.branch_fullID);
+
+        //lang
+        if(typeof reqData.queryString.lang == 'string'){
+            this.lang = reqData.queryString.lang;
+        }
     }
 
     getNewID(restaurantData) {
@@ -193,16 +208,16 @@ class Branches {
             //console.log(branchData);
 
             //copy control data
-            data.branchControl = cloneDeep(branchData.branchControl);
+            data.branchControl = _.cloneDeep(branchData.branchControl);
 
             //copy photo data
-            data.photos = cloneDeep(branchData.photos);
+            data.photos = _.cloneDeep(branchData.photos);
         
             //copy resources data
-            data.resources = cloneDeep(branchData.resources);
+            data.resources = _.cloneDeep(branchData.resources);
 
             //copy table data
-            data.tables = cloneDeep(branchData.tables);
+            data.tables = _.cloneDeep(branchData.tables);
 
             //update
             let dbOutput = await db.put(TABLE_NAME, data);

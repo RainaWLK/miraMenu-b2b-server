@@ -158,21 +158,22 @@ class Items {
 
   async get() {
     let dbMenusData = await this.getMenusData(true);
-    let itemData = dbMenusData.items;
+    let itemsData = dbMenusData.items;
 
     //output
     let dataArray = [];
     
-    for(let item_id in itemData) {
-        let data = itemData[item_id];
+    for(let item_id in itemsData) {
+        let itemData = itemsData[item_id];
 
-        let output = this.output(data, item_id);
+        //translate
+        let i18n = new I18n.main(itemData, this.idArray);
+        itemData = i18n.translate(this.lang);
+
+        let output = this.output(itemData, item_id);
 
         dataArray.push(output);
     }
-    //translate
-    let i18n = new I18n.main(itemData, this.idArray);
-    itemData = i18n.translate(this.lang);
 
     //if empty
     if(dataArray.length == 0){
@@ -198,7 +199,6 @@ class Items {
         }*/
         let itemData = await this.getItemData(true);
 
-        console.log(itemData);
         //translate
         let i18n = new I18n.main(itemData, this.idArray);
         itemData = i18n.translate(this.lang);
@@ -251,8 +251,10 @@ class Items {
         menusData.items[fullID] = inputData; 
         let msg = await db.post(TABLE_NAME, menusData);
 
+        //translate
+        inputData = i18nUtils.translate(lang);
         //output
-        let output = this.output(menusData.items[fullID], fullID);
+        let output = this.output(inputData, fullID);
         return JSONAPI.makeJSONAPI(TYPE_NAME, output);
       }
       catch(err) {
@@ -287,7 +289,6 @@ class Items {
           let i18nUtils = new I18n.main(itemData, this.idArray);
           inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
         }
-        console.log(inputData);
 
         //copy photo data
         inputData.photos = _.cloneDeep(itemData.photos);
@@ -300,8 +301,12 @@ class Items {
 
         let dbOutput = await db.put(TABLE_NAME, menusData);
 
+        //translate
+        let dbOutputData = dbOutput.items[this.item_fullID];
+        let i18nOutputUtils = new I18n.main(dbOutputData, this.idArray);
+        dbOutputData = i18nOutputUtils.translate(lang);
         //output
-        let output = this.output(dbOutput.items[this.item_fullID], this.item_fullID);
+        let output = this.output(dbOutputData, this.item_fullID);
         return JSONAPI.makeJSONAPI(TYPE_NAME, output);
       }
       catch(err) {

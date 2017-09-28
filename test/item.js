@@ -17,7 +17,7 @@ let sampleData = {
       "sale_price": "80",
       "tag": ["...."],
       "note": ["zzzzz"],
-      "photos": [],
+//      "photos": [],
       "nutrition": "366 cal",
       "availability": true,
       "ingredients": ["fish", "zzz"],
@@ -126,6 +126,7 @@ async function prepareTest(){
   URI = '/restaurants/'+"r"+branch_idArray.r+'/branches/'+"s"+branch_idArray.s+'/items';
 
   //output.data.attributes.social.facebook = "囧";
+
   let res = await op.checkOperation('POST', URI, input, output);
   let idArray = utils.parseID(res.body.data.id);
   return idArray;
@@ -134,7 +135,7 @@ async function prepareTest(){
 async function cleanTest(idArray){
   let op = new CommonTest();
   let URI_ID = '/restaurants/'+'r'+idArray.r+'/branches/'+'s'+idArray.s+'/items/'+'i'+idArray.i;
-console.log(URI_ID);
+
   await op.checkOperation('DELETE', URI_ID, null, "");
 
   //check

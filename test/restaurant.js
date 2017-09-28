@@ -9,7 +9,7 @@ let sampleData = {
         "social": {
             "facebook": "htttps://www.facebook.com/testraman"
         },
-        "photos": [],
+//        "photos": [],
         "location": {
             "continent": "asia",
             "country": "japan",

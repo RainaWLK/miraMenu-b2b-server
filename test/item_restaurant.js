@@ -8,6 +8,7 @@ let URI_prototype = URI;
 
 let sampleData = {
   "type": "items",
+  "language": "en-us",
   "attributes": {
       "name": "food 01",
       "desc": "milk",
@@ -16,7 +17,7 @@ let sampleData = {
       "sale_price": "80",
       "tag": ["...."],
       "note": ["zzzzz"],
-      "photos": [],
+//      "photos": [],
       "nutrition": "366 cal",
       "availability": true,
       "ingredients": ["fish", "zzz"],

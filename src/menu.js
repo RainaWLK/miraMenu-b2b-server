@@ -142,11 +142,14 @@ class Menus {
   }
 
   checkItemExisted(inputItems, dbMenusData_items){
+    console.log(inputItems);
+    console.log(dbMenusData_items);
     let validItems = [];
 
     if(Array.isArray(inputItems)) {
       validItems = inputItems.reduce((result, item_fullID) => {
-        //console.log(item_fullID);
+        console.log(result);
+        console.log(item_fullID);
         if(typeof dbMenusData_items[item_fullID] != 'undefined'){
           //branch item
           if((this.branchQuery) && 
@@ -169,23 +172,24 @@ class Menus {
 
   async get() {
     let dbMenusData = await this.getMenusData(true);
-    let menuData = dbMenusData.menus;
+    let menusData = dbMenusData.menus;
 
     //output
     let dataArray = [];
     
-    for(let menu_id in menuData) {
-      console.log(menu_id);
-      let data = menuData[menu_id];
+    for(let menu_id in menusData) {
+      let menuData = menusData[menu_id];
 
-      let output = this.output(data, menu_id);
+      //translate
+      let i18n = new I18n.main(menuData, this.idArray);
+      menuData = i18n.translate(this.lang);
+
+      let output = this.output(menuData, menu_id);
 
       dataArray.push(output);
     }
 
-    //translate
-    let i18n = new I18n.main(menuData, this.idArray);
-    itemData = i18n.translate(this.lang);
+
 
     //if empty
     if(dataArray.length == 0){
@@ -211,7 +215,7 @@ class Menus {
         }*/
         let menuData = await this.getMenuData(true);          
 
-        console.log(itemData);
+        console.log(menuData);
         //translate
         let i18n = new I18n.main(menuData, this.idArray);
         menuData = i18n.translate(this.lang);  
@@ -234,10 +238,8 @@ class Menus {
             let dbMenusData = await this.getMenusData(true);
 
             let menusData;
-            //let createNew = false;
             try {
                 menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-                //createNew = true;
                 //migration
                 if(typeof menusData.menus == 'undefined'){
                     menusData.menus = {};
@@ -272,12 +274,11 @@ class Menus {
             menusData.menus[fullID] = inputData; 
             let msg = await db.post(TABLE_NAME, menusData);
 
-            //update branch
-            //branchData[this.controlName].menusMaxID = menu_id;
-            //await db.put(this.branchTable, branchData);
-
+            
+            //translate
+            inputData = i18nUtils.translate(lang);
             //output
-            let output = this.output(menusData.menus[fullID], fullID);
+            let output = this.output(inputData, fullID);
             return JSONAPI.makeJSONAPI(TYPE_NAME, output);
         }
         catch(err) {
@@ -299,11 +300,11 @@ class Menus {
             throw err;
         }
 
+        let inputData = JSONAPI.parseJSONAPI(payload);
         let dbMenusData = await this.getMenusData(true);
         //check item existed
         inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
-
-        let inputData = JSONAPI.parseJSONAPI(payload);
+        
         delete inputData.id;
         inputData.menuControl = _.cloneDeep(menuData.menuControl);
 
@@ -327,8 +328,12 @@ class Menus {
 
         let dbOutput = await db.put(TABLE_NAME, menusData);
 
+        //translate
+        let dbOutputData = dbOutput.menus[this.menu_fullID];
+        let i18nOutputUtils = new I18n.main(dbOutputData, this.idArray);
+        dbOutputData = i18nOutputUtils.translate(lang);
         //output
-        let output = this.output(dbOutput.menus[this.menu_fullID], this.menu_fullID);
+        let output = this.output(dbOutputData, this.menu_fullID);
         return JSONAPI.makeJSONAPI(TYPE_NAME, output);
       }
       catch(err) {

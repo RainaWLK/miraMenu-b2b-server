@@ -2,8 +2,9 @@ let db = require('./dynamodb.js');
 let JSONAPI = require('./jsonapi.js');
 let Utils = require('./utils.js');
 let Image = require('./image.js');
-import { cloneDeep } from 'lodash';
-import { sprintf } from 'sprintf-js';
+let I18n = require('./i18n.js');
+let _ = require('lodash');
+//import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
 
 //import { makeInfo } from './image.js';
@@ -24,16 +25,27 @@ function RestaurantControl() {
     //}
 }
 
+let i18nSchema = {
+    "name": "",
+    "desc": "",
+    "category": "",
+};
+
 class Restaurant {
     constructor(reqData){
         this.reqData = reqData;
 
         //id array
-        let id = "";
+        this.restaurant_fullID = "";
         if(typeof this.reqData.params.restaurant_id === 'string'){
-            id += this.reqData.params.restaurant_id;
+            this.restaurant_fullID = this.reqData.params.restaurant_id;
         }
-        this.idArray = Utils.parseID(id);
+        this.idArray = Utils.parseID(this.restaurant_fullID);
+
+        //lang
+        if(typeof reqData.queryString.lang == 'string'){
+            this.lang = reqData.queryString.lang;
+        }
     }
 
 
@@ -57,6 +69,14 @@ class Restaurant {
         return "p"+maxID.toString();
     }
 
+    output(data, fullID){
+        data.id = fullID;
+        data.photos = Utils.objToArray(data.photos);
+        delete data.restaurantControl;
+    
+        return data;
+    }
+
     async get() {
         let identityId = this.reqData.userinfo.cognitoIdentityId;
 
@@ -78,9 +98,13 @@ class Restaurant {
             };
             let dataArray = await db.scanDataByFilter(params);
             console.log(dataArray);
-            dataArray.map(obj => {
-                obj.photos = Utils.objToArray(obj.photos);
-                delete obj.restaurantControl;
+            dataArray.map(restaurantData => {
+                //translate
+                let i18n = new I18n.main(restaurantData, this.idArray);
+                restaurantData = i18n.translate(this.lang);
+
+                restaurantData.photos = Utils.objToArray(restaurantData.photos);
+                delete restaurantData.restaurantControl;
             });
 
             //if empty
@@ -114,11 +138,19 @@ class Restaurant {
 
     async getByID() {
         try {
-            let data = await db.queryById(TABLE_NAME, this.reqData.params.restaurant_id);
-            data.photos = Utils.objToArray(data.photos);
-            delete data.restaurantControl;
-            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
-            return output;
+            let restaurantData = await db.queryById(TABLE_NAME, this.restaurant_fullID);
+
+            //translate
+            let i18n = new I18n.main(restaurantData, this.idArray);
+            restaurantData = i18n.translate(this.lang);
+
+            //data.photos = Utils.objToArray(data.photos);
+            //delete data.restaurantControl;
+            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, inputData);
+            //return output;
+            //output
+            let output = this.output(restaurantData, this.restaurant_fullID);
+            return JSONAPI.makeJSONAPI(TYPE_NAME, output);         
         }catch(err) {
             throw err;
         }
@@ -154,18 +186,30 @@ class Restaurant {
         }
 
         try {
-            let data = JSONAPI.parseJSONAPI(payload);
-            data.restaurantControl = JSON.parse(JSON.stringify(new RestaurantControl()));   //bug
+            let inputData = JSONAPI.parseJSONAPI(payload);
+            inputData.restaurantControl = JSON.parse(JSON.stringify(new RestaurantControl()));   //bug
             let restaurant_id = this.getNewID(controlData);
 
-            data.id = restaurant_id;
-            data.restaurantControl.owner = identityId;
-            data.photos = {};
-            data.resources = {};
-            data.i18n = {};
+            inputData.id = restaurant_id;
+            inputData.restaurantControl.owner = identityId;
+            inputData.photos = {};
+            inputData.resources = {};
+            inputData.i18n = {};
+
+            //i18n
+            let lang = inputData.language;
+            delete inputData.language;
+            if((typeof lang === 'undefined')&&(typeof inputData.defaultlanguage === 'string')){
+                lang = inputData.defaultlanguage;
+            }
+            else if(typeof lang === 'undefined'){
+                lang = "en-us";
+            }
+            let i18nUtils = new I18n.main(inputData, this.idArray);
+            inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
 
             //update restaurant
-            await db.post(TABLE_NAME, data);
+            await db.post(TABLE_NAME, inputData);
 
             //update control data
             controlData.value = restaurant_id
@@ -175,40 +219,61 @@ class Restaurant {
             userData.restaurants.push(restaurant_id);
             await db.post(USERINFO_TABLE_NAME, userData);
 
+            //translate
+            inputData = i18nUtils.translate(lang);
             //output
-            data.photos = Utils.objToArray(data.photos);
-            delete data.restaurantControl;
-            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
-            return output;    
+            //inputData.photos = Utils.objToArray(inputData.photos);
+            //delete inputData.restaurantControl;
+            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, inputData);
+            //return output;    
+
+            //output
+            let output = this.output(inputData, this.restaurant_fullID);
+            return JSONAPI.makeJSONAPI(TYPE_NAME, output);            
         }catch(err) {
             throw err;
         }
     }
 
     async updateByID(payload) {
-        let data = JSONAPI.parseJSONAPI(payload);
+        let inputData = JSONAPI.parseJSONAPI(payload);
 
         try {
-            data.id = this.reqData.params.restaurant_id;
-            let restaurantData = await db.queryById(TABLE_NAME, data.id);
+            inputData.id = this.reqData.params.restaurant_id;
+            let restaurantData = await db.queryById(TABLE_NAME, inputData.id);
 
             //copy control data
-            data.restaurantControl = cloneDeep(restaurantData.restaurantControl);
+            inputData.restaurantControl = _.cloneDeep(restaurantData.restaurantControl);
+
+            //i18n
+            let lang = inputData.language;
+            delete inputData.language;
+            if(typeof lang === 'string'){
+                let i18nUtils = new I18n.main(restaurantData, this.idArray);
+                inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+            }
 
             //copy photo data
-            data.photos = cloneDeep(restaurantData.photos);
-            
+            inputData.photos = _.cloneDeep(restaurantData.photos);
+            //copy i18n data
+            inputData.i18n = _.cloneDeep(restaurantData.i18n);      
             //copy resources data
-            data.resources = cloneDeep(restaurantData.resources);
+            inputData.resources = _.cloneDeep(restaurantData.resources);
 
             //update
-            let dbOutput = await db.put(TABLE_NAME, data);
+            let dbOutput = await db.put(TABLE_NAME, inputData);
 
+            //translate
+            let i18nOutputUtils = new I18n.main(dbOutput, this.idArray);
+            dbOutput = i18nOutputUtils.translate(lang);
             //output
-            dbOutput.photos = Utils.objToArray(dbOutput.photos);
-            delete dbOutput.restaurantControl;
-            let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
-            return output;
+            //dbOutput.photos = Utils.objToArray(dbOutput.photos);
+            //delete dbOutput.restaurantControl;
+            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
+            //return output;
+            //output
+            let output = this.output(dbOutput, this.restaurant_fullID);
+            return JSONAPI.makeJSONAPI(TYPE_NAME, output);  
         }catch(err) {
             console.log(err);
             throw err;

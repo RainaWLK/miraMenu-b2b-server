@@ -12,6 +12,8 @@ class I18n {
     if((typeof this.dbData == 'object')&&(typeof this.dbData.i18n == 'undefined')){
       this.dbData.i18n = {};
     }
+
+    this.outputLang = "";
   }
 
   translate(lang){
@@ -20,7 +22,7 @@ class I18n {
       if((typeof element == 'string')&&(element.indexOf(header) == 0)){
         let key = element.substring(header.length);
         if(key.indexOf('res-i18n-') == 0){
-          element = this.getLang(lang, key);
+          element = this.getStr(lang, key);
         }
       }
       else if(typeof element == 'object'){
@@ -34,12 +36,13 @@ class I18n {
     for(let i in this.dbData){
       this.dbData[i] = translateElement(this.dbData[i]);
     }
+    this.dbData.language = this.outputLang;
     return this.dbData;
   }
 
-  getLang(lang, key){
-    console.log("getLang: lang="+lang);
-    console.log(key);
+  getStr(lang, key){
+    //console.log("getStr: lang="+lang);
+    //console.log(key);
 
     if(_.isEmpty(this.dbData.i18n)){
       return "";
@@ -55,9 +58,11 @@ class I18n {
     }
 
     if(typeof i18nData.data[lang] == 'string'){
+      this.outputLang = lang;
       return i18nData.data[lang];
     }
     else if(typeof i18nData.data[i18nData.default] == 'string') {
+      this.outputLang = i18nData.default;
       return i18nData.data[i18nData.default];
     }
     else {
@@ -69,10 +74,7 @@ class I18n {
     let seq = -1;
     let makei18nElement = (schemaData, element, dbDataElement) => {
       seq++;
-      console.log(schemaData);  
-      console.log(element);
       if((typeof element === typeof schemaData)&&(_.isEmpty(element) === false)){
-        console.log(element+" match");
         let translatable = false;
         if(typeof element === 'string'){
           translatable = true;
@@ -93,16 +95,12 @@ class I18n {
             i18nData = _.cloneDeep(this.dbData.i18n[key]);
 
             if(typeof i18nData === 'object'){
-              console.log(element+" is existed !!");
               i18nExisted = true;
             }
           }
 
           if(i18nExisted){
-            console.log('element=');
-            console.log(element);
             i18nData.data[lang] = element;
-            console.log(key + " update");
             let result = this.updateI18n(key, i18nData);
           }
           else {
@@ -119,7 +117,6 @@ class I18n {
           element = header+key;
         }
         else if(typeof element === 'object'){
-          console.log(element+" object");
 
           if(typeof dbDataElement === 'object'){
             if(Array.isArray(element)){
@@ -148,7 +145,7 @@ class I18n {
           }
         }
       }
-      console.log(element);
+
       return element;
     };
 
