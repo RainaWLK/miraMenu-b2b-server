@@ -25,7 +25,7 @@ function BranchControl() {
         this.tablesMaxID = "t000";
         this.menusMaxID = "m000";
         this.itemsMaxID = "i000";
-        this.photoMaxID = "p000";
+        //this.photoMaxID = "p000";
         //this.table_ids = [];
     //}
 }
@@ -55,15 +55,14 @@ class Branches {
         }
     }
 
-    getNewID(restaurantData) {
-        let idList = Utils.parseID(restaurantData.restaurantControl.branchesMaxID);
-
-        let maxID = parseInt(idList.s, 16)+1;
-
-        return "s"+maxID.toString();
+    getNewID() {
+        const dateTime = Date.now();
+        const timestamp = Math.floor(dateTime);
+    
+        return `s${timestamp}`;
     }
 
-    getNewPhotoID(controlData){
+    /*getNewPhotoID(controlData){
         if(typeof controlData.photoMaxID == 'undefined'){
             controlData.photoMaxID = "p000";
         }
@@ -72,6 +71,13 @@ class Branches {
         let maxID = parseInt(idList.p, 10)+1;
 
         return "p"+maxID.toString();
+    }*/
+    output(data, fullID){
+        data.id = fullID;
+        data.photos = Utils.objToArray(data.photos);
+        delete data.branchControl;
+    
+        return data;
     }
 
     async get() {
@@ -92,16 +98,19 @@ class Branches {
                 ReturnConsumedCapacity: "TOTAL"
             };
             let dataArray = await db.scanDataByFilter(params);
-            dataArray.map(obj => {
-                obj.photos = Utils.objToArray(obj.photos);
-                delete obj.branchControl;
+            dataArray.map(branchData => {
+              //table
+              let tableArray = [];
+              for(let table_id in branchData.tables){
+                  tableArray.push(table_id);
+              }
+              branchData.tables = tableArray;
 
-                //table
-                let tableArray = [];
-                for(let table_id in obj.tables){
-                    tableArray.push(table_id);
-                }
-                obj.tables = tableArray;
+              //translate
+              let i18n = new I18n.main(branchData, this.idArray);
+              branchData = i18n.translate(this.lang);
+
+              return this.output(branchData, branchData.id);
             });
 
             //if empty
@@ -121,20 +130,27 @@ class Branches {
 
     async getByID() {
         try {
-            let id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
-            let data = await db.queryById(TABLE_NAME, id);
+            //let id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+            let branchData = await db.queryById(TABLE_NAME, this.branch_fullID);
 
-            data.photos = Utils.objToArray(data.photos);
-            delete data.branchControl;
+            //branchData.photos = Utils.objToArray(branchData.photos);
+            //delete data.branchControl;
             //table
             let tableArray = [];
-            for(let table_id in data.tables){
+            for(let table_id in branchData.tables){
                 tableArray.push(table_id);
             }
-            data.tables = tableArray;
+            branchData.tables = tableArray;
 
-            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
-            return output;
+            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, branchData);
+            //return output;
+            //translate
+            let i18n = new I18n.main(branchData, this.idArray);
+            branchData = i18n.translate(this.lang);
+
+            //output
+            let output = this.output(branchData, this.branch_fullID);
+            return JSONAPI.makeJSONAPI(TYPE_NAME, output);
         }catch(err) {
             throw err;
         }
@@ -143,50 +159,67 @@ class Branches {
     async create(payload) {
         try{
             let restaurantData = await db.queryById(RESTAURANT_TABLE_NAME, this.reqData.params.restaurant_id);
-            let data = JSONAPI.parseJSONAPI(payload);
-            let branch_id = this.getNewID(restaurantData);
+            let inputData = JSONAPI.parseJSONAPI(payload);
+            let branch_id = this.getNewID();
+            let fullID = this.branch_fullID + branch_id;
 
             let control = new BranchControl();
             control.restaurant_id = this.reqData.params.restaurant_id.toString();
             control.branch_id = branch_id;
-            data.branchControl = JSON.parse(JSON.stringify(control));   //bug
-            data.photos = {};
-            data.resources = {};
-            data.i18n = {};
+            inputData.id = fullID;
+            inputData.branchControl = JSON.parse(JSON.stringify(control));   //bug
+            inputData.photos = {};
+            inputData.resources = {};
+            inputData.i18n = {};
 
-            data.id = control.restaurant_id+control.branch_id;
+            //i18n
+            let lang = inputData.language;
+            delete inputData.language;
+            if((typeof lang === 'undefined')&&(typeof inputData.default_lang === 'string')){
+                lang = inputData.default_lang;
+            }
+            else if(typeof lang === 'undefined'){
+                lang = "en-us";
+            }
+            let i18nUtils = new I18n.main(inputData, this.idArray);
+            inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
 
             //table
             let tableFunc = new Tables.main(this.reqData);
             let tableObj = {};
             let tableArray = [];
-            for(let i in data.tables){
-                let tableData = data.tables[i];
+            for(let i in inputData.tables){
+                let tableData = inputData.tables[i];
 
-                let table_id = tableFunc.getNewID(data);
+                let table_id = tableFunc.getNewID(inputData);
                 if(typeof tableData.id != 'undefined'){
                     delete tableData.id;
                 }
                 tableObj[table_id] = tableData;
 
-                tableArray.push(id);
-                data.branchControl.tablesMaxID = table_id;
+                tableArray.push(table_id);
+                inputData.branchControl.tablesMaxID = table_id;
             }
-            data.tables = tableObj;
+            inputData.tables = tableObj;
 
-            await db.post(TABLE_NAME, data);
+            await db.post(TABLE_NAME, inputData);
 
             //update restaurant
-            restaurantData.restaurantControl.branchesMaxID = branch_id;
+            //restaurantData.restaurantControl.branchesMaxID = branch_id;
             restaurantData.restaurantControl.branch_ids.push(branch_id);
             await db.put(RESTAURANT_TABLE_NAME, restaurantData);
 
             //output
-            data.tables = tableArray;
-            data.photos = Utils.objToArray(data.photos);
-            delete data.branchControl;
-            let output = JSONAPI.makeJSONAPI(TYPE_NAME, data);
-            return output;   
+            inputData.tables = tableArray;
+            //inputData.photos = Utils.objToArray(inputData.photos);
+            //delete inputData.branchControl;
+            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, inputData);
+            //return output;
+            //translate
+            inputData = i18nUtils.translate(lang);
+            //output
+            let output = this.output(inputData, fullID);
+            return JSONAPI.makeJSONAPI(TYPE_NAME, output);
         }
         catch(err) {
             throw err;
@@ -195,43 +228,58 @@ class Branches {
     }
 
     async updateByID(payload) {
-        let data = JSONAPI.parseJSONAPI(payload);
+        let inputData = JSONAPI.parseJSONAPI(payload);
 
         try {
             //get and check restaurant existed
             let restaurantData = await db.queryById(RESTAURANT_TABLE_NAME, this.reqData.params.restaurant_id);
             //console.log("--restaurantData--");
             //console.log(restaurantData);
-            data.id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
-            let branchData = await db.queryById(TABLE_NAME, data.id);
+            //inputData.id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+            let branchData = await db.queryById(TABLE_NAME, this.branch_fullID);
             //console.log("--branchData--");
             //console.log(branchData);
 
             //copy control data
-            data.branchControl = _.cloneDeep(branchData.branchControl);
+            inputData.branchControl = _.cloneDeep(branchData.branchControl);
+
+            //i18n
+            let lang = inputData.language;
+            delete inputData.language;
+            if(typeof lang === 'string'){
+                let i18nUtils = new I18n.main(branchData, this.idArray);
+                inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+            }
 
             //copy photo data
-            data.photos = _.cloneDeep(branchData.photos);
-        
+            inputData.photos = _.cloneDeep(branchData.photos);
+            //copy i18n data
+            inputData.i18n = _.cloneDeep(branchData.i18n);              
             //copy resources data
-            data.resources = _.cloneDeep(branchData.resources);
+            inputData.resources = _.cloneDeep(branchData.resources);
 
             //copy table data
-            data.tables = _.cloneDeep(branchData.tables);
+            inputData.tables = _.cloneDeep(branchData.tables);
 
             //update
-            let dbOutput = await db.put(TABLE_NAME, data);
+            let dbOutput = await db.put(TABLE_NAME, inputData);
 
-            //output
             let tableArray = [];
             for(let table_id in dbOutput.tables){
                 tableArray.push(table_id);
             }
             dbOutput.tables = tableArray;
-            dbOutput.photos = Utils.objToArray(dbOutput.photos);
-            delete dbOutput.branchControl;
-            let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
-            return output;   
+            //dbOutput.photos = Utils.objToArray(dbOutput.photos);
+            //delete dbOutput.branchControl;
+            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
+            //return output;
+
+            //translate
+            let i18nOutputUtils = new I18n.main(dbOutput, this.idArray);
+            dbOutput = i18nOutputUtils.translate(lang);
+            //output
+            let output = this.output(inputData, this.branch_fullID);
+            return JSONAPI.makeJSONAPI(TYPE_NAME, output);
         }catch(err) {
             console.log(err);
             throw err;
@@ -240,7 +288,7 @@ class Branches {
 
     async deleteByID() {
         let data = {
-            id: this.reqData.params.restaurant_id+this.reqData.params.branch_id
+            id: this.branch_fullID
         };
 
         try {
@@ -316,7 +364,7 @@ class Branches {
       console.log(inputData);
 
 
-      let photo_id = this.getNewPhotoID(branchData.branchControl);
+      let photo_id = Image.getNewPhotoID();
       console.log(photo_id);
       let path = Utils.makePath(this.idArray);
       console.log(path);

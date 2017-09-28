@@ -7,10 +7,8 @@ let _ = require('lodash');
 //import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
 
-//import { makeInfo } from './image.js';
-
 const TABLE_NAME = "Restaurants";
-let CONTROL_TABLE_NAME = "Control";
+//let CONTROL_TABLE_NAME = "Control";
 const USERINFO_TABLE_NAME = "Users";
 
 const TYPE_NAME = "restaurants";
@@ -21,7 +19,7 @@ function RestaurantControl() {
     //contructor() {
         this.branchesMaxID = "s0";
         this.branch_ids = [];
-        this.photoMaxID = "p000";
+    //    this.photoMaxID = "p000";
     //}
 }
 
@@ -48,25 +46,11 @@ class Restaurant {
         }
     }
 
-
-
-    getNewID(controlData) {
-        let idList = Utils.parseID(controlData.value);
-
-        let maxID = parseInt(idList.r, 10)+1;
-
-        return "r"+maxID.toString();
-    }
-
-    getNewPhotoID(controlData){
-        if(typeof controlData.photoMaxID == 'undefined'){
-        controlData.photoMaxID = "p000";
-        }
-        
-        let idList = Utils.parseID(controlData.photoMaxID);
-        let maxID = parseInt(idList.p, 10)+1;
-
-        return "p"+maxID.toString();
+    getNewID() {
+      const dateTime = Date.now();
+      const timestamp = Math.floor(dateTime);
+  
+      return `r${timestamp}`;
     }
 
     output(data, fullID){
@@ -97,14 +81,14 @@ class Restaurant {
                 ReturnConsumedCapacity: "TOTAL"
             };
             let dataArray = await db.scanDataByFilter(params);
-            console.log(dataArray);
+            //console.log(dataArray);
+            
             dataArray.map(restaurantData => {
                 //translate
                 let i18n = new I18n.main(restaurantData, this.idArray);
                 restaurantData = i18n.translate(this.lang);
 
-                restaurantData.photos = Utils.objToArray(restaurantData.photos);
-                delete restaurantData.restaurantControl;
+                return this.output(restaurantData, restaurantData.id);
             });
 
             //if empty
@@ -144,10 +128,6 @@ class Restaurant {
             let i18n = new I18n.main(restaurantData, this.idArray);
             restaurantData = i18n.translate(this.lang);
 
-            //data.photos = Utils.objToArray(data.photos);
-            //delete data.restaurantControl;
-            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, inputData);
-            //return output;
             //output
             let output = this.output(restaurantData, this.restaurant_fullID);
             return JSONAPI.makeJSONAPI(TYPE_NAME, output);         
@@ -157,21 +137,8 @@ class Restaurant {
     }
 
     async create(payload) {
-        let controlData;
         let userData;
         let identityId = this.reqData.userinfo.cognitoIdentityId;
-
-        try {
-            controlData = await db.queryById(CONTROL_TABLE_NAME, "RestaurantsMaxID");
-        }
-        catch(err){ //init system
-            let year = new Date().getFullYear();
-
-            controlData = {
-                id: "RestaurantsMaxID",
-                value: "r"+year+"00000"
-            }
-        }
 
         try {
             userData = await db.queryById(USERINFO_TABLE_NAME, identityId);
@@ -188,7 +155,7 @@ class Restaurant {
         try {
             let inputData = JSONAPI.parseJSONAPI(payload);
             inputData.restaurantControl = JSON.parse(JSON.stringify(new RestaurantControl()));   //bug
-            let restaurant_id = this.getNewID(controlData);
+            let restaurant_id = this.getNewID();
 
             inputData.id = restaurant_id;
             inputData.restaurantControl.owner = identityId;
@@ -211,10 +178,6 @@ class Restaurant {
             //update restaurant
             await db.post(TABLE_NAME, inputData);
 
-            //update control data
-            controlData.value = restaurant_id
-            await db.put(CONTROL_TABLE_NAME, controlData);
-			
             //update user data
             userData.restaurants.push(restaurant_id);
             await db.post(USERINFO_TABLE_NAME, userData);
@@ -222,13 +185,7 @@ class Restaurant {
             //translate
             inputData = i18nUtils.translate(lang);
             //output
-            //inputData.photos = Utils.objToArray(inputData.photos);
-            //delete inputData.restaurantControl;
-            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, inputData);
-            //return output;    
-
-            //output
-            let output = this.output(inputData, this.restaurant_fullID);
+            let output = this.output(inputData, restaurant_id);
             return JSONAPI.makeJSONAPI(TYPE_NAME, output);            
         }catch(err) {
             throw err;
@@ -266,11 +223,6 @@ class Restaurant {
             //translate
             let i18nOutputUtils = new I18n.main(dbOutput, this.idArray);
             dbOutput = i18nOutputUtils.translate(lang);
-            //output
-            //dbOutput.photos = Utils.objToArray(dbOutput.photos);
-            //delete dbOutput.restaurantControl;
-            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
-            //return output;
             //output
             let output = this.output(dbOutput, this.restaurant_fullID);
             return JSONAPI.makeJSONAPI(TYPE_NAME, output);  
@@ -363,7 +315,7 @@ class Restaurant {
       console.log(inputData);
 
 
-      let photo_id = this.getNewPhotoID(restaurantData.restaurantControl);
+      let photo_id = Image.getNewPhotoID();
       console.log(photo_id);
       let path = Utils.makePath(this.idArray);
       console.log(path);

@@ -13,7 +13,7 @@ class I18n {
       this.dbData.i18n = {};
     }
 
-    this.outputLang = "";
+    this.outputLang = "en-us";
   }
 
   translate(lang){
