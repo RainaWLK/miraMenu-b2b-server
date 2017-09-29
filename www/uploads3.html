@@ -108,10 +108,19 @@
   function getPresignedUrl(files){
     let body = {};
     if(files.length > 1){
-      body.data = [];
+      //body.data = [];
+      //for(let i in files){
+      //  body.data.push(makeRequestBody(files[i], i));
+      //}
+      body.data = {};
+      body.data.type = "photos";
+      body.data.attributes = [];
       for(let i in files){
-        body.data.push(makeRequestBody(files[i], i));
+        let singleBody = makeRequestBody(files[i], i);
+        console.log(singleBody);
+        body.data.attributes.push(singleBody.attributes);
       }
+      console.log(body);
     }
     else{
       body.data = makeRequestBody(files[0]);
