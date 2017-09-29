@@ -25,7 +25,27 @@ let sampleData = {
   }
 }
 
+let sampleDataTW = {
+  "type": "items",
+  "language": "zh-tw",
+  "attributes": {
+      "name": "一號",
+      "desc": "牛奶",
+      "category": "早餐",
+      "list_price": "99.99",
+      "sale_price": "80",
+      "tag": ["...."],
+      "note": ["囧"],
+//      "photos": [],
+      "nutrition": "366 cal",
+      "availability": true,
+      "ingredients": ["魚", "雜七雜八"],
+      "inventory": "Sufficient"
+  }
+}
+
 let sample = {"data": sampleData};
+let sampleArray = {"data": []};
 
 function itemTest() {
   let URI_ID = URI+"/{item_id}";
@@ -44,18 +64,19 @@ function itemTest() {
         idArray = await prepareTest();
         
         URI_ID = URI+"/"+"i"+idArray.i;
-        fullid = "r"+idArray.r+"s"+idArray.s+"i"+idArray.i;
+        fullid = utils.makeFullID(idArray);
         return;
       });
 
       it('check data saved: GET '+URI, async () => {
-        let output = _.cloneDeep(sample);
-        output.data.id = fullid;
-        //output.data.attributes.location.tel = "012-3345678";
-        //output.data.attributes.desc = "囧";
+        let output = _.cloneDeep(sampleData);
+        let outputArray = _.cloneDeep(sampleArray);
+        output.id = fullid;
+        //output.attributes.location.tel = "012-3345678";
+        //output.attributes.desc = "囧";
+        outputArray.data.push(output);
 
-        let res = await op.checkOperation('GET', URI, null, null);
-        res.body.data.should.include.something.that.deep.equal(output.data);
+        let res = await op.checkOperation('GET', URI, null, outputArray);
       });
 
       after(async () => {
@@ -81,7 +102,7 @@ function itemByIDTest() {
       idArray = await prepareTest();
 
       URI_ID = URI+"/"+"i"+idArray.i;
-      fullid = "r"+idArray.r+"s"+idArray.s+"i"+idArray.i;
+      fullid = utils.makeFullID(idArray);
       return;
     });
 
@@ -108,6 +129,87 @@ function itemByIDTest() {
 	
     it('delete data: DELETE '+URI_ID, async () => {
       await cleanTest(idArray);
+      return;
+    });
+
+  });
+}
+
+
+function translationTest() {
+  let URI_ID = URI+"/{item_id}";
+  let op;
+  let parent_idArray;
+  let fullid;
+
+  before('prepare data', () => {
+    op = new CommonTest(URI_ID);
+  });
+
+  describe(URI_ID+' test', () => {
+    before(async () => {
+      parent_idArray = await prepareTest();
+      fullid = utils.makeFullID(parent_idArray);
+      return;
+    });
+
+    it('check data saved: GET '+URI_ID, async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', output.data.language);
+
+      //how to check i18n structure?
+    });
+
+    it('set data with another language: PATCH ' + URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      let twData = _.cloneDeep(sampleDataTW);
+			let input = {"data": twData};
+
+      let res = await op.checkOperation('PATCH', myURI_ID, input, input);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', input.data.language);
+    });
+
+    it('check default translation: GET '+URI_ID, async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', output.data.language);
+    });
+
+    it('check translation: GET '+URI_ID+'?lang=zh-tw', async () => {
+      let twData = _.cloneDeep(sampleDataTW);
+			let output = {"data": twData};
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      myURI_ID += "?lang=zh-tw";
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', output.data.language);
+    });
+
+    it('check non-extsted translation: GET '+URI_ID+'?lang=orc', async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      myURI_ID += "?lang=orc";
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', output.data.language);
+    });
+	
+    it('delete data: DELETE '+URI_ID, async () => {
+      await cleanTest(parent_idArray);
       return;
     });
 
@@ -150,6 +252,7 @@ async function cleanTest(idArray){
 function go() {
   itemByIDTest();
   itemTest();
+  translationTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;

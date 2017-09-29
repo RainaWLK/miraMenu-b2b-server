@@ -26,6 +26,7 @@ let sampleData = {
 };
 
 let sample = {"data": sampleData};
+let sampleArray = {"data": []};
 
 function tableTest() {
   let URI_ID = URI+"/{table_id}";

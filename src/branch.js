@@ -235,7 +235,7 @@ class Branches {
             let restaurantData = await db.queryById(RESTAURANT_TABLE_NAME, this.reqData.params.restaurant_id);
             //console.log("--restaurantData--");
             //console.log(restaurantData);
-            //inputData.id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+            inputData.id = this.branch_fullID;
             let branchData = await db.queryById(TABLE_NAME, this.branch_fullID);
             //console.log("--branchData--");
             //console.log(branchData);
@@ -269,16 +269,12 @@ class Branches {
                 tableArray.push(table_id);
             }
             dbOutput.tables = tableArray;
-            //dbOutput.photos = Utils.objToArray(dbOutput.photos);
-            //delete dbOutput.branchControl;
-            //let output = JSONAPI.makeJSONAPI(TYPE_NAME, dbOutput);
-            //return output;
 
             //translate
             let i18nOutputUtils = new I18n.main(dbOutput, this.idArray);
             dbOutput = i18nOutputUtils.translate(lang);
             //output
-            let output = this.output(inputData, this.branch_fullID);
+            let output = this.output(dbOutput, this.branch_fullID);
             return JSONAPI.makeJSONAPI(TYPE_NAME, output);
         }catch(err) {
             console.log(err);

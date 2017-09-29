@@ -78,6 +78,21 @@ class CommonTest {
     return req;
   }
 
+  removeInternalElement(inputData){
+    if(typeof inputData === 'object') {
+      if(typeof inputData.i18n !== 'undefined'){
+        delete inputData.i18n;
+      }
+      if(typeof inputData.resources !== 'undefined'){
+        delete inputData.resources;
+      }
+      if(typeof inputData.attributes.photos !== 'undefined'){
+        delete inputData.attributes.photos;
+      }
+    }
+    return inputData;
+  }
+
   async checkOperation(op ,uri, input, expectOutput) {
     try{
       console.log("======================");
@@ -99,29 +114,21 @@ class CommonTest {
       schemaTest.checkSchema(res, op, this.orgURI);
       console.log("schema check finish");
       if(expectOutput) {
-        if(Array.isArray(expectOutput)) {
-          for(let row in expectOutput) {
-            for(let i in expectOutput[row]) {
-              output[row].should.have.property(i).eql(expectOutput[i]);
-            }
+        if(Array.isArray(expectOutput.data)) {
+          
+          for(let row in output.data) {
+            output.data[row] = this.removeInternalElement(output.data[row]);
           }
+          //output.data.should.include.something.that.deep.equal(expectOutput.data[0]);
+          expect(output.data).to.include.something.that.deep.equal(expectOutput.data[0]);      
         }
         else {
-          if(typeof output.data == 'object') {
-            if(typeof output.data.id != 'undefined'){
+          if(typeof output.data === 'object') {
+            if(typeof output.data.id !== 'undefined'){
               delete output.data.id;
             }
-            if(typeof output.data.i18n != 'undefined'){
-              delete output.data.i18n;
-            }
-            if(typeof output.data.resources != 'undefined'){
-              delete output.data.resources;
-            }
-            if(typeof output.data.attributes.photos != 'undefined'){
-              delete output.data.attributes.photos;
-            }
           }
-
+          output.data = this.removeInternalElement(output.data);
           //output.data.should.deep.include(expectOutput.data);
           expect(output).to.deep.equal(expectOutput);         
         }

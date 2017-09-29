@@ -42,6 +42,7 @@ let languageSingleForm = {
 let itemSampleData = {
   "data": {
     "type": "items",
+    "language": "en-us",
     "attributes": {
         "name": "food 01",
         "desc": "milk",
@@ -50,7 +51,7 @@ let itemSampleData = {
         "sale_price": "80",
         "tag": ["...."],
         "note": ["zzzzz"],
-        "photos": [],
+        //"photos": [],
         "nutrition": "366 cal",
         "availability": true,
         "ingredients": "fish, zzz",
@@ -121,7 +122,7 @@ function i18nTest() {
         res.body.data.should.have.deep.property('id', i18n_fullid);
       });
 
-      it('set desc string: PATCH ' + ITEM_URI_ID, async () => {
+      /*it('set desc string: PATCH ' + ITEM_URI_ID, async () => {
         let i18nString = "i18n::"+i18n_id;
         let input = _.cloneDeep(itemSampleData);
         input.data.attributes.desc = i18nString;
@@ -155,7 +156,7 @@ function i18nTest() {
         //check
         let res = await op.pureOperation('GET', myURI_ID, null);
         res.body.data.attributes.should.have.property('desc', "apple");
-      });
+      });*/
 
       after(async () => {
         await cleanTest(i18n_idArray);
@@ -165,6 +166,7 @@ function i18nTest() {
     });
   });
 }
+
 
 async function prepareTest(){
   //create parent
