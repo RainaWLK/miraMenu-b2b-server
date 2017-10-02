@@ -61,8 +61,6 @@ function itemTest() {
 
       before(async () => {
         idArray = await prepareTest();
-        
-        //URI_ID = URI+"/"+"i"+idArray.i;
         fullid = utils.makeFullID(idArray);
         return;
       });
@@ -99,8 +97,6 @@ function itemByIDTest() {
   describe(URI_ID+' test', () => {
     it('set data: POST ' + URI, async () => {
       idArray = await prepareTest();
-
-      //URI_ID = URI+"/"+"i"+idArray.i;
       fullid = utils.makeFullID(idArray);
       return;
     });
@@ -225,7 +221,6 @@ async function prepareTest(){
 
   //create parent
   let branch_idArray = await branchTest.prepareTest();
-  //URI = '/restaurants/'+"r"+branch_idArray.r+'/branches/'+"s"+branch_idArray.s+'/items';
   let myURI = utils.getURI(URI, branch_idArray);
 
   //output.data.attributes.social.facebook = "囧";
@@ -237,7 +232,6 @@ async function prepareTest(){
 
 async function cleanTest(idArray){
   let op = new CommonTest();
-  //let URI_ID = '/restaurants/'+'r'+idArray.r+'/branches/'+'s'+idArray.s+'/items/'+'i'+idArray.i;
   let myURI_ID = utils.getURI(URI_ID, idArray);
 
   await op.checkOperation('DELETE', myURI_ID, null, "");

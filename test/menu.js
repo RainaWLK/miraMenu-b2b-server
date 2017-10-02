@@ -52,8 +52,6 @@ function menuTest() {
 
       before(async () => {
         idArray = await prepareTest();
-        
-        //URI_ID = URI+"/"+"m"+idArray.m;
         fullid = utils.makeFullID(idArray);
         return;
       });
@@ -97,8 +95,6 @@ function menuByIDTest() {
   describe(URI_ID+' test', () => {
     it('set data: POST ' + URI, async () => {
       idArray = await prepareTest();
-
-      //URI_ID = URI+"/"+"m"+idArray.m;
       fullid = utils.makeFullID(idArray);
       return;
     });
@@ -220,7 +216,6 @@ function photoUploadTest(){
   let idArray;
   before(async () => {
     idArray = await prepareTest();
-    //let fullid = utils.makeFullID(idArray);
     return;
   });
   it('generic photo upload test', async () => {
@@ -242,7 +237,6 @@ async function prepareTest(){
 
   //create parent
   let branch_idArray = await branchTest.prepareTest();
-  //URI = '/restaurants/'+"r"+branch_idArray.r+'/branches/'+"s"+branch_idArray.s+'/menus';
   let myURI = utils.getURI(URI, branch_idArray);
 
   //output.data.attributes.social.facebook = "囧";
@@ -253,7 +247,6 @@ async function prepareTest(){
 
 async function cleanTest(idArray){
   let op = new CommonTest();
-  //let URI_ID = '/restaurants/'+'r'+idArray.r+'/branches/'+'s'+idArray.s+'/menus/'+'m'+idArray.m;
   let myURI_ID = utils.getURI(URI_ID, idArray);
 
   await op.checkOperation('DELETE', myURI_ID, null, "");

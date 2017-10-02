@@ -4,11 +4,9 @@ let Utils = require('./utils.js');
 let Image = require('./image.js');
 let I18n = require('./i18n.js');
 let _ = require('lodash');
-//import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
 
 const TABLE_NAME = "Restaurants";
-//let CONTROL_TABLE_NAME = "Control";
 const USERINFO_TABLE_NAME = "Users";
 
 const TYPE_NAME = "restaurants";
@@ -142,7 +140,7 @@ class Restaurant {
 
         try {
             userData = await db.queryById(USERINFO_TABLE_NAME, identityId);
-            console.log("======1=======");
+            console.log("======user data=======");
             console.log(userData);
         }
         catch(err){ //new user
@@ -300,53 +298,6 @@ class Restaurant {
 
   async addPhoto(payload) {
     try {
-/*      let restaurant_id = this.reqData.params.restaurant_id;
-      let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
-
-      let inputData = JSONAPI.parseJSONAPI(payload);
-      delete inputData.id;
-      console.log(inputData);
-
-
-      let photo_id = Image.getNewPhotoID();
-      console.log(photo_id);
-      let path = Utils.makePath(this.idArray);
-      console.log(path);
-
-      let file_name = `${path}/photos/${photo_id}.jpg`;
-      console.log("file_name="+file_name);
-      restaurantData.restaurantControl.photoMaxID = photo_id;
-      console.log("restaurantData=");
-      console.log(restaurantData);
-
-      //sign
-      let signedData = await S3.getPresignedURL(file_name, inputData.mimetype);
-      console.log(signedData);
-
-      //update db
-      inputData.id = Utils.makeFullID(this.idArray) + photo_id;
-      inputData.ttl = Math.floor(Date.now() / 1000) + 600;  //expire after 10min
-      console.log(inputData);
-      let dbOutput = await db.put(PHOTO_TMP_TABLE_NAME, inputData);
-      console.log(dbOutput);
-
-      let dbOutput2 = await db.put(TABLE_NAME, restaurantData);
-
-      //output
-      let outputBuf = {
-        "id": inputData.id,
-        "mimetype": inputData.mimetype,
-        "filename": file_name,
-        "signedrequest": signedData.signedRequest,
-        "url": {
-          "original": signedData.url
-        }
-      };
-
-    　let output = JSONAPI.makeJSONAPI("photos", outputBuf);
-
-      return output;
-*/
       let restaurant_id = this.reqData.params.restaurant_id;
       let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
       let inputData = JSONAPI.parseJSONAPI(payload);

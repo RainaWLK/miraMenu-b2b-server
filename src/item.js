@@ -4,7 +4,6 @@ let Utils = require('./utils.js');
 let Image = require('./image.js');
 let I18n = require('./i18n.js');
 let _ = require('lodash');
-//import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
 
 const BRANCH_TABLE_NAME = "Branches";
@@ -407,16 +406,6 @@ class Items {
 
   async addPhoto(payload) {
     try {
-      /*let fullID = this.branch_fullID + this.reqData.params.item_id;      
-      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      let itemData = menusData.items[fullID];
-
-      //check item existed
-      if(typeof itemData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
-      }*/
       let itemData = await this.getItemData(false);
 
       let inputData = JSONAPI.parseJSONAPI(payload);
@@ -434,7 +423,6 @@ class Items {
     try {
       //get photo data
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      //let item_id = this.reqData.params.item_id;
       let fullID = this.branch_fullID + this.reqData.params.item_id;
 
       let itemData = menusData.items[fullID];
@@ -511,15 +499,6 @@ class Items {
 
   async getI18n() {
     try{
-      /*let dbMenusData = await this.getMenusData(true);
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let itemData = dbMenusData.items[fullID];
-
-      if(typeof itemData == 'undefined'){
-        let err = new Error("not found");
-        err.statusCode = 404;
-        throw err;
-      }*/
       let itemData = await this.getItemData(true);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);
@@ -532,14 +511,6 @@ class Items {
 
   async getI18nByID() {
     try {
-      /*let dbMenusData = await this.getMenusData();
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let itemData = dbMenusData.items[fullID];
-      if(typeof itemData == 'undefined'){
-        let err = new Error("not found");
-        err.statusCode = 404;
-        throw err;
-      }*/
       let itemData = await this.getItemData(true);
 
       let i18nUtils = new I18n.main(itemData, this.idArray);

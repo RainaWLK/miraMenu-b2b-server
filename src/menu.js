@@ -4,7 +4,6 @@ let Utils = require('./utils.js');
 let Image = require('./image.js');
 let I18n = require('./i18n.js');
 let _ = require('lodash');
-//import { sprintf } from 'sprintf-js';
 let S3 = require('./s3');
 
 const BRANCH_TABLE_NAME = "Branches";
@@ -41,14 +40,14 @@ class Menus {
     }
 
     //parse request
-    this.controlName = "restaurantControl";
+    //this.controlName = "restaurantControl";
     this.branch_fullID = this.reqData.params.restaurant_id;
     this.branchTable = RESTAURANT_TABLE_NAME;
     
     if(this.branchQuery){
         this.branch_fullID = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
         this.branchTable = BRANCH_TABLE_NAME;
-        this.controlName = "branchControl";
+        //this.controlName = "branchControl";
     }
     
     //id array
@@ -142,14 +141,10 @@ class Menus {
   }
 
   checkItemExisted(inputItems, dbMenusData_items){
-    console.log(inputItems);
-    console.log(dbMenusData_items);
     let validItems = [];
 
     if(Array.isArray(inputItems)) {
       validItems = inputItems.reduce((result, item_fullID) => {
-        console.log(result);
-        console.log(item_fullID);
         if(typeof dbMenusData_items[item_fullID] != 'undefined'){
           //branch item
           if((this.branchQuery) && 
@@ -215,7 +210,6 @@ class Menus {
         }*/
         let menuData = await this.getMenuData(true);          
 
-        console.log(menuData);
         //translate
         let i18n = new I18n.main(menuData, this.idArray);
         menuData = i18n.translate(this.lang);  
