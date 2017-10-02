@@ -271,7 +271,7 @@ class Restaurant {
         throw err;
     }
 
-    return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
+    return JSONAPI.makeJSONAPI("photos", dataArray);
   }
 
   async getPhotoInfoByID() {
@@ -300,15 +300,8 @@ class Restaurant {
 
   async addPhoto(payload) {
     try {
-      let restaurant_id = this.reqData.params.restaurant_id;
+/*      let restaurant_id = this.reqData.params.restaurant_id;
       let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
-
-      //check item existed
-      //if(typeof restaurantData == 'undefined'){
-      //    let err = new Error("not found");
-      //    err.statusCode = 404;
-      //    throw err;
-      //}
 
       let inputData = JSONAPI.parseJSONAPI(payload);
       delete inputData.id;
@@ -353,6 +346,13 @@ class Restaurant {
     　let output = JSONAPI.makeJSONAPI("photos", outputBuf);
 
       return output;
+*/
+      let restaurant_id = this.reqData.params.restaurant_id;
+      let restaurantData = await db.queryById(TABLE_NAME, restaurant_id);
+      let inputData = JSONAPI.parseJSONAPI(payload);
+      let output = Image.addPhoto(inputData, this.idArray);
+      
+      return output;
     }catch(err) {
       console.log(err);
       throw err;
@@ -384,7 +384,7 @@ class Restaurant {
       //output
       let outputBuf = dbOutput.photos[photo_id];
       outputBuf.id = restaurant_id+photo_id;
-      let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
+      let output = JSONAPI.makeJSONAPI("photos", outputBuf);
       return output;
     }catch(err) {
         throw err;

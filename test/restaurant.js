@@ -1,8 +1,10 @@
 import CommonTest from './common.js';
 let _ = require('lodash');
 let utils = require('./utils');
+let photoTest = require('./phototest');
 
 let URI = '/restaurants';
+let URI_ID = URI+"/{restaurant_id}";
 
 let sampleData = {
     "type": "restaurants",
@@ -54,23 +56,23 @@ let sample = {"data": sampleData};
 let sampleArray = {"data": []};
 
 function restaurantTest() {
-  let URI_ID = URI+"/{restaurant_id}";
   let op = new CommonTest(URI);
-  let id;
+  let idArray;
+  let fullid;
 
   describe(URI+' test', () => {
     describe('CRUD test', () => {
 
       before(async () => {
-        id = await prepareTest();
-        URI_ID = URI+"/"+id;
+        idArray = await prepareTest();
+        fullid = utils.makeFullID(idArray);
         return;
       });
 
       it('check data saved: GET '+URI, async () => {
         let output = _.cloneDeep(sampleData);
         let outputArray = _.cloneDeep(sampleArray);
-        output.id = id;
+        output.id = fullid;
         //output.attributes.location.tel = "012-3345678";
         //output.attributes.desc = "囧";
         outputArray.data.push(output);
@@ -79,7 +81,7 @@ function restaurantTest() {
       });
 
       after(async () => {
-        await cleanTest(id);
+        await cleanTest(idArray);
         return;
       });
     });
@@ -87,40 +89,42 @@ function restaurantTest() {
 }
 
 function restaurantByIDTest() {
-  let URI_ID = URI+"/{restaurant_id}";
   let op = new CommonTest(URI_ID);
-  let id;
+  let idArray;
+  let fullid;
 
   describe(URI+'/{id} test', () => {
     it('set data: POST ' + URI, async () => {
-      id = await prepareTest();
-      URI_ID = URI+"/"+id;
+      idArray = await prepareTest();
+      fullid = utils.makeFullID(idArray);
       return;
     });
 
     it('check data saved: GET '+URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
       let output = _.cloneDeep(sample);
       //output.data.attributes.desc = "囧";
 
-      let res = await op.checkOperation('GET', URI_ID, null, output);
-      res.body.data.should.have.deep.property('id', id);
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
     });
 	
     it('set data: PATCH ' + URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
       let input = _.cloneDeep(sample);
 	    input.data.attributes.social["twitch"] = "https://www.twitch.tv/HNRT";
 
-      let res = await op.checkOperation('PATCH', URI_ID, input, input);
-      res.body.data.should.have.deep.property('id', id);
+      let res = await op.checkOperation('PATCH', myURI_ID, input, input);
+      res.body.data.should.have.deep.property('id', fullid);
 
       //check
-      res = await op.checkOperation('GET', URI_ID, null, input);
-      res.body.data.should.have.deep.property('id', id);
+      res = await op.checkOperation('GET', myURI_ID, null, input);
+      res.body.data.should.have.deep.property('id', fullid);
     });
 
 
     it('delete data: DELETE '+URI_ID, async () => {
-      await cleanTest(id);
+      await cleanTest(idArray);
       return;
     });
 
@@ -129,7 +133,6 @@ function restaurantByIDTest() {
 
 
 function translationTest() {
-  let URI_ID = URI+"/{restaurant_id}";
   let op;
   let parent_idArray;
   let fullid;
@@ -140,11 +143,7 @@ function translationTest() {
 
   describe(URI_ID+' test', () => {
     before(async () => {
-      let id = await prepareTest();
-      id = id.substring(1);
-      parent_idArray = {
-        'r': id
-      };
+      parent_idArray = await prepareTest();
       fullid = utils.makeFullID(parent_idArray);
       return;
     });
@@ -205,33 +204,52 @@ function translationTest() {
     });
 	
     it('delete data: DELETE '+URI_ID, async () => {
-      await cleanTest('r'+parent_idArray.r);
+      await cleanTest(parent_idArray);
       return;
     });
 
   });
 }
 
+function photoUploadTest(){
+  let myURI = URI_ID+"/photos";
+  let myURI_ID = myURI+"/{photo_id}";
+  let idArray;
+
+  before(async () => {
+    idArray = await prepareTest();
+    return;
+  });
+  it('generic photo upload test', async () => {
+    photoTest.photoTest(idArray, myURI, myURI_ID);
+  });
+
+  after(async () => {
+    await cleanTest(idArray);
+    return;
+  });
+}
+
 async function prepareTest(){
   let op = new CommonTest(URI);
-  let id;
   let input = _.cloneDeep(sample);
   let output = _.cloneDeep(sample);
 
   //output.data.attributes.social.facebook = "囧";
   let res = await op.checkOperation('POST', URI, input, output);
-  id = res.body.data.id;
-  return id;
+
+  let idArray = utils.parseID(res.body.data.id);
+  return idArray;
 }
 
-async function cleanTest(id){
+async function cleanTest(idArray){
   let op = new CommonTest();
-  let URI_ID = URI+"/"+id;
+  let myURI_ID = utils.getURI(URI_ID, idArray);
 
-  await op.checkOperation('DELETE', URI_ID, null, "");
+  await op.checkOperation('DELETE', myURI_ID, null, "");
 
   //check
-  let res = await op.pureOperation('GET', URI_ID, null);
+  let res = await op.pureOperation('GET', myURI_ID, null);
   res.statusCode.should.eql(404);
   return;
 }
@@ -240,6 +258,7 @@ function go() {
   restaurantByIDTest();
   restaurantTest();
   translationTest();
+  photoUploadTest();
 };
 
 exports.go = go;

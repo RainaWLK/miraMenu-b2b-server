@@ -1,10 +1,11 @@
 import CommonTest from './common.js';
 let _ = require('lodash');
 let restaurantTest = require('./restaurant');
+let photoTest = require('./phototest');
 let utils = require('./utils');
 
 let URI = "/restaurants/{restaurant_id}/branches";
-let URI_prototype = URI;
+let URI_ID = URI+"/{branch_id}";
 
 let sampleData = {
     "type": "branches",
@@ -134,13 +135,12 @@ let sample = {"data": sampleData};
 let sampleArray = {"data": []};
 
 function branchTest() {
-  let URI_ID = URI+"/{branch_id}";
   let op;
   let idArray;
   let fullid;
 
   before('prepare data', () => {
-    op = new CommonTest(URI_prototype);
+    op = new CommonTest(URI);
   });
 
   describe(URI+' test', () => {
@@ -149,12 +149,13 @@ function branchTest() {
       before(async () => {
         idArray = await prepareTest();
         
-        URI_ID = URI+"/"+"s"+idArray.s;
+        //URI_ID = URI+"/"+"s"+idArray.s;
         fullid = utils.makeFullID(idArray);
         return;
       });
 
       it('check data saved: GET '+URI, async () => {
+        let myURI = utils.getURI(URI, idArray);
         let output = _.cloneDeep(sampleData);
         let outputArray = _.cloneDeep(sampleArray);
         output.id = fullid;
@@ -162,7 +163,7 @@ function branchTest() {
         //output.attributes.desc = "囧";
         outputArray.data.push(output);
 
-        let res = await op.checkOperation('GET', URI, null, outputArray);
+        let res = await op.checkOperation('GET', myURI, null, outputArray);
       });
 
       after(async () => {
@@ -174,7 +175,6 @@ function branchTest() {
 }
 
 function branchByIDTest() {
-  let URI_ID = URI+"/{branch_id}";
   let op;
   let idArray;
   let fullid;
@@ -186,30 +186,31 @@ function branchByIDTest() {
   describe('/restaurants/{restaurant_id}/branches/{branch_id} test', () => {
     it('set data: POST ' + URI, async () => {
       idArray = await prepareTest();
-
-      URI_ID = URI+"/"+"s"+idArray.s;
+      //URI_ID = URI+"/"+"s"+idArray.s;
       fullid = utils.makeFullID(idArray);
       return;
     });
 
 
     it('check data saved: GET '+URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
       let output = _.cloneDeep(sample);
       //output.data.attributes.desc = "囧";
 
-      let res = await op.checkOperation('GET', URI_ID, null, output);
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
       res.body.data.should.have.deep.property('id', fullid);
     });
 
     it('set data: PATCH ' + URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
       let input = _.cloneDeep(sample);
 	    input.data.attributes.social["twitch"] = "https://www.twitch.tv/HNRT";
 
-      let res = await op.checkOperation('PATCH', URI_ID, input, input);
+      let res = await op.checkOperation('PATCH', myURI_ID, input, input);
       res.body.data.should.have.deep.property('id', fullid);
 
       //check
-      res = await op.checkOperation('GET', URI_ID, null, input);
+      res = await op.checkOperation('GET', myURI_ID, null, input);
       res.body.data.should.have.deep.property('id', fullid);
     });
 	
@@ -223,7 +224,6 @@ function branchByIDTest() {
 
 
 function translationTest() {
-  let URI_ID = URI+"/{branch_id}";
   let op;
   let parent_idArray;
   let fullid;
@@ -302,33 +302,53 @@ function translationTest() {
   });
 }
 
+function photoUploadTest(){
+  let myURI = URI_ID+"/photos";
+  let myURI_ID = myURI+"/{photo_id}";
+  let idArray;
+  before(async () => {
+    idArray = await prepareTest();
+    //let fullid = utils.makeFullID(idArray);
+  });
+  it('generic photo upload test', async () => {
+    photoTest.photoTest(idArray, myURI, myURI_ID);
+  });
+
+  after(async () => {
+    await cleanTest(idArray);
+    return;
+  });
+}
+
 async function prepareTest(){
-  let op = new CommonTest(URI_prototype);
+  let op = new CommonTest(URI);
   let input = _.cloneDeep(sample);
   let output = _.cloneDeep(sample);
 
   //create parent
-  let restaurant_id = await restaurantTest.prepareTest();
-  URI = "/restaurants/"+restaurant_id+'/branches';
+  let parent_idArray = await restaurantTest.prepareTest();
+  let myURI = utils.getURI(URI, parent_idArray);
+  //URI = "/restaurants/"+restaurant_id+'/branches';
 
   //output.data.attributes.social.facebook = "囧";
-  let res = await op.checkOperation('POST', URI, input, output);
+  let res = await op.checkOperation('POST', myURI, input, output);
   let idArray = utils.parseID(res.body.data.id);
   return idArray;
 }
 
 async function cleanTest(idArray){
   let op = new CommonTest();
-  let URI_ID = '/restaurants/'+'r'+idArray.r+'/branches/'+'s'+idArray.s;
+  //let URI_ID = '/restaurants/'+'r'+idArray.r+'/branches/'+'s'+idArray.s;
+  let myURI_ID = utils.getURI(URI_ID, idArray);
 
-  await op.checkOperation('DELETE', URI_ID, null, "");
+  await op.checkOperation('DELETE', myURI_ID, null, "");
 
   //check
-  let res = await op.pureOperation('GET', URI_ID, null);
+  let res = await op.pureOperation('GET', myURI_ID, null);
   res.statusCode.should.eql(404);
 
   //delete parent
-  await restaurantTest.cleanTest("r"+idArray.r);
+  await restaurantTest.cleanTest(idArray);
   return;
 }
 
@@ -336,6 +356,7 @@ function go() {
   branchByIDTest();
   branchTest();
   translationTest();
+  photoUploadTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;

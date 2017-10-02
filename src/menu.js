@@ -394,7 +394,7 @@ class Menus {
         throw err;
     }
 
-    return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
+    return JSONAPI.makeJSONAPI("photos", dataArray);
   }
 
   async getPhotoInfoByID() {
@@ -430,10 +430,10 @@ class Menus {
   }
 
   async addPhoto(payload) {
-    let output;
+//    let output;
     
     try {
-      let fullID = this.branch_fullID + this.reqData.params.menu_id;   
+/*      let fullID = this.branch_fullID + this.reqData.params.menu_id;   
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       let menuData = menusData.menus[fullID];
 
@@ -502,6 +502,18 @@ class Menus {
         output = JSONAPI.makeJSONAPI("photos", outputBuf);
       }
 
+      return output;*/
+      console.log("add photo");
+      let menuData = await this.getMenuData(false);
+      console.log("get menu data done");
+      console.log(menuData);
+      console.log(payload);
+
+      let inputData = JSONAPI.parseJSONAPI(payload);
+      console.log("parseJSONAPI done");
+      console.log(inputData);
+      let output = Image.addPhoto(inputData, this.idArray);
+      
       return output;
     }catch(err) {
       console.log(err);

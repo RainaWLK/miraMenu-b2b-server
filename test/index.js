@@ -28,11 +28,10 @@ before('login', async () => {
 //restaurantTest.go();
 //branchTest.go();
 //tableTest.go();
-//menuTest.go();
+menuTest.go();
 //menuTest_restaurant.go();
-//menuTest_photo.go();
-itemTest.go();
-itemTest_restaurant.go();
+//itemTest.go();
+//itemTest_restaurant.go();
 //itemTest_photo.go();
 //itemTest_resource.go();
-itemTest_i18n.go();
+//itemTest_i18n.go();

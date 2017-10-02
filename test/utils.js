@@ -98,6 +98,7 @@ function objToArray(obj){
 
 function getURI(URI, idArray){
   let path = URI;
+  console.log("====getURI====");
   console.log(idArray);
   if(typeof idArray.r != 'undefined'){
     path = path.replace('{restaurant_id}', `r${idArray.r}`);
@@ -121,7 +122,7 @@ function getURI(URI, idArray){
     path = path.replace('{resource_id}', `res${idArray.res}`);
     path = path.replace('{i18n_id}', `res${idArray.res}`);
   }
-  console.log("====getURI====");
+  
   console.log(path);
   return path;
 }

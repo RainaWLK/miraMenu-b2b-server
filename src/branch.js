@@ -323,7 +323,7 @@ class Branches {
         throw err;
     }
 
-    return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
+    return JSONAPI.makeJSONAPI("photos", dataArray);
   }
 
   async getPhotoInfoByID() {
@@ -352,7 +352,7 @@ class Branches {
 
   async addPhoto(payload) {
     try {
-      let branch_id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
+/*      let branch_id = this.reqData.params.restaurant_id+this.reqData.params.branch_id;
       let branchData = await db.queryById(TABLE_NAME, branch_id);
 
       let inputData = JSONAPI.parseJSONAPI(payload);
@@ -397,6 +397,11 @@ class Branches {
 
     　let output = JSONAPI.makeJSONAPI("photos", outputBuf);
 
+      return output;*/
+      let branchData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      let inputData = JSONAPI.parseJSONAPI(payload);
+      let output = Image.addPhoto(inputData, this.idArray);
+      
       return output;
     }catch(err) {
       console.log(err);
@@ -429,7 +434,7 @@ class Branches {
       //output
       let outputBuf = dbOutput.photos[photo_id];
       outputBuf.id = branch_id+photo_id;
-      let output = JSONAPI.makeJSONAPI(TYPE_NAME, outputBuf);
+      let output = JSONAPI.makeJSONAPI("photos", outputBuf);
       return output;
     }catch(err) {
         throw err;
