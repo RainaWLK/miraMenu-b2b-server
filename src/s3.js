@@ -3,7 +3,10 @@ let s3options = {
 	useDualstack: true,
 	region: "us-east-1"
 }
-const BUCKET = "meshphoto";
+let BUCKET = "meshphoto-tmp";
+if(process.env.NODE_ENV == 'development'){
+	BUCKET = "meshphoto-dev-tmp";
+}
 
 const s3 = new AWS.S3(s3options);
 
