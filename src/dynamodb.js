@@ -4,10 +4,6 @@ let _ = require('lodash');
 AWS.config.update({
     region: "us-east-1"
 });
-//if (typeof Promise === 'undefined') {
-//  AWS.config.setPromisesDependency(require('bluebird'));
-//}
-//AWS.config.setPromisesDependency(require('Q').Promise);
 //const doc = require('dynamodb-doc');
 const docClient = new AWS.DynamoDB.DocumentClient();
 
@@ -102,7 +98,7 @@ function fixEmptyValue(data){
   let outputData = {};
   for(let i in data){
 
-    if(data[i] === ""){
+    if((data[i] === "")||(data[i] === undefined)){
       continue;
     }
     else if(Array.isArray(data[i])){
