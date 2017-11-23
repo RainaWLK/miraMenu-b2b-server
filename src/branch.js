@@ -159,8 +159,8 @@ class Branches {
             //i18n
             let lang = inputData.language;
             delete inputData.language;
-            if((typeof lang === 'undefined')&&(typeof inputData.default_lang === 'string')){
-                lang = inputData.default_lang;
+            if((typeof lang === 'undefined')&&(typeof inputData.default_language === 'string')){
+                lang = inputData.default_language;
             }
             else if(typeof lang === 'undefined'){
                 lang = "en-us";

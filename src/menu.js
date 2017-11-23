@@ -22,8 +22,8 @@ function MenuControl() {
 
 let i18nSchema = {
   "name": "",
-  "menu_desc": "",
-  "menu_cat": "",
+  "desc": "",
+  "category": "",
 }
 
 
@@ -248,8 +248,15 @@ class Menus {
                 } 
             }
             //check item existed
-            inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
-
+            if(typeof inputData.sections === 'object'){
+              inputData.sections.map(menu_section => {
+                menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
+              });
+            }
+            else {
+              inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
+            }
+            
             let control = new MenuControl();
             inputData.menuControl = JSON.parse(JSON.stringify(control));   //bug
             inputData.photos = {};
@@ -297,8 +304,15 @@ class Menus {
         let inputData = JSONAPI.parseJSONAPI(payload);
         let dbMenusData = await this.getMenusData(true);
         //check item existed
-        inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
-        
+        if(typeof inputData.sections === 'object'){
+          inputData.sections.map(menu_section => {
+            menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
+          });
+        }
+        else {
+          inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
+        }
+       
         delete inputData.id;
         inputData.menuControl = _.cloneDeep(menuData.menuControl);
 

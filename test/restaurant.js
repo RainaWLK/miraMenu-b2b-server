@@ -14,15 +14,11 @@ let sampleData = {
             "facebook": "htttps://www.facebook.com/testraman"
         },
 //        "photos": [],
-        "location": {
-            "continent": "asia",
-            "country": "japan",
-            "address": "Ikebukuro, 1町目123-1",
-            "city": "tokyo",
-            "dist": "Ikebukuro",
-            "tel": "012-3345678",
-            "state": "tokyo"
+        "geolocation": {
+          "zipcode": "12790"
         },
+        "address": "mage dist NO.1, stormwind",
+        "tel": "02-33333333",
         "category": "japanese",
         "name": "jumi raman",
         "desc": "This is a auto test data: Raman"
@@ -37,15 +33,11 @@ let sampleDataTW = {
           "facebook": "htttps://www.facebook.com/testraman"
       },
 //        "photos": [],
-      "location": {
-          "continent": "asia",
-          "country": "japan",
-          "address": "Ikebukuro, 1町目123-1",
-          "city": "tokyo",
-          "dist": "Ikebukuro",
-          "tel": "012-3345678",
-          "state": "tokyo"
+      "geolocation": {
+        "zipcode": "12790"
       },
+      "address": "法師區 NO.1, stormwind",
+      "tel": "02-33333333",
       "category": "日式",
       "name": "啾咪拉麵",
       "desc": "自動測試資料：拉麵"

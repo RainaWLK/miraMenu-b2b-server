@@ -9,20 +9,17 @@ let URI_ID = URI+"/{branch_id}";
 
 let sampleData = {
     "type": "branches",
+    "default_language": "en-us",
     "language": "en-us",
     "attributes": {
       "name": "branch 2",
       "desc": "gg seafood branch 2 zz",
       "category": "seafood",
-      "location": {
-        "continent": "Asia",
-        "country": "Taiwan",
-        "state": "Taiwan",
-        "city": "基隆",
-        "dist": "吱吱區",
-        "address": "吱吱漁港二號碼頭",
-        "tel": "02-33333333"
+      "geolocation": {
+        "zipcode": "12790"
       },
+      "address": "mage dist NO.1, stormwind",
+      "tel": "02-33333333",
       "currency": "TWD",
       "social": {
         "web": "https://www.ggseafood.com/2"
@@ -71,20 +68,17 @@ let sampleData = {
 
 let sampleDataTW = {
   "type": "branches",
+  "default_language": "en-us",
   "language": "zh-tw",
   "attributes": {
     "name": "二號店",
     "desc": "吱吱海產二號店zz",
     "category": "seafood",
-    "location": {
-      "continent": "Asia",
-      "country": "Taiwan",
-      "state": "Taiwan",
-      "city": "基隆",
-      "dist": "吱吱區",
-      "address": "吱吱漁港二號碼頭",
-      "tel": "02-33333333"
+    "geolocation": {
+      "zipcode": "12790"
     },
+    "address": "吱吱漁港二號碼頭",
+    "tel": "02-33333333",
     "currency": "TWD",
     "social": {
       "web": "https://www.ggseafood.com/2"

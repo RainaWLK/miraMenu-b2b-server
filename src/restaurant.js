@@ -164,10 +164,7 @@ class Restaurant {
             //i18n
             let lang = inputData.language;
             delete inputData.language;
-            if((typeof lang === 'undefined')&&(typeof inputData.defaultlanguage === 'string')){
-                lang = inputData.defaultlanguage;
-            }
-            else if(typeof lang === 'undefined'){
+            if(typeof lang === 'undefined'){
                 lang = "en-us";
             }
             let i18nUtils = new I18n.main(inputData, this.idArray);

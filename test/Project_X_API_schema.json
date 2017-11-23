@@ -18,6 +18,9 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -30,37 +33,19 @@
                   "category": {
                     "type": "string"
                   },
-                  "location": {
+                  "geolocation": {
                     "type": "object",
                     "properties": {
-                      "country": {
-                        "type": "string"
-                      },
-                      "state": {
-                        "type": "string"
-                      },
-                      "city": {
-                        "type": "string"
-                      },
-                      "dist": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "string"
-                      },
                       "zipcode": {
                         "type": "string"
-                      },
-                      "tel": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "country",
-                      "city",
-                      "address",
-                      "tel"
-                    ]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "tel": {
+                    "type": "string"
                   },
                   "social": {
                     "type": "object",
@@ -107,6 +92,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -132,7 +124,9 @@
                   "name",
                   "desc",
                   "category",
-                  "location",
+                  "geolocation",
+                  "address",
+                  "tel",
                   "photos"
                 ]
               },
@@ -222,6 +216,9 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -234,37 +231,19 @@
                   "category": {
                     "type": "string"
                   },
-                  "location": {
+                  "geolocation": {
                     "type": "object",
                     "properties": {
-                      "country": {
-                        "type": "string"
-                      },
-                      "state": {
-                        "type": "string"
-                      },
-                      "city": {
-                        "type": "string"
-                      },
-                      "dist": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "string"
-                      },
                       "zipcode": {
                         "type": "string"
-                      },
-                      "tel": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "country",
-                      "city",
-                      "address",
-                      "tel"
-                    ]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "tel": {
+                    "type": "string"
                   },
                   "social": {
                     "type": "object",
@@ -311,6 +290,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -336,7 +322,9 @@
                   "name",
                   "desc",
                   "category",
-                  "location",
+                  "geolocation",
+                  "address",
+                  "tel",
                   "photos"
                 ]
               },
@@ -428,6 +416,9 @@
                 "type": {
                   "type": "string"
                 },
+                "language": {
+                  "type": "string"
+                },
                 "attributes": {
                   "type": "object",
                   "properties": {
@@ -440,37 +431,19 @@
                     "category": {
                       "type": "string"
                     },
-                    "location": {
+                    "geolocation": {
                       "type": "object",
                       "properties": {
-                        "country": {
-                          "type": "string"
-                        },
-                        "state": {
-                          "type": "string"
-                        },
-                        "city": {
-                          "type": "string"
-                        },
-                        "dist": {
-                          "type": "string"
-                        },
-                        "address": {
-                          "type": "string"
-                        },
                         "zipcode": {
                           "type": "string"
-                        },
-                        "tel": {
-                          "type": "string"
                         }
-                      },
-                      "required": [
-                        "country",
-                        "city",
-                        "address",
-                        "tel"
-                      ]
+                      }
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "tel": {
+                      "type": "string"
                     },
                     "social": {
                       "type": "object",
@@ -517,6 +490,13 @@
                           "title": {
                             "type": "string"
                           },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "logo",
+                              "main"
+                            ]
+                          },
                           "url": {
                             "type": "object",
                             "properties": {
@@ -542,7 +522,9 @@
                     "name",
                     "desc",
                     "category",
-                    "location",
+                    "geolocation",
+                    "address",
+                    "tel",
                     "photos"
                   ]
                 },
@@ -630,6 +612,9 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -642,37 +627,19 @@
                   "category": {
                     "type": "string"
                   },
-                  "location": {
+                  "geolocation": {
                     "type": "object",
                     "properties": {
-                      "country": {
-                        "type": "string"
-                      },
-                      "state": {
-                        "type": "string"
-                      },
-                      "city": {
-                        "type": "string"
-                      },
-                      "dist": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "string"
-                      },
                       "zipcode": {
                         "type": "string"
-                      },
-                      "tel": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "country",
-                      "city",
-                      "address",
-                      "tel"
-                    ]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "tel": {
+                    "type": "string"
                   },
                   "social": {
                     "type": "object",
@@ -719,6 +686,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -744,7 +718,9 @@
                   "name",
                   "desc",
                   "category",
-                  "location",
+                  "geolocation",
+                  "address",
+                  "tel",
                   "photos"
                 ]
               },
@@ -1009,6 +985,12 @@
               "type": {
                 "type": "string"
               },
+              "default_language": {
+                "type": "string"
+              },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -1021,37 +1003,19 @@
                   "category": {
                     "type": "string"
                   },
-                  "location": {
+                  "geolocation": {
                     "type": "object",
                     "properties": {
-                      "country": {
-                        "type": "string"
-                      },
-                      "state": {
-                        "type": "string"
-                      },
-                      "city": {
-                        "type": "string"
-                      },
-                      "dist": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "string"
-                      },
                       "zipcode": {
                         "type": "string"
-                      },
-                      "tel": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "country",
-                      "city",
-                      "address",
-                      "tel"
-                    ]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "tel": {
+                    "type": "string"
                   },
                   "currency": {
                     "type": "string"
@@ -1149,6 +1113,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -1174,7 +1145,9 @@
                   "name",
                   "desc",
                   "category",
-                  "location",
+                  "geolocation",
+                  "address",
+                  "tel",
                   "currency",
                   "total_table",
                   "capacity",
@@ -1241,6 +1214,7 @@
             "required": [
               "id",
               "type",
+              "default_language",
               "attributes"
             ]
           }
@@ -1267,6 +1241,12 @@
               "type": {
                 "type": "string"
               },
+              "default_language": {
+                "type": "string"
+              },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -1279,37 +1259,19 @@
                   "category": {
                     "type": "string"
                   },
-                  "location": {
+                  "geolocation": {
                     "type": "object",
                     "properties": {
-                      "country": {
-                        "type": "string"
-                      },
-                      "state": {
-                        "type": "string"
-                      },
-                      "city": {
-                        "type": "string"
-                      },
-                      "dist": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "string"
-                      },
                       "zipcode": {
                         "type": "string"
-                      },
-                      "tel": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "country",
-                      "city",
-                      "address",
-                      "tel"
-                    ]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "tel": {
+                    "type": "string"
                   },
                   "currency": {
                     "type": "string"
@@ -1407,6 +1369,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -1432,7 +1401,9 @@
                   "name",
                   "desc",
                   "category",
-                  "location",
+                  "geolocation",
+                  "address",
+                  "tel",
                   "currency",
                   "total_table",
                   "capacity",
@@ -1499,6 +1470,7 @@
             "required": [
               "id",
               "type",
+              "default_language",
               "attributes"
             ]
           }
@@ -1527,6 +1499,12 @@
                 "type": {
                   "type": "string"
                 },
+                "default_language": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string"
+                },
                 "attributes": {
                   "type": "object",
                   "properties": {
@@ -1539,37 +1517,19 @@
                     "category": {
                       "type": "string"
                     },
-                    "location": {
+                    "geolocation": {
                       "type": "object",
                       "properties": {
-                        "country": {
-                          "type": "string"
-                        },
-                        "state": {
-                          "type": "string"
-                        },
-                        "city": {
-                          "type": "string"
-                        },
-                        "dist": {
-                          "type": "string"
-                        },
-                        "address": {
-                          "type": "string"
-                        },
                         "zipcode": {
                           "type": "string"
-                        },
-                        "tel": {
-                          "type": "string"
                         }
-                      },
-                      "required": [
-                        "country",
-                        "city",
-                        "address",
-                        "tel"
-                      ]
+                      }
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "tel": {
+                      "type": "string"
                     },
                     "currency": {
                       "type": "string"
@@ -1667,6 +1627,13 @@
                           "title": {
                             "type": "string"
                           },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "logo",
+                              "main"
+                            ]
+                          },
                           "url": {
                             "type": "object",
                             "properties": {
@@ -1692,7 +1659,9 @@
                     "name",
                     "desc",
                     "category",
-                    "location",
+                    "geolocation",
+                    "address",
+                    "tel",
                     "currency",
                     "total_table",
                     "capacity",
@@ -1759,6 +1728,7 @@
               "required": [
                 "id",
                 "type",
+                "default_language",
                 "attributes"
               ]
             }
@@ -1786,6 +1756,12 @@
               "type": {
                 "type": "string"
               },
+              "default_language": {
+                "type": "string"
+              },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -1798,37 +1774,19 @@
                   "category": {
                     "type": "string"
                   },
-                  "location": {
+                  "geolocation": {
                     "type": "object",
                     "properties": {
-                      "country": {
-                        "type": "string"
-                      },
-                      "state": {
-                        "type": "string"
-                      },
-                      "city": {
-                        "type": "string"
-                      },
-                      "dist": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "string"
-                      },
                       "zipcode": {
                         "type": "string"
-                      },
-                      "tel": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "country",
-                      "city",
-                      "address",
-                      "tel"
-                    ]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "tel": {
+                    "type": "string"
                   },
                   "currency": {
                     "type": "string"
@@ -1926,6 +1884,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -1951,7 +1916,9 @@
                   "name",
                   "desc",
                   "category",
-                  "location",
+                  "geolocation",
+                  "address",
+                  "tel",
                   "currency",
                   "total_table",
                   "capacity",
@@ -2018,6 +1985,7 @@
             "required": [
               "id",
               "type",
+              "default_language",
               "attributes"
             ]
           }
@@ -2219,6 +2187,9 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
@@ -2340,6 +2311,9 @@
                 "type": "string"
               },
               "type": {
+                "type": "string"
+              },
+              "language": {
                 "type": "string"
               },
               "attributes": {
@@ -2467,6 +2441,9 @@
                 "type": {
                   "type": "string"
                 },
+                "language": {
+                  "type": "string"
+                },
                 "attributes": {
                   "type": "object",
                   "properties": {
@@ -2586,6 +2563,9 @@
                 "type": "string"
               },
               "type": {
+                "type": "string"
+              },
+              "language": {
                 "type": "string"
               },
               "attributes": {
@@ -2711,23 +2691,41 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
-                  "menu_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "menu_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "menu_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
-                  "items": {
-                    "type": "array"
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "items"
+                      ]
+                    }
                   },
                   "menu_hours": {
                     "type": "string"
@@ -2760,6 +2758,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -2783,9 +2788,9 @@
                 },
                 "required": [
                   "name",
-                  "menu_desc",
-                  "menu_cat",
-                  "menu_availability",
+                  "desc",
+                  "category",
+                  "availability",
                   "photos"
                 ]
               },
@@ -2875,23 +2880,41 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
-                  "menu_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "menu_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "menu_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
-                  "items": {
-                    "type": "array"
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "items"
+                      ]
+                    }
                   },
                   "menu_hours": {
                     "type": "string"
@@ -2924,6 +2947,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -2947,9 +2977,9 @@
                 },
                 "required": [
                   "name",
-                  "menu_desc",
-                  "menu_cat",
-                  "menu_availability",
+                  "desc",
+                  "category",
+                  "availability",
                   "photos"
                 ]
               },
@@ -3041,23 +3071,41 @@
                 "type": {
                   "type": "string"
                 },
+                "language": {
+                  "type": "string"
+                },
                 "attributes": {
                   "type": "object",
                   "properties": {
                     "name": {
                       "type": "string"
                     },
-                    "menu_desc": {
+                    "desc": {
                       "type": "string"
                     },
-                    "menu_cat": {
+                    "category": {
                       "type": "string"
                     },
-                    "menu_availability": {
+                    "availability": {
                       "type": "boolean"
                     },
-                    "items": {
-                      "type": "array"
+                    "sections": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "items": {
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "items"
+                        ]
+                      }
                     },
                     "menu_hours": {
                       "type": "string"
@@ -3090,6 +3138,13 @@
                           "title": {
                             "type": "string"
                           },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "logo",
+                              "main"
+                            ]
+                          },
                           "url": {
                             "type": "object",
                             "properties": {
@@ -3113,9 +3168,9 @@
                   },
                   "required": [
                     "name",
-                    "menu_desc",
-                    "menu_cat",
-                    "menu_availability",
+                    "desc",
+                    "category",
+                    "availability",
                     "photos"
                   ]
                 },
@@ -3203,23 +3258,41 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
-                  "menu_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "menu_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "menu_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
-                  "items": {
-                    "type": "array"
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "items"
+                      ]
+                    }
                   },
                   "menu_hours": {
                     "type": "string"
@@ -3252,6 +3325,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -3275,9 +3355,9 @@
                 },
                 "required": [
                   "name",
-                  "menu_desc",
-                  "menu_cat",
-                  "menu_availability",
+                  "desc",
+                  "category",
+                  "availability",
                   "photos"
                 ]
               },
@@ -3367,23 +3447,41 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
-                  "menu_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "menu_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "menu_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
-                  "items": {
-                    "type": "array"
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "items"
+                      ]
+                    }
                   },
                   "menu_hours": {
                     "type": "string"
@@ -3416,6 +3514,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -3439,9 +3544,9 @@
                 },
                 "required": [
                   "name",
-                  "menu_desc",
-                  "menu_cat",
-                  "menu_availability",
+                  "desc",
+                  "category",
+                  "availability",
                   "photos"
                 ]
               },
@@ -3531,23 +3636,41 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
-                  "menu_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "menu_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "menu_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
-                  "items": {
-                    "type": "array"
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "items"
+                      ]
+                    }
                   },
                   "menu_hours": {
                     "type": "string"
@@ -3580,6 +3703,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -3603,9 +3733,9 @@
                 },
                 "required": [
                   "name",
-                  "menu_desc",
-                  "menu_cat",
-                  "menu_availability",
+                  "desc",
+                  "category",
+                  "availability",
                   "photos"
                 ]
               },
@@ -3697,23 +3827,41 @@
                 "type": {
                   "type": "string"
                 },
+                "language": {
+                  "type": "string"
+                },
                 "attributes": {
                   "type": "object",
                   "properties": {
                     "name": {
                       "type": "string"
                     },
-                    "menu_desc": {
+                    "desc": {
                       "type": "string"
                     },
-                    "menu_cat": {
+                    "category": {
                       "type": "string"
                     },
-                    "menu_availability": {
+                    "availability": {
                       "type": "boolean"
                     },
-                    "items": {
-                      "type": "array"
+                    "sections": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "items": {
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "items"
+                        ]
+                      }
                     },
                     "menu_hours": {
                       "type": "string"
@@ -3746,6 +3894,13 @@
                           "title": {
                             "type": "string"
                           },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "logo",
+                              "main"
+                            ]
+                          },
                           "url": {
                             "type": "object",
                             "properties": {
@@ -3769,9 +3924,9 @@
                   },
                   "required": [
                     "name",
-                    "menu_desc",
-                    "menu_cat",
-                    "menu_availability",
+                    "desc",
+                    "category",
+                    "availability",
                     "photos"
                   ]
                 },
@@ -3859,23 +4014,41 @@
               "type": {
                 "type": "string"
               },
+              "language": {
+                "type": "string"
+              },
               "attributes": {
                 "type": "object",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
-                  "menu_desc": {
+                  "desc": {
                     "type": "string"
                   },
-                  "menu_cat": {
+                  "category": {
                     "type": "string"
                   },
-                  "menu_availability": {
+                  "availability": {
                     "type": "boolean"
                   },
-                  "items": {
-                    "type": "array"
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "items"
+                      ]
+                    }
                   },
                   "menu_hours": {
                     "type": "string"
@@ -3908,6 +4081,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -3931,9 +4111,9 @@
                 },
                 "required": [
                   "name",
-                  "menu_desc",
-                  "menu_cat",
-                  "menu_availability",
+                  "desc",
+                  "category",
+                  "availability",
                   "photos"
                 ]
               },
@@ -4440,6 +4620,13 @@
                         "title": {
                           "type": "string"
                         },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
+                        },
                         "url": {
                           "type": "object",
                           "properties": {
@@ -4622,6 +4809,13 @@
                         },
                         "title": {
                           "type": "string"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "logo",
+                            "main"
+                          ]
                         },
                         "url": {
                           "type": "object",

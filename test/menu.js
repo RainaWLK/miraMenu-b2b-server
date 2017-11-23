@@ -12,10 +12,13 @@ let sampleData = {
     "language": "en-us",
     "attributes": {
       "name": "Menu 002",
-      "menu_desc": "tuna set",
-      "menu_cat": "lunch",
-      "menu_availability": true,
-      "items": [],
+      "desc": "tuna set",
+      "category": "lunch",
+      "availability": true,
+      "sections": [{
+        "name": "main",
+        "items":[]
+      }],
       //"photos": [],
       "menu_hours": "24"
     }
@@ -26,10 +29,13 @@ let sampleDataTW = {
   "language": "zh-tw",
   "attributes": {
     "name": "二號餐",
-    "menu_desc": "鮪魚套餐",
-    "menu_cat": "午餐",
-    "menu_availability": true,
-    "items": [],
+    "desc": "鮪魚套餐",
+    "category": "午餐",
+    "availability": true,
+    "sections": [{
+      "name": "主餐",
+      "items":[]
+    }],
     //"photos": [],
     "menu_hours": "24"
   }
@@ -112,7 +118,7 @@ function menuByIDTest() {
     it('set data: PATCH ' + URI_ID, async () => {
       let myURI_ID = utils.getURI(URI_ID, idArray);
 			let input = _.cloneDeep(sample);
-	    input.data.attributes.menu_desc = "泡麵";
+	    input.data.attributes.desc = "泡麵";
 
       let res = await op.checkOperation('PATCH', myURI_ID, input, input);
       res.body.data.should.have.deep.property('id', fullid);
@@ -262,9 +268,9 @@ async function cleanTest(idArray){
 }
 
 function go() {
-    menuByIDTest();
-    menuTest();
-    translationTest();
+    //menuByIDTest();
+    //menuTest();
+    //translationTest();
     photoUploadTest();
 };
 exports.go = go;

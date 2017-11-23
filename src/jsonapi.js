@@ -28,6 +28,10 @@ function makeJSONAPI(path, dataList) {
             obj.language = orgData.language;
             delete orgData.language;
         }
+        if(typeof orgData.default_language === 'string'){
+            obj.default_language = orgData.default_language;
+            delete orgData.default_language;
+        }
         obj.attributes = orgData;
 
         if(typeof orgData.resources != 'undefined'){
@@ -87,6 +91,8 @@ function parseJSONAPI(orgData) {
             singleData.id = data.id;
         if(typeof data.language != 'undefined')
             singleData.language = data.language;
+        if(typeof data.default_language != 'undefined')
+            singleData.default_language = data.default_language;
         return singleData;
     }
 

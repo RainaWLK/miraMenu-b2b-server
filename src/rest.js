@@ -132,7 +132,8 @@ class Rest {
 		    });  
 		}
 		else {
-		    this.app = new ApiBuilder();
+			this.app = new ApiBuilder();
+			this.app.corsMaxAge(3600); // in seconds 
 		}
 	}
 	
