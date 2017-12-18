@@ -25,6 +25,7 @@ let i18nSchema = {
     "name": "",
     "desc": "",
     "category": "",
+    "address": ""
 };
 
 class Restaurant {

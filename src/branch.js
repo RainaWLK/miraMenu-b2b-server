@@ -34,7 +34,8 @@ let i18nSchema = {
     "desc": "",
     "category": "",
     "details": "",
-    "special_event": [""]
+    "special_event": [""],
+    "address": ""
 }
 
 class Branches {
