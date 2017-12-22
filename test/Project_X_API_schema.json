@@ -1082,6 +1082,9 @@
                   "minimum_order": {
                     "type": "string"
                   },
+                  "qrcode": {
+                    "type": "string"
+                  },
                   "tables": {
                     "type": "array"
                   },
@@ -1336,6 +1339,9 @@
                     "type": "array"
                   },
                   "minimum_order": {
+                    "type": "string"
+                  },
+                  "qrcode": {
                     "type": "string"
                   },
                   "tables": {
@@ -1596,6 +1602,9 @@
                     "minimum_order": {
                       "type": "string"
                     },
+                    "qrcode": {
+                      "type": "string"
+                    },
                     "tables": {
                       "type": "array"
                     },
@@ -1851,6 +1860,9 @@
                     "type": "array"
                   },
                   "minimum_order": {
+                    "type": "string"
+                  },
+                  "qrcode": {
                     "type": "string"
                   },
                   "tables": {

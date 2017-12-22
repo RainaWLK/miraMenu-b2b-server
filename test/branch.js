@@ -1,8 +1,8 @@
 import CommonTest from './common.js';
 let _ = require('lodash');
-let restaurantTest = require('./restaurant');
-let photoTest = require('./phototest');
-let utils = require('./utils');
+let restaurantTest = require('./restaurant.js');
+let photoTest = require('./phototest.js');
+let utils = require('./utils.js');
 
 let URI = "/restaurants/{restaurant_id}/branches";
 let URI_ID = URI+"/{branch_id}";
@@ -125,6 +125,10 @@ let sampleDataTW = {
   }
 };
 
+let ignoreKeys = [
+  "qrcode"
+];
+
 let sample = {"data": sampleData};
 let sampleArray = {"data": []};
 
@@ -134,7 +138,7 @@ function branchTest() {
   let fullid;
 
   before('prepare data', () => {
-    op = new CommonTest(URI);
+    op = new CommonTest(URI, ignoreKeys);
   });
 
   describe(URI+' test', () => {
@@ -172,7 +176,7 @@ function branchByIDTest() {
   let fullid;
 
   before('prepare data', () => {
-    op = new CommonTest(URI_ID);
+    op = new CommonTest(URI_ID, ignoreKeys);
   });
 
   describe('/restaurants/{restaurant_id}/branches/{branch_id} test', () => {
@@ -190,6 +194,18 @@ function branchByIDTest() {
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
       res.body.data.should.have.deep.property('id', fullid);
+    });
+
+    it('check qr code existed: GET '+URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+
+      let res = await op.pureOperation('GET', myURI_ID, null);
+      let qrcode_url = res.body.data.attributes.qrcode;
+
+      res = await photoTest.doDownload(qrcode_url);
+      res.statusCode.should.eql(200);
     });
 
     it('set data: PATCH ' + URI_ID, async () => {
@@ -220,7 +236,7 @@ function translationTest() {
   let fullid;
 
   before('prepare data', () => {
-    op = new CommonTest(URI_ID);
+    op = new CommonTest(URI_ID, ignoreKeys);
   });
 
   describe(URI_ID+' test', () => {
@@ -311,7 +327,7 @@ function photoUploadTest(){
 }
 
 async function prepareTest(){
-  let op = new CommonTest(URI);
+  let op = new CommonTest(URI, ignoreKeys);
   let input = _.cloneDeep(sample);
   let output = _.cloneDeep(sample);
 

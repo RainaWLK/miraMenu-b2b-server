@@ -4,6 +4,7 @@ let Utils = require('./utils.js');
 let Tables = require('./table.js');
 let Image = require('./image.js');
 let I18n = require('./i18n.js');
+let qrcode = require('./qrcode.js');
 let _ = require('lodash');
 let S3 = require('./s3');
 
@@ -142,69 +143,81 @@ class Branches {
     }
 
     async create(payload) {
-        try{
-            let restaurantData = await db.queryById(RESTAURANT_TABLE_NAME, this.reqData.params.restaurant_id);
-            let inputData = JSONAPI.parseJSONAPI(payload);
-            let branch_id = this.getNewID();
-            let fullID = this.branch_fullID + branch_id;
+      try{
+        let restaurantData = await db.queryById(RESTAURANT_TABLE_NAME, this.reqData.params.restaurant_id);
+        let inputData = JSONAPI.parseJSONAPI(payload);
+        let branch_id = this.getNewID();
+        let fullID = this.branch_fullID + branch_id;
 
-            let control = new BranchControl();
-            control.restaurant_id = this.reqData.params.restaurant_id.toString();
-            control.branch_id = branch_id;
-            inputData.id = fullID;
-            inputData.branchControl = JSON.parse(JSON.stringify(control));   //bug
-            inputData.photos = {};
-            inputData.resources = {};
-            inputData.i18n = {};
+        let control = new BranchControl();
+        control.restaurant_id = this.reqData.params.restaurant_id.toString();
+        control.branch_id = branch_id;
+        inputData.id = fullID;
+        inputData.branchControl = JSON.parse(JSON.stringify(control));   //bug
+        inputData.photos = {};
+        inputData.resources = {};
+        inputData.i18n = {};
 
-            //i18n
-            let lang = inputData.language;
-            delete inputData.language;
-            if((typeof lang === 'undefined')&&(typeof inputData.default_language === 'string')){
-                lang = inputData.default_language;
-            }
-            else if(typeof lang === 'undefined'){
-                lang = "en-us";
-            }
-            let i18nUtils = new I18n.main(inputData, this.idArray);
-            inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
-
-            //table
-            let tableFunc = new Tables.main(this.reqData);
-            let tableObj = {};
-            let tableArray = [];
-            for(let i in inputData.tables){
-                let tableData = inputData.tables[i];
-
-                let table_id = tableFunc.getNewID(inputData);
-                if(typeof tableData.id != 'undefined'){
-                    delete tableData.id;
-                }
-                tableObj[table_id] = tableData;
-
-                tableArray.push(table_id);
-                inputData.branchControl.tablesMaxID = table_id;
-            }
-            inputData.tables = tableObj;
-
-            await db.post(TABLE_NAME, inputData);
-
-            //update restaurant
-            restaurantData.restaurantControl.branch_ids.push(branch_id);
-            await db.put(RESTAURANT_TABLE_NAME, restaurantData);
-
-            //output
-            inputData.tables = tableArray;
-
-            //translate
-            inputData = i18nUtils.translate(lang);
-            //output
-            let output = this.output(inputData, fullID);
-            return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+        //i18n
+        let lang = inputData.language;
+        delete inputData.language;
+        if((typeof lang === 'undefined')&&(typeof inputData.default_language === 'string')){
+          lang = inputData.default_language;
         }
-        catch(err) {
-            throw err;
+        else if(typeof lang === 'undefined'){
+          lang = "en-us";
         }
+        let i18nUtils = new I18n.main(inputData, this.idArray);
+        inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+
+        //table
+        let tableFunc = new Tables.main(this.reqData);
+        let tableObj = {};
+        let tableArray = [];
+        for(let i in inputData.tables){
+          let tableData = inputData.tables[i];
+
+          let table_id = tableFunc.getNewID(inputData);
+          if(typeof tableData.id != 'undefined'){
+            delete tableData.id;
+          }
+          tableObj[table_id] = tableData;
+
+          tableArray.push(table_id);
+          inputData.branchControl.tablesMaxID = table_id;
+        }
+        inputData.tables = tableObj;
+
+        //qr code
+        let path = `restaurants/${this.reqData.params.restaurant_id}/branches/${branch_id}`;
+        let url = 'https://mira.menu/'+path;
+        let s3path = path+'/qrcode/qrcode.svg';
+        let qrcodeStr = await qrcode.createQRCode(url);
+
+        let s3 = new S3.S3('us-east-1', 'meshphoto');
+        let s3result = await s3.uploadToS3(qrcodeStr, s3path, 'image/svg+xml');
+        console.log(s3result);
+        inputData.qrcode = 'https://cdn.mira.menu/'+s3result.key;
+
+
+        await db.post(TABLE_NAME, inputData);
+
+        //update restaurant
+        restaurantData.restaurantControl.branch_ids.push(branch_id);
+        await db.put(RESTAURANT_TABLE_NAME, restaurantData);
+
+        //output
+        inputData.tables = tableArray;
+
+        //translate
+        inputData = i18nUtils.translate(lang);
+        //output
+        let output = this.output(inputData, fullID);
+        return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+      }
+      catch(err) {
+        throw err;
+      }
 
     }
 

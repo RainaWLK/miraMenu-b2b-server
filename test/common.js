@@ -12,8 +12,12 @@ let aws4  = require('aws4');
 
 
 class CommonTest {
-  constructor(OrgURI) {
+  constructor(OrgURI, ignoreKeys) {
     this.orgURI = OrgURI;
+    this.ignoreKeys = [];
+    if(Array.isArray(ignoreKeys)){
+      this.ignoreKeys = ignoreKeys;
+    }
   }
 
   setAWSCredentials(req, op, uri, body){
@@ -89,7 +93,22 @@ class CommonTest {
       if(typeof inputData.attributes.photos !== 'undefined'){
         delete inputData.attributes.photos;
       }
+      inputData = this.removeIgnoreElement(inputData);
     }
+    return inputData;
+  }
+
+  setIgnore(ignoreKeys){
+    this.ignoreKeys = ignoreKeys;
+  }
+
+  removeIgnoreElement(inputData){
+    this.ignoreKeys.map(key => {
+      if(typeof inputData.attributes[key] !== 'undefined'){
+        delete inputData.attributes[key];
+      }
+      return key;
+    });
     return inputData;
   }
 
@@ -115,10 +134,8 @@ class CommonTest {
       console.log("schema check finish");
       if(expectOutput) {
         if(Array.isArray(expectOutput.data)) {
-          
-          for(let row in output.data) {
-            output.data[row] = this.removeInternalElement(output.data[row]);
-          }
+          output.data = output.data.map(data => this.removeInternalElement(data));
+
           //output.data.should.include.something.that.deep.equal(expectOutput.data[0]);
           expect(output.data).to.include.something.that.deep.equal(expectOutput.data[0]);      
         }

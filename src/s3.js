@@ -20,42 +20,55 @@ function urlToPath(url){
 	return result;
 }
 
+class S3 {
+	constructor(region, bucket){
+		this.bucket = bucket;
 
-async function getS3Obj(file){
-	var params = {
-		Bucket: BUCKET,
-		Key: file
-	};
+		let s3options = {
+			useDualstack: true,
+			region: region
+		}
 
-	try {
-		let data = await s3.getObject(params).promise();
-		//res.setHeader("Content-Type", data.ContentType);
-		return data.Body;
-	}catch(err){
-		throw err;
-	}
-}
-
-
-async function uploadToS3(filename, buf){
-	var params = {
-		Bucket: BUCKET,
-		ACL: "public-read",
-		Key: filename,
-		Body: buf
-	};
-
-	try {
-		let data = await s3.upload(params).promise();
-		console.log("Upload successed: " + data.Location);
-		return data;
-	}
-	catch(err){
-		console.log('ERROR MSG: ', err);
-		throw err;
+		this.s3 = new AWS.S3(s3options);
 	}
 
-}
+	async getS3Obj(file){
+		var params = {
+			Bucket: this.bucket,
+			Key: file
+		};
+
+		try {
+			let data = await this.s3.getObject(params).promise();
+			//res.setHeader("Content-Type", data.ContentType);
+			return data.Body;
+		}catch(err){
+			throw err;
+		}
+	}
+
+
+	async uploadToS3(buf, filename, contentType){
+		var params = {
+			Bucket: this.bucket,
+			ACL: "public-read",
+			Key: filename,
+			ContentType: contentType,
+			Body: buf
+		};
+
+		try {
+			let data = await this.s3.upload(params).promise();
+			console.log("Upload successed: " + data.Location);
+			return data;
+		}
+		catch(err){
+			console.log('ERROR MSG: ', err);
+			throw err;
+		}
+
+	}
+};
 
 async function deleteS3Obj(file){
 	var params = {
@@ -109,7 +122,6 @@ function getPresignedURL(file, fileType){
 }
 
 exports.urlToPath = urlToPath;
-exports.getS3Obj = getS3Obj;
-exports.uploadToS3 = uploadToS3;
 exports.deleteS3Obj = deleteS3Obj;
 exports.getPresignedURL = getPresignedURL;
+exports.S3 = S3;
