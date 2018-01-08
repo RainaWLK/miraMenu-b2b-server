@@ -4,7 +4,7 @@ let restaurantTest = require('./restaurant.js');
 let photoTest = require('./phototest.js');
 let utils = require('./utils.js');
 
-let URI = "/restaurants/{restaurant_id}/branches";
+let URI = "/v1/restaurants/{restaurant_id}/branches";
 let URI_ID = URI+"/{branch_id}";
 
 let sampleData = {
@@ -357,9 +357,9 @@ async function cleanTest(idArray){
 }
 
 function go() {
-  branchByIDTest();
-  branchTest();
-  translationTest();
+  //branchByIDTest();
+  //branchTest();
+  //translationTest();
   photoUploadTest();
 };
 exports.go = go;

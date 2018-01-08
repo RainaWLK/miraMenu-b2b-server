@@ -4,7 +4,7 @@ let branchTest = require('./branch');
 let photoTest = require('./phototest');
 let utils = require('./utils');
 
-let URI = "/restaurants/{restaurant_id}/branches/{branch_id}/menus";
+let URI = "/v1/restaurants/{restaurant_id}/branches/{branch_id}/menus";
 let URI_ID = URI+"/{menu_id}";
 
 let sampleData = {

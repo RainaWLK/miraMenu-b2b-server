@@ -3,11 +3,11 @@ let _ = require('lodash');
 let itemTest = require('./item');
 let utils = require('./utils');
 
-let URI = "/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/i18n";
+let URI = "/v1/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/i18n";
 let URI_ID = URI + '/{i18n_id}';
 let URI_prototype = URI;
 
-let ITEM_URI_ID = "/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}";
+let ITEM_URI_ID = "/v1/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}";
 
 let languageForm = {
   "data": {

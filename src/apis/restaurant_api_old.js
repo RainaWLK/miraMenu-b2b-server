@@ -1,10 +1,9 @@
 let Restaurant = require('../restaurant.js');
-const API_VERSION = '/v1';
 
 function go(api){
 
   
-api.get(API_VERSION+'/restaurants/{restaurant_id}', async (req) => {
+api.get('/restaurants/{restaurant_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -15,7 +14,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}', async (req) => {
   }
 });
 
-api.patch(API_VERSION+'/restaurants/{restaurant_id}', async (req) => {
+api.patch('/restaurants/{restaurant_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -26,7 +25,7 @@ api.patch(API_VERSION+'/restaurants/{restaurant_id}', async (req) => {
   }
 });
 
-api.delete(API_VERSION+'/restaurants/{restaurant_id}', async (req) => {
+api.delete('/restaurants/{restaurant_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -37,7 +36,7 @@ api.delete(API_VERSION+'/restaurants/{restaurant_id}', async (req) => {
   }
 });
 
-api.get(API_VERSION+'/restaurants', async (req) => {
+api.get('/restaurants', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -48,7 +47,7 @@ api.get(API_VERSION+'/restaurants', async (req) => {
   }
 });
 
-api.post(API_VERSION+'/restaurants', async (req) => {
+api.post('/restaurants', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -60,7 +59,7 @@ api.post(API_VERSION+'/restaurants', async (req) => {
 });
 
 //========
-api.get(API_VERSION+'/restaurants/{restaurant_id}/photos/{photo_id}', async (req) => {
+api.get('/restaurants/{restaurant_id}/photos/{photo_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -71,7 +70,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/photos/{photo_id}', async (req
   }
 });
 
-api.patch(API_VERSION+'/restaurants/{restaurant_id}/photos/{photo_id}', async (req) => {
+api.patch('/restaurants/{restaurant_id}/photos/{photo_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -82,7 +81,7 @@ api.patch(API_VERSION+'/restaurants/{restaurant_id}/photos/{photo_id}', async (r
   }
 });
 
-api.delete(API_VERSION+'/restaurants/{restaurant_id}/photos/{photo_id}', async (req) => {
+api.delete('/restaurants/{restaurant_id}/photos/{photo_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -94,7 +93,7 @@ api.delete(API_VERSION+'/restaurants/{restaurant_id}/photos/{photo_id}', async (
 });
 
 
-api.get(API_VERSION+'/restaurants/{restaurant_id}/photos', async (req) => {
+api.get('/restaurants/{restaurant_id}/photos', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -105,7 +104,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/photos', async (req) => {
   }
 });
 
-api.post(API_VERSION+'/restaurants/{restaurant_id}/photos', async (req) => {
+api.post('/restaurants/{restaurant_id}/photos', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -118,7 +117,7 @@ api.post(API_VERSION+'/restaurants/{restaurant_id}/photos', async (req) => {
 
 /*
 //============== i18n =========================
-api.get(API_VERSION+'/restaurants/{restaurant_id}/i18n', async (req) => {
+api.get('/restaurants/{restaurant_id}/i18n', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -129,7 +128,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/i18n', async (req) => {
   }
 });
 
-api.post(API_VERSION+'/restaurants/{restaurant_id}/i18n', async (req) => {
+api.post('/restaurants/{restaurant_id}/i18n', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -140,7 +139,7 @@ api.post(API_VERSION+'/restaurants/{restaurant_id}/i18n', async (req) => {
   }
 });
 
-api.get(API_VERSION+'/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req) => {
+api.get('/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -151,7 +150,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req) =
   }
 });
 
-api.patch(API_VERSION+'/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req) => {
+api.patch('/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -162,7 +161,7 @@ api.patch(API_VERSION+'/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req)
   }
 });
 
-api.delete(API_VERSION+'/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req) => {
+api.delete('/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -175,7 +174,7 @@ api.delete(API_VERSION+'/restaurants/{restaurant_id}/i18n/{i18n_id}', async (req
 
 
 //============== Resources =========================
-api.get(API_VERSION+'/restaurants/{restaurant_id}/resources', async (req) => {
+api.get('/restaurants/{restaurant_id}/resources', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -186,7 +185,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/resources', async (req) => {
   }
 });
 
-api.post(API_VERSION+'/restaurants/{restaurant_id}/resources', async (req) => {
+api.post('/restaurants/{restaurant_id}/resources', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -197,7 +196,7 @@ api.post(API_VERSION+'/restaurants/{restaurant_id}/resources', async (req) => {
   }
 });
 
-api.get(API_VERSION+'/restaurants/{restaurant_id}/resources/{resource_id}', async (req) => {
+api.get('/restaurants/{restaurant_id}/resources/{resource_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{
@@ -208,7 +207,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/resources/{resource_id}', asyn
   }
 });
 
-api.delete(API_VERSION+'/restaurants/{restaurant_id}/resources/{resource_id}', async (req) => {
+api.delete('/restaurants/{restaurant_id}/resources/{resource_id}', async (req) => {
   let cmdObj = new Restaurant.main(req);
 
   try{

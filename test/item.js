@@ -3,7 +3,7 @@ let _ = require('lodash');
 let branchTest = require('./branch');
 let utils = require('./utils');
 
-let URI = "/restaurants/{restaurant_id}/branches/{branch_id}/items";
+let URI = "/v1/restaurants/{restaurant_id}/branches/{branch_id}/items";
 let URI_ID = URI+"/{item_id}";
 
 let sampleData = {

@@ -176,9 +176,10 @@ class Items {
 
     //if empty
     if(dataArray.length == 0){
-        let err = new Error("not found");
-        err.statusCode = 404;
-        throw err;
+        //let err = new Error("not found");
+        //err.statusCode = 404;
+        //throw err;
+        return "";
     }
 
     return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
@@ -364,9 +365,10 @@ class Items {
 
     //if empty
     if(dataArray.length == 0){
-        let err = new Error("not found");
-        err.statusCode = 404;
-        throw err;
+        //let err = new Error("not found");
+        //err.statusCode = 404;
+        //throw err;
+        return "";
     }
 
     return JSONAPI.makeJSONAPI("photos", dataArray);
@@ -633,9 +635,10 @@ class Items {
 
     //if empty
     if(dataArray.length == 0){
-        let err = new Error("not found");
-        err.statusCode = 404;
-        throw err;
+        //let err = new Error("not found");
+        //err.statusCode = 404;
+        //throw err;
+        return "";
     }
 
     return JSONAPI.makeJSONAPI("resources", dataArray);

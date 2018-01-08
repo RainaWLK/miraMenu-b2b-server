@@ -4,7 +4,7 @@ let parentTest = require('./menu');
 let utils = require('./utils');
 let photoTest = require('./phototest');
 
-let URI = "/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}/photos";
+let URI = "/v1/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}/photos";
 let URI_ID = URI + '/{photo_id}';
 let URI_prototype = URI;
 

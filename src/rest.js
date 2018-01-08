@@ -139,10 +139,19 @@ class Rest {
 	
 	responseOK(res, msg) {
 		if(DEBUG) {
+			if(msg == ""){
+				res.status(204);
+			}
 			res.send(msg);
 			res.end();
 		}
-		return msg;
+		else {
+			if(msg == ""){
+				return new this.app.ApiResponse("", {'Content-Type': 'text/plain'}, '204');
+			}
+			return msg;
+		}
+		
 	}
 	
 	responseError(res, err) {
@@ -186,11 +195,14 @@ class Rest {
 			await this.app.get(uri, action);
 		}
 		else {
-			await this.app.get(uri, action, {
-				authorizationType: 'AWS_IAM',
-				invokeWithCredentials: true,
+			let options = {
 				success: { code: 200 }
-			});
+			};
+			if(uri == '/restaurants'){
+				options.authorizationType = 'AWS_IAM';
+				options.invokeWithCredentials = true;
+			}
+			await this.app.get(uri, action, options);
 		}
 	}
 
@@ -244,11 +256,12 @@ class Rest {
 			await this.app.patch(uri, action);
 		}
 		else {
-			await this.app.patch(uri, action, {
+			let options = {
 				authorizationType: 'AWS_IAM',
 				invokeWithCredentials: true,
 				success: { code: 200 }
-			});
+			};
+			await this.app.patch(uri, action, options);
 		}
 	}
 

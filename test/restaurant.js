@@ -3,7 +3,7 @@ let _ = require('lodash');
 let utils = require('./utils');
 let photoTest = require('./phototest');
 
-let URI = '/restaurants';
+let URI = '/v1/restaurants';
 let URI_ID = URI+"/{restaurant_id}";
 
 let sampleData = {

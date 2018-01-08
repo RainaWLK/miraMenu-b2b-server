@@ -1,10 +1,9 @@
 let Tables = require('../table.js');
-const API_VERSION = '/v1';
 
 function go(api){
 
 //=========== table =========
-api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables', async (req) => {
+api.get('/restaurants/{restaurant_id}/branches/{branch_id}/tables', async (req) => {
   let cmdObj = new Tables.main(req);
 
   try{
@@ -15,7 +14,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables', 
   }
 });
 
-api.post(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables', async (req) => {
+api.post('/restaurants/{restaurant_id}/branches/{branch_id}/tables', async (req) => {
   let cmdObj = new Tables.main(req);
 
   try{
@@ -27,7 +26,7 @@ api.post(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables',
 });
 
 
-api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}', async (req) => {
+api.get('/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}', async (req) => {
   let cmdObj = new Tables.main(req);
 
   try{
@@ -38,7 +37,7 @@ api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables/{t
   }
 });
 
-api.patch(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}', async (req) => {
+api.patch('/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}', async (req) => {
   let cmdObj = new Tables.main(req);
 
   try{
@@ -49,7 +48,7 @@ api.patch(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables/
   }
 });
 
-api.delete(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}', async (req) => {
+api.delete('/restaurants/{restaurant_id}/branches/{branch_id}/tables/{table_id}', async (req) => {
   let cmdObj = new Tables.main(req);
 
   try{

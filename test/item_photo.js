@@ -3,7 +3,7 @@ let itemTest = require('./item');
 let utils = require('./utils');
 let photoTest = require('./phototest');
 
-let URI = "/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos";
+let URI = "/v1/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/photos";
 let URI_ID = URI + '/{photo_id}';
 
 function itemPhotoUploadTest(){
