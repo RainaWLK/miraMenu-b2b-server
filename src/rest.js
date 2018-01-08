@@ -196,12 +196,10 @@ class Rest {
 		}
 		else {
 			let options = {
+				authorizationType: 'AWS_IAM',
+				invokeWithCredentials: true,
 				success: { code: 200 }
 			};
-			if(uri == '/restaurants'){
-				options.authorizationType = 'AWS_IAM';
-				options.invokeWithCredentials = true;
-			}
 			await this.app.get(uri, action, options);
 		}
 	}

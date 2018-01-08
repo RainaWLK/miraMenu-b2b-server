@@ -335,6 +335,14 @@ async function prepareTest(){
   let parent_idArray = await restaurantTest.prepareTest();
   let myURI = utils.getURI(URI, parent_idArray);
 
+  //check
+  describe('base data test', () => {
+    it('check no content', async () => {
+      let res = await op.pureOperation('GET', myURI, null);
+      res.statusCode.should.eql(204);
+    });
+  });
+
   //output.data.attributes.social.facebook = "囧";
   let res = await op.checkOperation('POST', myURI, input, output);
   let idArray = utils.parseID(res.body.data.id);
@@ -357,10 +365,10 @@ async function cleanTest(idArray){
 }
 
 function go() {
-  //branchByIDTest();
-  //branchTest();
+  branchByIDTest();
+  branchTest();
   //translationTest();
-  photoUploadTest();
+  //photoUploadTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;

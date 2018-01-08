@@ -245,6 +245,14 @@ async function prepareTest(){
   let branch_idArray = await branchTest.prepareTest();
   let myURI = utils.getURI(URI, branch_idArray);
 
+  //check
+  describe('base data test', () => {
+    it('check no content', async () => {
+      let res = await op.pureOperation('GET', myURI, null);
+      res.statusCode.should.eql(204);
+    });
+  });
+
   //output.data.attributes.social.facebook = "囧";
   let res = await op.checkOperation('POST', myURI, input, output);
   let idArray = utils.parseID(res.body.data.id);
@@ -268,10 +276,10 @@ async function cleanTest(idArray){
 }
 
 function go() {
-    //menuByIDTest();
-    //menuTest();
+    menuByIDTest();
+    menuTest();
     //translationTest();
-    photoUploadTest();
+    //photoUploadTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;
