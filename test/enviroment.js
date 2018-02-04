@@ -12,9 +12,9 @@ exports.chai = chai;
 
 //aws
 let aws = {
-  region: 'us-east-1',
-  host: 'aoboid0wkl.execute-api.us-east-1.amazonaws.com',
-  stage: 'development',
+  region: 'us-west-2',
+  host: '6qzss09080.execute-api.us-west-2.amazonaws.com',
+  stage: 'dev',
   //stage: 'auth',
   //credentials: { 
   //  accessKeyId: 'ASIAJEJDSVKVHO5XXC2A',
@@ -23,9 +23,9 @@ let aws = {
   //},
   credentials: {},
   cognito: {
-    cognito_user_pool_id: "us-east-1_kNIvkACXW",
-    congito_client_id: '5bkbb4foiaickvetk89ucq4p2c',    //cognito app client id
-    aws_identity_pool_id: 'us-east-1:4ad17068-f8a4-4fed-aaf7-55e7e9a2e7ac'  //federate identity pool
+    cognito_user_pool_id: "us-west-2_N9GACNjyK",
+    congito_client_id: '7j2f8534apn6a8prfrvvtemk0a',    //cognito app client id
+    aws_identity_pool_id: 'us-west-2:402b42ff-45c7-494b-a043-70a457930f4a'  //federate identity pool
   },
   account: {
     username: 'eee',

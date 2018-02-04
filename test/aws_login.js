@@ -36,7 +36,7 @@ function signIn(username, password) {
                 console.log(id_token);
 
                 //step2: Integrate into federate identity
-                let idp = 'cognito-idp.us-east-1.amazonaws.com/'+ env.aws.cognito.cognito_user_pool_id;
+                let idp = 'cognito-idp.us-west-2.amazonaws.com/'+ env.aws.cognito.cognito_user_pool_id;
                 try{
                     let credentals = await registerFederateIdentityPool(idp, id_token);
                     resolve(credentals);

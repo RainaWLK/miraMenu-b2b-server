@@ -195,7 +195,7 @@ class Branches {
         let s3path = path+'/qrcode/qrcode.svg';
         let qrcodeStr = await qrcode.createQRCode(url);
 
-        let s3 = new S3.S3('us-east-1', 'meshphoto');
+        let s3 = new S3.S3('us-west-2', 'meshphoto');
         let s3result = await s3.uploadToS3(qrcodeStr, s3path, 'image/svg+xml');
         console.log(s3result);
         inputData.qrcode = 'https://cdn.mira.menu/'+s3result.key;

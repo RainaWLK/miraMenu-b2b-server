@@ -1,7 +1,7 @@
 let AWS = require('aws-sdk');
 let s3options = {
 	useDualstack: true,
-	region: "us-east-1"
+	region: "us-west-2"
 }
 let BUCKET = "meshphoto-tmp";
 if(process.env.NODE_ENV == 'development'){

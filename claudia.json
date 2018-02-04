@@ -2,10 +2,10 @@
   "lambda": {
     "role": "myrestaurant-executor",
     "name": "myrestaurant",
-    "region": "us-east-1"
+    "region": "us-west-2"
   },
   "api": {
-    "id": "aoboid0wkl",
+    "id": "6qzss09080",
     "module": "build/app"
   }
 }
