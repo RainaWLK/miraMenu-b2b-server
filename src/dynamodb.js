@@ -215,6 +215,35 @@ function deleteData(tableName, data){
     
 }
 
+function batchGet(params){
+  return new Promise((resolve, reject) => {
+    params = fixEmptyValue(params);
+
+    docClient.batchGet(params).promise().then(result => {
+      console.log("Batch get succeeded:", JSON.stringify(result, null, 2));
+      resolve(result);
+    }).catch(err => {
+      console.error("Batch get fail. Error JSON:", JSON.stringify(err, null, 2));
+      reject(err);
+    });
+  });
+}
+
+function batchWrite(params){
+  return new Promise((resolve, reject) => {
+    params = fixEmptyValue(params);
+
+    console.log(params);
+    docClient.batchWrite(params).promise().then(result => {
+      console.log("Batch write succeeded:", JSON.stringify(result, null, 2));
+      resolve(result);
+    }).catch(err => {
+      console.error("Batch write fail. Error JSON:", JSON.stringify(err, null, 2));
+      reject(err);
+    });
+  });
+}
+
 async function sendSNS(tableName, method, data){
   let attr = {
     "table": tableName,
@@ -270,6 +299,8 @@ exports.scan = scanData;
 exports.post = postData;
 exports.put = putData;
 exports.delete = deleteData;
+exports.batchGet = batchGet;
+exports.batchWrite = batchWrite;
 
 exports.scanDataByFilter = scanDataByFilter;
 

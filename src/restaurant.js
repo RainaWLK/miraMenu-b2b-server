@@ -61,64 +61,48 @@ class Restaurant {
     }
 
     async get() {
-        let identityId = this.reqData.userinfo.cognitoIdentityId;
+      let identityId = this.reqData.userinfo.cognitoIdentityId;
 
-        try {
-            //scan table Restaurant (bug: must merged into dynamodb.js)
-            //let restaurant_id = this.reqData.params.restaurant_id.toString();
-            var params = {
-                TableName: TABLE_NAME,
-                //ProjectionExpression: "#yr, title, info.rating",
-                FilterExpression: "#a1.#a2 = :b",
-                ExpressionAttributeNames: {
-                    "#a1": "restaurantControl",
-                    "#a2": "owner"
-                },
-                ExpressionAttributeValues: {
-                     ":b": identityId 
-                },
-                ReturnConsumedCapacity: "TOTAL"
-            };
-            let dataArray = await db.scanDataByFilter(params);
-            //console.log(dataArray);
-            
-            dataArray.map(restaurantData => {
-                //translate
-                let i18n = new I18n.main(restaurantData, this.idArray);
-                restaurantData = i18n.translate(this.lang);
-
-                return this.output(restaurantData, restaurantData.id);
-            });
-
-            //if empty
-            if(dataArray.length == 0){
-                //let err = new Error("not found");
-                //err.statusCode = 404;
-                //throw err;
-                return "";
-            }
-
-            return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);   
-        }catch(err) {
-            console.log("==restaurant get err!!==");
-            console.log(err);
-            throw err;
-        } 
-    }
-
-    /*async get() {
-        try {
-            let msg = await db.scan(TABLE_NAME);
-            msg.map(obj => {
-                delete obj.restaurantControl;
-            });
-            return JSONAPI.makeJSONAPI(this.reqData.paths[1], msg);            
-        }catch(err) {
-            console.log("==restaurant get err!!==");
-            console.log(err);
-            throw err;
+      try {
+        let restaurantsArray = await db.queryById(USERINFO_TABLE_NAME, identityId);
+        let keyArray = restaurantsArray.restaurants;
+        if(!Array.isArray(keyArray)){
+          return "";
         }
-    }*/
+
+        let params = {
+          RequestItems: {}
+        };
+        params.RequestItems[TABLE_NAME] = {
+          Keys: keyArray.map(id => {
+            return {'id': id}
+          })
+        };
+
+        let result = await db.batchGet(params);
+        let dataArray = result.Responses[TABLE_NAME];
+
+        dataArray.map(restaurantData => {
+          //translate
+          let i18n = new I18n.main(restaurantData, this.idArray);
+          restaurantData = i18n.translate(this.lang);
+
+          return this.output(restaurantData, restaurantData.id);
+        });
+
+        //if empty
+        if(dataArray.length == 0){
+          return "";
+        }
+
+        return JSONAPI.makeJSONAPI(TYPE_NAME, dataArray);
+      }catch(err) {
+        console.log("==restaurant get err!!==");
+        console.log(err);
+        //throw err;
+        return "";
+      }
+    }
 
     async getByID() {
         try {
