@@ -17,17 +17,10 @@ const PHOTO_TMP_TABLE_NAME = "photo_tmp";
 
 
 function BranchControl() {
-    //contructor() {
-        //this.branchesMaxID = "0";
-        //this.branch_ids = [];
-        this.restaurant_id = "0";
-        this.branch_id = "s0";
-        this.tablesMaxID = "t000";
-        this.menusMaxID = "m000";
-        this.itemsMaxID = "i000";
-        //this.photoMaxID = "p000";
-        //this.table_ids = [];
-    //}
+    this.restaurant_id = "0";
+    this.branch_id = "s0";
+    this.tablesMaxID = "t000";
+    //this.table_ids = [];
 }
 
 let i18nSchema = {
@@ -162,10 +155,10 @@ class Branches {
         //i18n
         let lang = inputData.language;
         delete inputData.language;
-        if((typeof lang === 'undefined')&&(typeof inputData.default_language === 'string')){
+        if((lang === undefined)&&(typeof inputData.default_language === 'string')){
           lang = inputData.default_language;
         }
-        else if(typeof lang === 'undefined'){
+        else if(lang === undefined){
           lang = "en-us";
         }
         let i18nUtils = new I18n.main(inputData, this.idArray);

@@ -499,6 +499,7 @@ class Items {
     }
   }
 
+/*
   async getI18n() {
     try{
       let itemData = await this.getItemData(true);
@@ -606,6 +607,7 @@ class Items {
         throw err;
     }
   }
+  */
 
   async getResources() {
     /*let dbMenusData = await this.getMenusData(true);

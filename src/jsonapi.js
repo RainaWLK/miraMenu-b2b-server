@@ -28,10 +28,16 @@ function makeJSONAPI(path, dataList) {
             obj.language = orgData.language;
             delete orgData.language;
         }
-        if(typeof orgData.default_language === 'string'){
-            obj.default_language = orgData.default_language;
-            delete orgData.default_language;
+        if((typeof orgData.i18n === 'object') && (_.isEmpty(orgData.i18n) === false)){
+            obj.i18n = _.cloneDeep(orgData.i18n);
+            delete orgData.i18n;
+            
+            if(typeof orgData.default_language === 'string'){
+                obj.default_language = obj.i18n.default;
+                delete orgData.default_language;
+            }
         }
+        
         obj.attributes = orgData;
 
         if(typeof orgData.resources != 'undefined'){
@@ -45,19 +51,6 @@ function makeJSONAPI(path, dataList) {
         }
         if(obj.resources.length == 0){
             delete obj.resources;
-        }
-
-        if(typeof orgData.i18n != 'undefined'){
-            //obj.i18n = _.cloneDeep(orgData.i18n);
-            for(let i18n_id in orgData.i18n){
-                let i18nData = orgData.i18n[i18n_id];
-                i18nData.id = i18n_id;
-                obj.i18n.push(i18nData);
-            }
-            delete orgData.i18n;
-        }
-        if(obj.i18n.length == 0){
-            delete obj.i18n;
         }
 
         //obj.relationships = {};

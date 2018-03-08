@@ -117,63 +117,6 @@ api.post(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/photos',
 });
 
 /*
-//============== i18n =========================
-api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/i18n', async (req) => {
-  let cmdObj = new Branches.main(req);
-
-  try{
-      return await cmdObj.getI18n(req.body);
-  }
-  catch(err){
-      throw err;
-  }
-});
-
-api.post(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/i18n', async (req) => {
-  let cmdObj = new Branches.main(req);
-
-  try{
-      return await cmdObj.addI18n(req.body);
-  }
-  catch(err){
-      throw err;
-  }
-});
-
-api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/i18n/{i18n_id}', async (req) => {
-  let cmdObj = new Branches.main(req);
-
-  try{
-      return await cmdObj.getI18nByID(req.body);
-  }
-  catch(err){
-      throw err;
-  }
-});
-
-api.patch(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/i18n/{i18n_id}', async (req) => {
-  let cmdObj = new Branches.main(req);
-
-  try{
-      return await cmdObj.updateI18n(req.body);
-  }
-  catch(err){
-      throw err;
-  }
-});
-
-api.delete(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/i18n/{i18n_id}', async (req) => {
-  let cmdObj = new Branches.main(req);
-
-  try{
-      return await cmdObj.deleteI18n(req.body);
-  }
-  catch(err){
-      throw err;
-  }
-});
-
-
 //============== Resources =========================
 api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/resources', async (req) => {
   let cmdObj = new Branches.main(req);
