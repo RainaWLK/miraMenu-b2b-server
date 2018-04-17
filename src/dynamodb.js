@@ -106,6 +106,12 @@ function fixEmptyValue(data){
     else if(Array.isArray(data[i])){
       data[i] = data[i].filter(elem => {
         return elem !== "";
+      })
+      .map(elem => {
+        if(typeof elem === 'object'){
+          elem = fixEmptyValue(elem);
+        }
+        return elem;
       });
     }
     else if(typeof data[i] == 'object'){
@@ -215,33 +221,147 @@ function deleteData(tableName, data){
     
 }
 
-function batchGet(params){
-  return new Promise((resolve, reject) => {
-    params = fixEmptyValue(params);
+async function batchGet(params){
+  params = fixEmptyValue(params);
+  try {
+    let count = 0;
+    let outputParams = {
+      RequestItems: {}
+    }
+    let totalResult = {
+      Responses: {}
+    }
+    
+    for(let tableName in params.RequestItems) {
+      let table = params.RequestItems[tableName];
+      
+      outputParams.RequestItems[tableName] = {
+        Keys: []
+      };
+      totalResult.Responses[tableName] = [];
+      
+      for(let i in table.Keys) {
+        let key = table.Keys[i];
+        
+        outputParams.RequestItems[tableName].Keys.push(key)
+        
+        count++;
+        
+        if(count >= 100) {
+          let result = await sendBatchGet(outputParams, totalResult);
+          //console.log(result);
 
-    docClient.batchGet(params).promise().then(result => {
-      console.log("Batch get succeeded:", JSON.stringify(result, null, 2));
-      resolve(result);
-    }).catch(err => {
-      console.error("Batch get fail. Error JSON:", JSON.stringify(err, null, 2));
-      reject(err);
-    });
-  });
+          //reset params
+          outputParams = {
+            RequestItems: {}
+          };
+          outputParams.RequestItems[tableName] = {
+            Keys: []
+          };
+          count = 0;
+        }
+      }
+      if(outputParams.RequestItems[tableName].Keys.length === 0){
+        delete outputParams.RequestItems[tableName];
+      }
+    }
+    
+    let finalResult = await sendBatchGet(outputParams, totalResult);
+    return finalResult;
+  }
+  catch(err) {
+    throw err;
+  }
 }
 
-function batchWrite(params){
-  return new Promise((resolve, reject) => {
-    params = fixEmptyValue(params);
+async function sendBatchGet(params, output) {
+  try {
+    let result = await docClient.batchGet(params).promise();
+    console.log("Batch get succeeded:", JSON.stringify(result, null, 2));
+    
+    //combine output
+    if((typeof output === 'object') && (typeof output.Responses === 'object')) {
+      for(let resultTableName in result.Responses) {
+        result.Responses[resultTableName].map(data => {
+          output.Responses[resultTableName].push(data);
+        });
+      }
+      return output;
+    }
+    return result;
+  }
+  catch(err) {
+    console.error("Batch get fail. Error JSON:", JSON.stringify(err, null, 2));
+    throw err;
+  }
+}
 
-    console.log(params);
-    docClient.batchWrite(params).promise().then(result => {
-      console.log("Batch write succeeded:", JSON.stringify(result, null, 2));
-      resolve(result);
-    }).catch(err => {
-      console.error("Batch write fail. Error JSON:", JSON.stringify(err, null, 2));
-      reject(err);
-    });
-  });
+
+async function batchWrite(params) {
+  params = fixEmptyValue(params);
+
+  //bug
+  try {
+    let count = 0;
+    let outputParams = {
+      RequestItems: {}
+    }
+    let totalResult = {
+      Responses: {}
+    }
+    
+    for(let tableName in params.RequestItems) {
+      let table = params.RequestItems[tableName];
+      
+      outputParams.RequestItems[tableName] = {
+        Keys: []
+      };
+      totalResult.Responses[tableName] = [];
+      
+      for(let i in table.Keys) {
+        let key = table.Keys[i];
+        
+        outputParams.RequestItems[tableName].Keys.push(key)
+        
+        count++;
+        
+        if(count >= 100) {
+          let result = await sendBatchWrite(outputParams, totalResult);
+          //console.log(result);
+
+          //reset params
+          outputParams = {
+            RequestItems: {}
+          };
+          outputParams.RequestItems[tableName] = {
+            Keys: []
+          };
+          count = 0;
+        }
+      }
+      if(outputParams.RequestItems[tableName].Keys.length === 0){
+        delete outputParams.RequestItems[tableName];
+      }
+    }
+    
+    let finalResult = await sendBatchWrite(outputParams, totalResult);
+    return finalResult;
+  }
+  catch(err) {
+    throw err;
+  }
+}
+
+async function sendBatchWrite(params) {
+  try {
+    let result = await docClient.batchWrite(params).promise();
+    console.log("Batch write succeeded:", JSON.stringify(result, null, 2));
+    return result;
+  }
+  catch(err) {
+    console.error("Batch write fail. Error JSON:", JSON.stringify(err, null, 2));
+    throw err;
+  }
 }
 
 async function sendSNS(tableName, method, data){

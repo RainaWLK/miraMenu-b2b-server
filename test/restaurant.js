@@ -250,7 +250,7 @@ function go() {
   restaurantByIDTest();
   restaurantTest();
   translationTest();
-  photoUploadTest();
+  //photoUploadTest();
 };
 
 exports.go = go;

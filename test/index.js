@@ -17,7 +17,6 @@ let aws = require('./aws_login');
 
 before('login', async () => {
     let credentials = await aws.signIn(env.aws.account.username, env.aws.account.password);
-    console.log(credentials);
 
     env.aws.credentials.accessKeyId = credentials.data.Credentials.AccessKeyId;
     env.aws.credentials.secretAccessKey = credentials.data.Credentials.SecretKey;
@@ -25,10 +24,10 @@ before('login', async () => {
     return;
 });
 
-//restaurantTest.go();
-//branchTest.go();
+restaurantTest.go();
+branchTest.go();
 //tableTest.go();
-menuTest.go();
+//menuTest.go();
 //menuTest_restaurant.go();
 //itemTest.go();
 //itemTest_restaurant.go();

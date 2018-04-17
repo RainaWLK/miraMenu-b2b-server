@@ -24,7 +24,7 @@ let aws = {
   credentials: {},
   cognito: {
     cognito_user_pool_id: "us-west-2_N9GACNjyK",
-    congito_client_id: '7j2f8534apn6a8prfrvvtemk0a',    //cognito app client id
+    congito_client_id: '75agnqqirbaisr8b6478q475a2',    //cognito app client id
     aws_identity_pool_id: 'us-west-2:402b42ff-45c7-494b-a043-70a457930f4a'  //federate identity pool
   },
   account: {

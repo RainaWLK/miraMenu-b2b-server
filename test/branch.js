@@ -367,7 +367,7 @@ async function cleanTest(idArray){
 function go() {
   branchByIDTest();
   branchTest();
-  //translationTest();
+  translationTest();
   //photoUploadTest();
 };
 exports.go = go;

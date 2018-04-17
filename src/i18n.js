@@ -1,5 +1,3 @@
-let JSONAPI = require('./jsonapi.js');
-let Utils = require('./utils.js');
 let _ = require('lodash');
 
 const I18N_TYPE_NAME = "i18n";
