@@ -271,8 +271,8 @@ class Rest {
 			let reqData = makeReqData(req);
 			try {
 				await authorizer.permissionCheck(reqData);
-				await callback(reqData);
-				return self.responseOK(res, "");
+				let resultMsg = await callback(reqData);
+				return self.responseOK(res, resultMsg);
 			}
 			catch(errcode) {
 				return self.responseError(res, errcode);
@@ -284,11 +284,12 @@ class Rest {
 			await this.app.delete(uri, action);
 		}
 		else {
-			await this.app.delete(uri, action, {
+			let options = {
 				authorizationType: 'AWS_IAM',
 				invokeWithCredentials: true,
-				success: { code: 204 }
-			});
+				success: { code: 200 }
+			};
+			await this.app.delete(uri, action, options);
 		}
 	}
 

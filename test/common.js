@@ -176,4 +176,4 @@ class CommonTest {
 
 
 
-export default CommonTest;
+module.exports = CommonTest;

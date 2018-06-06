@@ -175,6 +175,38 @@ class I18n {
     }
     return id;
   }
+  
+  deleteI18n(targetLang, orgData) {
+    let langArray = [];
+    for(let i in orgData.i18n) {
+      if(i === 'default')
+        continue;
+
+      if(i === targetLang)  //skip lang which will be deleted
+        continue;
+
+      langArray.push(i);
+    }
+
+    if(langArray.length <= 0){
+      let err = new Error("Only one language left, cannot be deleted");
+      err.statusCode = 403;
+      throw err;
+    }
+    if(typeof orgData.i18n[targetLang] === 'object') {
+      delete orgData.i18n[targetLang];
+      
+      if(orgData.i18n.default == targetLang){
+        orgData.i18n.default = langArray[0];
+      }
+    }
+    else {
+      let err = new Error("not found");
+      err.statusCode = 404;
+      throw err;
+    }
+    return orgData;
+  }
 
 }
 

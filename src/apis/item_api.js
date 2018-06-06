@@ -231,6 +231,29 @@ api.post(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/items/{i
   }
 });
 
+//============== I18n =========================
+api.delete(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/i18n/{lang_code}', async (req) => {
+  let cmdObj = new Items.main(req);
+
+  try{
+      return await cmdObj.deleteI18n(req.body);
+  }
+  catch(err){
+      throw err;
+  }
+});
+
+api.delete(API_VERSION+'/restaurants/{restaurant_id}/items/{item_id}/i18n/{lang_code}', async (req) => {
+  let cmdObj = new Items.main(req);
+
+  try{
+      return await cmdObj.deleteI18n(req.body);
+  }
+  catch(err){
+      throw err;
+  }
+});
+/*
 //============== Resources =========================
 api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/resources', async (req) => {
   let cmdObj = new Items.main(req);
@@ -320,6 +343,7 @@ api.delete(API_VERSION+'/restaurants/{restaurant_id}/items/{item_id}/resources/{
       throw err;
   }
 });
+*/
 
 }
 

@@ -116,6 +116,17 @@ api.post(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/photos',
   }
 });
 
+//============== I18n =========================
+api.delete(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/i18n/{lang_code}', async (req) => {
+  let cmdObj = new Branches.main(req);
+
+  try{
+      return await cmdObj.deleteI18n(req.body);
+  }
+  catch(err){
+      throw err;
+  }
+});
 /*
 //============== Resources =========================
 api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/resources', async (req) => {

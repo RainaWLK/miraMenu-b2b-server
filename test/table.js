@@ -1,4 +1,4 @@
-import CommonTest from './common.js';
+let CommonTest = require('./common.js');
 let _ = require('lodash');
 //let restaurantTest = require('./restaurant');
 let branchTest = require('./branch');

@@ -1,4 +1,4 @@
-import CommonTest from './common.js';
+let CommonTest = require('./common.js');
 let env = require('./enviroment.js');
 let schemaTest = require('./schema.js');
 let utils = require('./utils');

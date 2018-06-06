@@ -1,8 +1,11 @@
-import CommonTest from './common.js';
+let env = require('./enviroment.js');
+let CommonTest = require('./common.js');
 let _ = require('lodash');
 let branchTest = require('./branch');
 let photoTest = require('./phototest');
 let utils = require('./utils');
+
+var expect = env.chai.expect;
 
 let URI = "/v1/restaurants/{restaurant_id}/branches/{branch_id}/menus";
 let URI_ID = URI+"/{menu_id}";
@@ -30,7 +33,7 @@ let sampleDataTW = {
   "attributes": {
     "name": "二號餐",
     "desc": "鮪魚套餐",
-    "category": "午餐",
+    "category": "lunch",
     "availability": true,
     "sections": [{
       "name": "主餐",
@@ -165,7 +168,7 @@ function translationTest() {
       //how to check i18n structure?
     });
 
-    it('set data with another language: PATCH ' + URI_ID, async () => {
+    it('set data with another language "zh-tw": PATCH ' + URI_ID, async () => {
       let myURI_ID = utils.getURI(URI_ID, parent_idArray);
       let twData = _.cloneDeep(sampleDataTW);
 			let input = {"data": twData};
@@ -207,6 +210,49 @@ function translationTest() {
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });
+
+    //delete translation
+    it('delete translation "zh-tw": DELETE '+URI_ID, async () => {
+      let deleteLang = 'zh-tw';
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray) + '/i18n/'+deleteLang;
+
+      let res = await op.pureOperation('DELETE', myURI_ID, null);
+      
+      expect(res.body.data.i18n).to.not.have.property(deleteLang);
+      expect(res.body.data.i18n.default).to.not.equal(deleteLang);
+    });
+    
+    it('check default translation: GET '+URI_ID, async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', output.data.language);
+    });
+    
+    //delete translation
+    it('delete all translation : DELETE '+URI_ID, async () => {
+      let deleteLang = 'en-us';
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray) + '/i18n/'+deleteLang;
+
+      let res = await op.pureOperation('DELETE', myURI_ID, null);
+      
+      expect(res.statusCode).to.equal(403);
+    });
+    
+    it('check default translation: GET '+URI_ID, async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('language', output.data.language);
+      
+      expect(res.body.data.i18n).to.have.property(output.data.language);
+      expect(res.body.data.i18n.default).to.equal(output.data.language);
+    });	
 	
     it('delete data: DELETE '+URI_ID, async () => {
       await cleanTest(parent_idArray);
@@ -276,9 +322,9 @@ async function cleanTest(idArray){
 }
 
 function go() {
-    menuByIDTest();
-    menuTest();
-    //translationTest();
+    //menuByIDTest();
+    //menuTest();
+    translationTest();
     //photoUploadTest();
 };
 exports.go = go;

@@ -1,6 +1,5 @@
 let AWS = require('aws-sdk');
 let _ = require('lodash');
-let sns = require('./sns.js');
 
 AWS.config.update({
     region: "us-west-2"
@@ -138,7 +137,6 @@ function postData(tableName, data){
 
       docClient.put(params).promise().then(async result => {
           console.log("Added item:", JSON.stringify(result, null, 2));
-          await sendSNS(tableName, "POST", inputData);
           resolve(result);
       }).catch(err => {
           console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
@@ -184,7 +182,6 @@ function putData(tableName, data){
           console.log("UpdateItem succeeded:", JSON.stringify(inputData, null, 2));
           let outputData = result.Attributes;
           outputData.id = inputData.id;
-          await sendSNS(tableName, "PUT", outputData);
           resolve(outputData);
         }).catch(err => {
           console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
@@ -210,7 +207,6 @@ function deleteData(tableName, data){
     return new Promise((resolve, reject) => {
         docClient.delete(params).promise().then(async result => {
             console.log("DeleteItem succeeded:", JSON.stringify(result, null, 2));
-            await sendSNS(tableName, "DELETE", data);
             resolve(result);
         }).catch(err => {
             console.error("Unable to delete item. Error JSON:", JSON.stringify(err, null, 2));
@@ -364,6 +360,7 @@ async function sendBatchWrite(params) {
   }
 }
 
+/*
 async function sendSNS(tableName, method, data){
   let attr = {
     "table": tableName,
@@ -371,7 +368,7 @@ async function sendSNS(tableName, method, data){
     "id": data.id
   }
   return await sns.sendSNS(data, attr, "DBCache");
-}
+}*/
 
 async function unittest(){
   let table = "photo_tmp";

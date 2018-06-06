@@ -1,5 +1,3 @@
-import 'babel-polyfill'
-
 let restaurantTest = require('./restaurant.js');
 let branchTest = require('./branch.js');
 let tableTest = require('./table.js');
@@ -24,12 +22,12 @@ before('login', async () => {
     return;
 });
 
-restaurantTest.go();
-branchTest.go();
+//restaurantTest.go();
+//branchTest.go();
 //tableTest.go();
-//menuTest.go();
+menuTest.go();
 //menuTest_restaurant.go();
-//itemTest.go();
+itemTest.go();
 //itemTest_restaurant.go();
 //itemTest_photo.go();
 //itemTest_resource.go();

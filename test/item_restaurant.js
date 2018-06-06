@@ -1,7 +1,10 @@
-import CommonTest from './common.js';
+let env = require('./enviroment.js');
+let CommonTest = require('./common.js');
 let _ = require('lodash');
 let restaurantTest = require('./restaurant');
 let utils = require('./utils');
+
+var expect = env.chai.expect;
 
 let URI = "/v1/restaurants/{restaurant_id}/items";
 let URI_ID = URI+"/{item_id}";
@@ -31,13 +34,13 @@ let sampleDataTW = {
   "attributes": {
       "name": "一號",
       "desc": "牛奶",
-      "category": "早餐",
+      "category": "common breakfast",
       "list_price": "99.99",
       "sale_price": "80",
       "tag": ["...."],
       "note": ["囧"],
 //      "photos": [],
-      "nutrition": "366 cal",
+      "nutrition": "366 卡",
       "availability": true,
       "ingredients": ["魚", "雜七雜八"],
       "inventory": "Sufficient"
@@ -207,6 +210,49 @@ function translationTest() {
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });
+    
+    //delete translation
+    it('delete translation "zh-tw": DELETE '+URI_ID, async () => {
+      let deleteLang = 'zh-tw';
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray) + '/i18n/'+deleteLang;
+
+      let res = await op.pureOperation('DELETE', myURI_ID, null);
+      
+      expect(res.body.data.i18n).to.not.have.property(deleteLang);
+      expect(res.body.data.i18n.default).to.not.equal(deleteLang);
+    });
+    
+    it('check default translation: GET '+URI_ID, async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', output.data.language);
+    });
+    
+    //delete translation
+    it('delete all translation : DELETE '+URI_ID, async () => {
+      let deleteLang = 'en-us';
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray) + '/i18n/'+deleteLang;
+
+      let res = await op.pureOperation('DELETE', myURI_ID, null);
+      
+      expect(res.statusCode).to.equal(403);
+    });
+    
+    it('check default translation: GET '+URI_ID, async () => {
+      let output = _.cloneDeep(sample);
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('language', output.data.language);
+      
+      expect(res.body.data.i18n).to.have.property(output.data.language);
+      expect(res.body.data.i18n.default).to.equal(output.data.language);
+    });	
 	
     it('delete data: DELETE '+URI_ID, async () => {
       await cleanTest(parent_idArray);
@@ -259,8 +305,8 @@ async function cleanTest(idArray){
 }
 
 function go() {
-  itemByIDTest();
-  itemTest();
+  //itemByIDTest();
+  //itemTest();
   translationTest();
 };
 exports.go = go;

@@ -24,7 +24,6 @@ function RestaurantControl() {
 let i18nSchema = {
     "name": "",
     "desc": "",
-    "category": "",
     "address": ""
 };
 
@@ -56,6 +55,8 @@ class Restaurant {
         data.id = fullID;
         data.photos = Utils.objToArray(data.photos);
         delete data.restaurantControl;
+        
+        data.default_language = data.i18n.default;
     
         return data;
     }
@@ -150,8 +151,11 @@ class Restaurant {
             //i18n
             let lang = inputData.language;
             delete inputData.language;
-            if(typeof lang === 'undefined'){
-                lang = "en-us";
+            if((lang === undefined)&&(typeof inputData.default_language === 'string')){
+              lang = inputData.default_language;
+            }
+            else if(lang === undefined){
+              lang = "en-us";
             }
             let i18nUtils = new I18n.main(inputData, this.idArray);
             inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
@@ -213,19 +217,45 @@ class Restaurant {
         }
     }
 
-    async deleteByID() {
-        let data = {
-            id: this.reqData.params.restaurant_id
-        };
+  async deleteByID() {
+    let data = {
+      id: this.reqData.params.restaurant_id
+    };
 
-        try {
-            let msg = await db.delete(TABLE_NAME, data);
-            return msg;
-        }catch(err) {
-            console.log(err);
-            throw err;
-        }
+    try {
+      let msg = await db.delete(TABLE_NAME, data);
+      return "";
+    }catch(err) {
+      console.log(err);
+      throw err;
     }
+  }
+
+  async deleteI18n() {
+    try {
+      let targetLang = this.reqData.params.lang_code;
+
+      let restaurantData = await db.queryById(TABLE_NAME, this.restaurant_fullID);
+      //console.log("--restaurantData--");
+      //console.log(restaurantData);
+
+      let i18nUtils = new I18n.main(restaurantData, this.idArray);
+      let newData = i18nUtils.deleteI18n(targetLang, restaurantData);
+
+      //update
+      let dbOutput = await db.put(TABLE_NAME, newData);
+      
+      //translate
+      let i18nOutputUtils = new I18n.main(dbOutput, this.idArray);
+      dbOutput = i18nOutputUtils.translate(newData.i18n.default);
+      //output
+      let output = this.output(dbOutput, this.branch_fullID);
+      return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+    }catch(err) {
+      console.log(err);
+      throw err;
+    }
+  }
 
   async getPhotoInfo() {
     let restaurant_id = this.reqData.params.restaurant_id;

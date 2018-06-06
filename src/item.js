@@ -24,6 +24,7 @@ let i18nSchema = {
     "name": "",
     "desc": "",
     "category": "",
+    "nutrition": "",
     "ingredients": [""],
     "note": [""],
     "photos": [
@@ -267,8 +268,7 @@ class Items {
   async updateByID(payload) {
       try{
         let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-        let fullID = this.branch_fullID + this.reqData.params.item_id;
-        let itemData = menusData.items[fullID];
+        let itemData = menusData.items[this.item_fullID];
 
         //check item existed
         if(typeof itemData == 'undefined'){
@@ -315,26 +315,59 @@ class Items {
   }
 
   async deleteByID() {
-      try{
-          let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-          let fullID = this.branch_fullID + this.reqData.params.item_id;          
-
-          if(typeof menusData.items[fullID] == 'undefined'){
-              let err = new Error("not found");
-              err.statusCode = 404;
-              throw err;
-          }
-          //let itemData = await this.getItemData(false);
-          delete menusData.items[this.item_fullID];
-          //bug: must delete all photos in s3
-          //bug: must delete all resources in s3
-
-          let msg = await db.put(TABLE_NAME, menusData);
-          return msg;
+    try{
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      if(typeof menusData.items[this.item_fullID] == 'undefined'){
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
       }
-      catch(err) {
+      //let itemData = await this.getItemData(false);
+      delete menusData.items[this.item_fullID];
+      //bug: must delete all photos in s3
+      //bug: must delete all resources in s3
+
+      let msg = await db.put(TABLE_NAME, menusData);
+      return "";
+    }
+    catch(err) {
+      throw err;
+    }
+  }
+  
+  async deleteI18n() {
+    try {
+      let targetLang = this.reqData.params.lang_code;
+
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      let itemData = menusData.items[this.item_fullID];
+
+      //check item existed
+      if(typeof itemData == 'undefined'){
+          let err = new Error("not found");
+          err.statusCode = 404;
           throw err;
       }
+
+      let i18nUtils = new I18n.main(itemData, this.idArray);
+      let newData = i18nUtils.deleteI18n(targetLang, itemData);
+
+
+      menusData.menus[this.item_fullID] = newData;
+
+      let dbOutput = await db.put(TABLE_NAME, menusData);
+
+      //translate
+      let dbOutputData = dbOutput.menus[this.item_fullID];
+      let i18nOutputUtils = new I18n.main(dbOutputData, this.idArray);
+      dbOutputData = i18nOutputUtils.translate(newData.i18n.default);
+      //output
+      let output = this.output(dbOutputData, this.item_fullID);
+      return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+    }catch(err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   async getPhotoInfo() {
@@ -493,7 +526,7 @@ class Items {
       menusData.items[this.item_fullID] = itemData;
       let dbOutput = await db.put(TABLE_NAME, menusData);
 
-      return dbOutput;
+      return "";
     }catch(err) {
         throw err;
     }
