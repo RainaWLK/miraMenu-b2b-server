@@ -5,6 +5,7 @@ let Image = require('./image.js');
 let I18n = require('./i18n.js');
 let _ = require('lodash');
 let S3 = require('./s3');
+let AWS = require('aws-sdk');
 
 const BRANCH_TABLE_NAME = "Branches";
 const RESTAURANT_TABLE_NAME = "Restaurants";
@@ -13,6 +14,9 @@ const TABLE_NAME = "Menus";
 const TYPE_NAME = "items";
 
 const RESOURCE_TYPE_NAME = "resources";
+
+const USERINFO_TABLE_NAME = "Users";
+const USERCOMMENT_TABLE_NAME = "UserComment";
 
 const PHOTO_TMP_TABLE_NAME = "photo_tmp";
 
@@ -532,16 +536,8 @@ class Items {
     }
   }
 
+/*
   async getResources() {
-    /*let dbMenusData = await this.getMenusData(true);
-    let fullID = this.branch_fullID + this.reqData.params.item_id;
-    let itemData = dbMenusData.items[fullID];
-
-    if(typeof itemData == 'undefined'){
-      let err = new Error("not found");
-      err.statusCode = 404;
-      throw err;
-    }*/
     let itemData = await this.getItemData(true);
 
     //output
@@ -571,15 +567,6 @@ class Items {
 
   async getResourceByID() {
     try {
-      /*let dbMenusData = await this.getMenusData(true);
-      let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let itemData = dbMenusData.items[fullID];
-
-      if(typeof itemData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
-      }*/
       let itemData = await this.getItemData(true);
 
       let resource_id = this.reqData.params.resource_id;
@@ -606,16 +593,6 @@ class Items {
     let mimetype = "application/octet-stream";
     
     try {
-      /*let fullID = this.branch_fullID + this.reqData.params.item_id;
-      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-      let itemData = menusData.items[fullID];
-
-      //check item existed
-      if(typeof itemData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
-      }*/
       let itemData = await this.getItemData(false);
 
       let inputData = JSONAPI.parseJSONAPI(payload);
@@ -720,6 +697,60 @@ class Items {
       return dbOutput;
     }catch(err) {
         throw err;
+    }
+  }
+  */
+  
+  async getComment() {
+    try {
+      var cognitosync = new AWS.CognitoSync({
+        apiVersion: '2014-06-30',
+        region: "us-west-2"
+      });
+
+      let commentArray = await db.queryByKey('UserComment', 'object_id-index', 'object_id', this.item_fullID);
+      
+      let dataArray = commentArray.map(element => {
+        return {
+          time: element.date,
+          user: element.identityId,
+          data: element.data
+        }
+      });
+      
+      
+      //cognito sync
+      console.log('cognito sync...');
+      for(let i in dataArray) {
+        var params = {
+          DatasetName: 'userinfo', /* required */
+          IdentityId: dataArray[i].user, /* required */
+          IdentityPoolId: 'us-west-2:b14d7bf2-5ef7-45ae-95a4-115f46f191bc', /* required */
+          LastSyncCount: 0,
+          MaxResults: 0,
+          //NextToken: 'STRING_VALUE',
+          //SyncSessionToken: 'STRING_VALUE'
+        };
+        
+        try {
+          let data = await cognitosync.listRecords(params).promise();          
+          console.log(data);
+          
+        }
+        catch(err) {
+          console.log(err, err.stack); // an error occurred
+          continue;
+        }
+      }
+      console.log(dataArray);
+
+      return dataArray;
+    }
+    catch(err) {
+      console.log("==item comment get err!!==");
+      console.log(err);
+      //throw err;
+      return "";
     }
   }
 

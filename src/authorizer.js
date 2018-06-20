@@ -13,11 +13,10 @@ if(process.env.NODE_ENV == 'development'){
 
 function makePathList(pathArray){
     let path = {};
-    let i = 1;
-
-    let blockNum = Math.ceil((pathArray.length-1)/2);
+    
+    let blockNum = Math.ceil((pathArray.length-2)/2);
     for(let i = 0; i < blockNum; i++){
-        let p = 1 + 2*i;
+        let p = 2 + 2*i;
         if(p < pathArray.length-1){
             path[pathArray[p]] = pathArray[p+1];
         }

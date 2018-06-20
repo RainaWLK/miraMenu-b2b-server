@@ -116,6 +116,30 @@ api.delete(API_VERSION+'/restaurants/{restaurant_id}/items/{item_id}', async (re
   }
 });
 
+//=========== Comments =======
+
+api.get(API_VERSION+'/restaurants/{restaurant_id}/branches/{branch_id}/items/{item_id}/comment', async (req) => {
+  let cmdObj = new Items.main(req);
+
+  try{
+      return await cmdObj.getComment();
+  }
+  catch(err){
+      throw err;
+  }
+});
+
+api.get(API_VERSION+'/restaurants/{restaurant_id}/items/{item_id}/comment', async (req) => {
+  let cmdObj = new Items.main(req);
+
+  try{
+      return await cmdObj.getComment();
+  }
+  catch(err){
+      throw err;
+  }
+});
+
 //=========== Photos =========
 api.get(API_VERSION+'/restaurants/{restaurant_id}/items/{item_id}/photos/{photo_id}', async (req) => {
   let cmdObj = new Items.main(req);
