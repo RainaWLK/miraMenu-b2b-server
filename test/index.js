@@ -27,7 +27,7 @@ before('login', async () => {
 //tableTest.go();
 menuTest.go();
 //menuTest_restaurant.go();
-itemTest.go();
+//itemTest.go();
 //itemTest_restaurant.go();
 //itemTest_photo.go();
 //itemTest_resource.go();

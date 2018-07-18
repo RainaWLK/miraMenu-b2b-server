@@ -21,6 +21,10 @@ let sampleData = {
       "sections": [{
         "name": "main",
         "items":[]
+      },
+      {
+        "name": "dessert",
+        "items":[]
       }],
       //"photos": [],
       "menu_hours": "24"
@@ -37,6 +41,10 @@ let sampleDataTW = {
     "availability": true,
     "sections": [{
       "name": "主餐",
+      "items":[]
+    },
+    {
+      "name": "甜點",
       "items":[]
     }],
     //"photos": [],
@@ -184,6 +192,7 @@ function translationTest() {
       let myURI_ID = utils.getURI(URI_ID, parent_idArray);
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
+      console.log(res.body.data.attributes);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });
@@ -196,6 +205,7 @@ function translationTest() {
       myURI_ID += "?lang=zh-tw";
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
+      console.log(res.body.data.attributes);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });
@@ -207,6 +217,32 @@ function translationTest() {
       myURI_ID += "?lang=orc";
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', output.data.language);
+    });
+    
+    //delete section
+    it('delete a section: PATCH ' + URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      let twData = _.cloneDeep(sampleDataTW);
+      twData.attributes.sections = twData.attributes.sections.slice(1);
+			let input = {"data": twData};
+
+      let res = await op.checkOperation('PATCH', myURI_ID, input, input);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', input.data.language);
+    });    
+    
+    it('check section: GET '+URI_ID+'?lang=zh-tw', async () => {
+      let twData = _.cloneDeep(sampleDataTW);
+      twData.attributes.sections = twData.attributes.sections.slice(1);
+			let output = {"data": twData};
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      myURI_ID += "?lang=zh-tw";
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      console.log(res.body.data.attributes);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });

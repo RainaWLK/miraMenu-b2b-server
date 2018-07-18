@@ -16,10 +16,6 @@ const RESOURCE_TYPE_NAME = "resources";
 
 const PHOTO_TMP_TABLE_NAME = "photo_tmp";
 
-function MenuControl() {
-//  this.photoMaxID = "p000";
-}
-
 let i18nSchema = {
   "name": "",
   "desc": "",
@@ -251,18 +247,19 @@ class Menus {
                     "items": {}
                 } 
             }
-            //check item existed
+            //sections and check item existed
             if(typeof inputData.sections === 'object'){
+              let menu_section_id = 0;
               inputData.sections.map(menu_section => {
                 menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
+              
+                menu_section.id = menu_section_id++;
               });
             }
             else {
               inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
             }
             
-            let control = new MenuControl();
-            inputData.menuControl = JSON.parse(JSON.stringify(control));   //bug
             inputData.photos = {};
             inputData.resources = {};
             inputData.i18n = {};
@@ -305,6 +302,9 @@ class Menus {
             throw err;
         }
 
+        console.log("===== org menu data======");
+        console.log(menuData);
+
         let inputData = JSONAPI.parseJSONAPI(payload);
         let dbMenusData = await this.getMenusData(true);
         //check item existed
@@ -318,7 +318,6 @@ class Menus {
         }
        
         delete inputData.id;
-        inputData.menuControl = _.cloneDeep(menuData.menuControl);
 
         //i18n
         let lang = inputData.language;
@@ -371,7 +370,39 @@ class Menus {
       throw err;
     }
   }
+  
+  //sections
+  makeSections(newSections, orgSections) {
+    //create id list
+    let idList = newSections
+            .filter(section => section.id !== undefined)
+            .map(section => section.id);
+            
+    let result = newSections.map(section => {
+      if(section.id !== undefined) {
+        //update
+        //let orgSection = orgSections.find(element => section.id === element.id);
+        
+        //update i18n
+      }
+      else {
+        //new
+        let new_id = 0;
+        while(1) {
+          if(idList.find(element => new_id == parseInt(element.id)) === undefined) {
+            section.id = new_id;
+            break;
+          }
+          new_id++;
+        }
+      }
+      return section;
+    });
     
+    return result;
+  }
+  
+  //i18n  
   async deleteI18n() {
     try {
       let targetLang = this.reqData.params.lang_code;

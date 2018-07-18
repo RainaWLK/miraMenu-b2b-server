@@ -96,16 +96,23 @@ class I18n {
           let i18nExisted = false;
 
           //check string existed
+          console.log(element);
+          console.log(dbDataElement);
           if((typeof dbDataElement === 'string')&&(dbDataElement.indexOf(header) === 0)){
             key = dbDataElement.substring(header.length);
-
+            console.log('dbDataElement == string');
             let defaultLang = inputData.i18n.default;
             if(typeof this.dbData.i18n[defaultLang][key] === 'string'){
               i18nExisted = true;
+              
+              console.log("i18n existed");
             }
           }
 
           if(i18nExisted){
+            console.log("--key--");
+            console.log(key);
+            console.log(i18nPack[key]);
             i18nPack[key] = element;
             element = dbDataElement;
           }
@@ -120,24 +127,41 @@ class I18n {
 
           if(typeof dbDataElement === 'object'){
             if(Array.isArray(element)){
-
-              for(let i in element){
-                element[i] = makei18nElement(schemaData[0], element[i], dbDataElement[i]);
+              console.log('array type');
+              
+              if((element.length > 0) && (typeof element[0].id === 'string')) {
+                element = element.map(e => {
+                  let orgE = dbDataElement.find(dbE => dbE.id = e.id);
+                  return makei18nElement(schemaData[0], e, orgE);
+                });
+              }
+              else {
+                console.log('old compacility');
+                //old compacility
+                for(let i in element){
+                  element[i] = makei18nElement(schemaData[0], element[i], dbDataElement[i]);
+                }
               }
             }
             else{
+              console.log('object type');
               for(let i in schemaData){
                 element[i] = makei18nElement(schemaData[i], element[i], dbDataElement[i]);
               }
             }
           }
           else {
+            console.log("makei18n dbDataElement !== object");
+            console.log(element);
             if(Array.isArray(element)){
-              for(let i in element){
-                element[i] = makei18nElement(schemaData[0], element[i]);
-              }
+              console.log('array type2');
+              element = element.map(e => makei18nElement(schemaData[0], e));
+              //for(let i in element){
+              //  element[i] = makei18nElement(schemaData[0], element[i]);
+              //}
             }
-            else{
+            else {
+              console.log('object type2');
               for(let i in schemaData){
                 element[i] = makei18nElement(schemaData[i], element[i]);
               }
@@ -212,5 +236,6 @@ class I18n {
   }
 
 }
+
 
 exports.main = I18n;
