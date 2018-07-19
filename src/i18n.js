@@ -96,7 +96,7 @@ class I18n {
           let i18nExisted = false;
 
           //check string existed
-          console.log(element);
+          console.log(`element = string: ${element}`);
           console.log(dbDataElement);
           if((typeof dbDataElement === 'string')&&(dbDataElement.indexOf(header) === 0)){
             key = dbDataElement.substring(header.length);
@@ -110,16 +110,17 @@ class I18n {
           }
 
           if(i18nExisted){
-            console.log("--key--");
-            console.log(key);
+            console.log(`i18n existed: ${key}`);
             console.log(i18nPack[key]);
             i18nPack[key] = element;
             element = dbDataElement;
           }
           else {
+            console.log(`--i18n not existed: ${key}  !!!--`);
             key = this.getNewResourceID("i18n", seq);
             i18nPack[key] = element;
             element = header+key;
+            console.log(`create new i18n: ${element}`);
           }
           
         }
@@ -128,30 +129,51 @@ class I18n {
           if(typeof dbDataElement === 'object'){
             if(Array.isArray(element)){
               console.log('array type');
+              console.log(dbDataElement);
+              console.log(element);
+              console.log(typeof element[0].id);
+              console.log('-------------');
               
-              if((element.length > 0) && (typeof element[0].id === 'string')) {
+              if((element.length > 0) && (element[0].id !== undefined)) {
                 element = element.map(e => {
-                  let orgE = dbDataElement.find(dbE => dbE.id = e.id);
-                  return makei18nElement(schemaData[0], e, orgE);
+                  let orgE = dbDataElement.find(dbE => dbE.id === e.id);
+                  if(orgE !== undefined) {
+                    console.log('find org');
+                    console.log(schemaData[0]);
+                    console.log(orgE);
+                    console.log(e);
+                    return makei18nElement(schemaData[0], e, orgE);
+                  }
+                  else {
+                    console.log('new item!!');
+                    console.log(e);
+                    return makei18nElement(schemaData[0], e);
+                  }
+                  
                 });
               }
               else {
-                console.log('old compacility');
                 //old compacility
                 for(let i in element){
+                  console.log('old compacility');
                   element[i] = makei18nElement(schemaData[0], element[i], dbDataElement[i]);
                 }
               }
             }
             else{
-              console.log('object type');
               for(let i in schemaData){
+                console.log('object type');
+                console.log(i);
+                console.log(schemaData[i]);
+                console.log(element[i]);
+                console.log(dbDataElement[i]);
                 element[i] = makei18nElement(schemaData[i], element[i], dbDataElement[i]);
               }
             }
           }
           else {
             console.log("makei18n dbDataElement !== object");
+            console.log(dbDataElement);
             console.log(element);
             if(Array.isArray(element)){
               console.log('array type2');
@@ -161,8 +183,9 @@ class I18n {
               //}
             }
             else {
-              console.log('object type2');
+              
               for(let i in schemaData){
+                console.log('object type2');
                 element[i] = makei18nElement(schemaData[i], element[i]);
               }
             }
@@ -174,10 +197,14 @@ class I18n {
     };
     
     if((typeof this.dbData === 'object')&&(typeof inputData === 'object')) {
-      for(let i in i18nSchema){  
+      for(let i in i18nSchema){
+        console.log('--------root----------');
+        console.log(this.dbData[i]);
         inputData[i] = makei18nElement(i18nSchema[i], inputData[i], this.dbData[i]);
       }
     }
+    console.log('-----result-----');
+    console.log(inputData);
     
     //default lang
     let inputDefaultLang = inputData.default_language;

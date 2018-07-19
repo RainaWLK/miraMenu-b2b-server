@@ -14,7 +14,8 @@
     "deploy": "npm run transpile && claudia update --version dev --set-env NODE_ENV=production --runtime nodejs8.10 --no-optional-dependencies",
     "start": "npm run transpile && cross-env NODE_ENV=development node build/app.js",
     "help": "claudia --help",
-    "destroy": "claudia destroy"
+    "destroy": "claudia destroy",
+    "i18ntest": "mocha test/i18n_unittest.js"
   },
   "author": "Luke",
   "license": "ISC",

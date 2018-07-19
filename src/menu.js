@@ -373,23 +373,20 @@ class Menus {
   
   //sections
   makeSections(newSections, orgSections) {
+    console.log('makeSections');
     //create id list
     let idList = newSections
             .filter(section => section.id !== undefined)
             .map(section => section.id);
+    console.log('idList=');
+    console.log(idList);
             
     let result = newSections.map(section => {
-      if(section.id !== undefined) {
-        //update
-        //let orgSection = orgSections.find(element => section.id === element.id);
-        
-        //update i18n
-      }
-      else {
+      if(section.id === undefined) {
         //new
         let new_id = 0;
         while(1) {
-          if(idList.find(element => new_id == parseInt(element.id)) === undefined) {
+          if(idList.find(element => new_id === parseInt(element.id)) === undefined) {
             section.id = new_id;
             break;
           }
@@ -398,7 +395,16 @@ class Menus {
       }
       return section;
     });
-    
+
+    //remove deleted sections
+    /*orgSections.filter(sectionElement => idList.find(idElement => sectionElement.id === idElement) === undefined)
+    .forEach(sectionElement => {
+      console.log('got deleted sections:');
+      console.log(sectionElement);
+
+    });*/
+
+
     return result;
   }
   
