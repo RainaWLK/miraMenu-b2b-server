@@ -28,10 +28,10 @@ class I18n {
       langPack = defaultPack;
       
       //for compitable
-      if(langPack === undefined){
+      //if(langPack === undefined){
         //console.log('no default langPack, skip');
-        return this.dbData;
-      }
+      //  return this.dbData;
+      //}
     }
     
     let translateElement = (element) => {
@@ -39,7 +39,7 @@ class I18n {
       if((typeof element == 'string')&&(element.indexOf(header) == 0)){
         let key = element.substring(header.length);
         if(key.indexOf('res-i18n-') == 0){
-          element = this.getStr(langPack, defaultPack, key);
+          element = this.getStr(lang, this.dbData.i18n, key);
         }
       }
       else if(typeof element == 'object'){
@@ -57,16 +57,31 @@ class I18n {
     return this.dbData;
   }
 
-  getStr(langPack, defaultPack, key){
-    let i18nStr = langPack[key];
+  getStr(lang, i18n, key){
+    let langPack = i18n[lang];
+    let defaultPack = i18n[i18n.default];
+    let i18nStr;
+    
+    if((typeof langPack === 'object') && (typeof langPack[key] === 'string')) {
+      i18nStr = langPack[key];
+    }
+    else {
+      i18nStr = defaultPack[key];
+    }
 
     if(typeof i18nStr === 'string'){
       return i18nStr;
     }
     else {
-      i18nStr = defaultPack[key];
-      if(typeof i18nStr === 'string'){
-        return i18nStr;
+      //pick any lang
+      for(let lang in i18n){
+        if(lang === 'default'){
+          continue;
+        }
+        if((typeof i18n[lang] === 'object') && 
+          (typeof i18n[lang][key] === 'string')) {
+          return i18n[lang][key];
+        }
       }
       return "";
     }
@@ -96,31 +111,22 @@ class I18n {
           let i18nExisted = false;
 
           //check string existed
-          console.log(`element = string: ${element}`);
-          console.log(dbDataElement);
           if((typeof dbDataElement === 'string')&&(dbDataElement.indexOf(header) === 0)){
             key = dbDataElement.substring(header.length);
-            console.log('dbDataElement == string');
             let defaultLang = inputData.i18n.default;
             if(typeof this.dbData.i18n[defaultLang][key] === 'string'){
               i18nExisted = true;
-              
-              console.log("i18n existed");
             }
           }
 
           if(i18nExisted){
-            console.log(`i18n existed: ${key}`);
-            console.log(i18nPack[key]);
             i18nPack[key] = element;
             element = dbDataElement;
           }
           else {
-            console.log(`--i18n not existed: ${key}  !!!--`);
             key = this.getNewResourceID("i18n", seq);
             i18nPack[key] = element;
             element = header+key;
-            console.log(`create new i18n: ${element}`);
           }
           
         }
@@ -128,64 +134,40 @@ class I18n {
 
           if(typeof dbDataElement === 'object'){
             if(Array.isArray(element)){
-              console.log('array type');
-              console.log(dbDataElement);
-              console.log(element);
-              console.log(typeof element[0].id);
-              console.log('-------------');
               
               if((element.length > 0) && (element[0].id !== undefined)) {
                 element = element.map(e => {
-                  let orgE = dbDataElement.find(dbE => dbE.id === e.id);
+                  let orgE = dbDataElement.find(dbE => dbE.id == e.id);
                   if(orgE !== undefined) {
-                    console.log('find org');
-                    console.log(schemaData[0]);
-                    console.log(orgE);
-                    console.log(e);
                     return makei18nElement(schemaData[0], e, orgE);
                   }
                   else {
-                    console.log('new item!!');
-                    console.log(e);
                     return makei18nElement(schemaData[0], e);
                   }
-                  
                 });
               }
               else {
                 //old compacility
                 for(let i in element){
-                  console.log('old compacility');
                   element[i] = makei18nElement(schemaData[0], element[i], dbDataElement[i]);
                 }
               }
             }
             else{
               for(let i in schemaData){
-                console.log('object type');
-                console.log(i);
-                console.log(schemaData[i]);
-                console.log(element[i]);
-                console.log(dbDataElement[i]);
                 element[i] = makei18nElement(schemaData[i], element[i], dbDataElement[i]);
               }
             }
           }
           else {
-            console.log("makei18n dbDataElement !== object");
-            console.log(dbDataElement);
-            console.log(element);
             if(Array.isArray(element)){
-              console.log('array type2');
               element = element.map(e => makei18nElement(schemaData[0], e));
               //for(let i in element){
               //  element[i] = makei18nElement(schemaData[0], element[i]);
               //}
             }
             else {
-              
               for(let i in schemaData){
-                console.log('object type2');
                 element[i] = makei18nElement(schemaData[i], element[i]);
               }
             }
@@ -197,14 +179,10 @@ class I18n {
     };
     
     if((typeof this.dbData === 'object')&&(typeof inputData === 'object')) {
-      for(let i in i18nSchema){
-        console.log('--------root----------');
-        console.log(this.dbData[i]);
+      for(let i in i18nSchema){  
         inputData[i] = makei18nElement(i18nSchema[i], inputData[i], this.dbData[i]);
       }
     }
-    console.log('-----result-----');
-    console.log(inputData);
     
     //default lang
     let inputDefaultLang = inputData.default_language;

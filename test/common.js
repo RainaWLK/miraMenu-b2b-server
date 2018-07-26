@@ -15,7 +15,7 @@ class CommonTest {
   constructor(OrgURI, ignoreKeys) {
     this.orgURI = OrgURI;
     this.ignoreKeys = [];
-    if(Array.isArray(ignoreKeys)){
+    if(typeof ignoreKeys === 'object'){
       this.ignoreKeys = ignoreKeys;
     }
   }
@@ -83,6 +83,7 @@ class CommonTest {
   }
 
   removeInternalElement(inputData){
+    console.log('removeInternalElement');
     if(typeof inputData === 'object') {
       if(typeof inputData.i18n !== 'undefined'){
         delete inputData.i18n;
@@ -93,27 +94,65 @@ class CommonTest {
       if(typeof inputData.attributes.photos !== 'undefined'){
         delete inputData.attributes.photos;
       }
-      inputData = this.removeIgnoreElement(inputData);
+      //for menu sections
+      inputData.attributes = this.removeIgnoreElement({
+        sections: [{
+          id: ''
+        }],
+        qrcode: ''
+      }, inputData.attributes);
+      //for others
+      inputData.attributes = this.removeIgnoreElement(this.ignoreKeys, inputData.attributes);
     }
+    console.log(inputData.attributes);
     return inputData;
   }
 
   setIgnore(ignoreKeys){
+    console.log('setIgnore');
+    console.log(ignoreKeys);
     this.ignoreKeys = ignoreKeys;
   }
 
-  removeIgnoreElement(inputData){
-    this.ignoreKeys.map(key => {
-      if(typeof inputData.attributes[key] !== 'undefined'){
-        delete inputData.attributes[key];
+  removeIgnoreElement(keys, inputData){
+    //console.log('removeIgnoreElement');
+    //console.log(keys);
+    //console.log(inputData);
+    for(let key in keys) {
+      let value = keys[key];
+      //console.log(key);
+      //console.log(typeof value);
+      //console.log(inputData[key]);
+      if(typeof value === 'string'){
+        if(typeof inputData[key] !== 'undefined'){
+           //console.log('----delete !!!---');
+           //console.log(this.ignoreKeys);
+           //console.log(key);
+           //console.log(inputData[key]);
+          delete inputData[key];
+        }
       }
-      return key;
-    });
+      else if(Array.isArray(value)) {
+        if(typeof inputData[key] !== 'undefined'){
+          inputData[key].forEach(element => {
+            this.removeIgnoreElement(value[0], element);
+          });
+        }        
+      }
+      else if(typeof value === 'object') {
+        if(typeof inputData[key] !== 'undefined'){
+          this.removeIgnoreElement(value, inputData[key]);
+        }
+        
+      }
+    }
+    
     return inputData;
   }
 
   async checkOperation(op ,uri, input, expectOutput) {
     try{
+      expectOutput = _.cloneDeep(expectOutput);
       console.log("======================");
       console.log(op + " " + uri);
       if(_.isEmpty(input) === false){
@@ -125,7 +164,7 @@ class CommonTest {
       console.log("--------response-----------");
       console.log(res.statusCode);
       if(_.isEmpty(output) === false){
-        console.log(output.data);
+        console.log(output.data.attributes);
       }
         
 
@@ -135,8 +174,8 @@ class CommonTest {
       if(expectOutput) {
         if(Array.isArray(expectOutput.data)) {
           output.data = output.data.map(data => this.removeInternalElement(data));
+          expectOutput.data = expectOutput.data.map(data => this.removeInternalElement(data));
 
-          //output.data.should.include.something.that.deep.equal(expectOutput.data[0]);
           expect(output.data).to.include.something.that.deep.equal(expectOutput.data[0]);      
         }
         else {
@@ -146,6 +185,7 @@ class CommonTest {
             }
           }
           output.data = this.removeInternalElement(output.data);
+          expectOutput.data = this.removeInternalElement(expectOutput.data);
           //output.data.should.deep.include(expectOutput.data);
           expect(output).to.deep.equal(expectOutput);         
         }

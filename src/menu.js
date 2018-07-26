@@ -249,12 +249,15 @@ class Menus {
             }
             //sections and check item existed
             if(typeof inputData.sections === 'object'){
-              let menu_section_id = 0;
+              //let menu_section_id = 0;
+              
+              //TODO: merge these?
               inputData.sections.map(menu_section => {
                 menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
               
-                menu_section.id = menu_section_id++;
+                //menu_section.id = menu_section_id++;
               });
+              inputData.sections = this.makeSections(inputData.sections);
             }
             else {
               inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
@@ -312,6 +315,7 @@ class Menus {
           inputData.sections.map(menu_section => {
             menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
           });
+          inputData.sections = this.makeSections(inputData.sections);
         }
         else {
           inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
@@ -372,22 +376,20 @@ class Menus {
   }
   
   //sections
-  makeSections(newSections, orgSections) {
-    console.log('makeSections');
+  makeSections(newSections) {
     //create id list
     let idList = newSections
             .filter(section => section.id !== undefined)
             .map(section => section.id);
-    console.log('idList=');
-    console.log(idList);
             
     let result = newSections.map(section => {
       if(section.id === undefined) {
         //new
         let new_id = 0;
         while(1) {
-          if(idList.find(element => new_id === parseInt(element.id)) === undefined) {
+          if(idList.find(element => new_id === parseInt(element)) === undefined) {
             section.id = new_id;
+            idList.push(new_id);
             break;
           }
           new_id++;
@@ -395,15 +397,6 @@ class Menus {
       }
       return section;
     });
-
-    //remove deleted sections
-    /*orgSections.filter(sectionElement => idList.find(idElement => sectionElement.id === idElement) === undefined)
-    .forEach(sectionElement => {
-      console.log('got deleted sections:');
-      console.log(sectionElement);
-
-    });*/
-
 
     return result;
   }

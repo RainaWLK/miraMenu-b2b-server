@@ -218,18 +218,18 @@ describe('update data with new lang', () => {
   let sampleDataWords = {
     "id": "r1524107780801s1524642972145m1524725848720",
     "language": "mars",
-    "name": "二號餐",
-    "desc": "鮪魚套餐",
+    "name": "~~~~~~~~~~",
+    "desc": "*******",
     "category": "General",
     "sections": [
       {
         "id": 0,
-        "name": "主餐",
+        "name": "!@$!#%!$!#",
         "items":["r1s1i1", "r1i2"]
       },
       {
         "id": 1,
-        "name": "甜點",
+        "name": "^^^^^^^^^^^^^^^^",
         "items":["r1s1i3"]
       }
     ],
@@ -280,6 +280,7 @@ describe('update data with new lang', () => {
 });
 
 describe('update data and delete something with same lang', () => {
+  console.log('------update data and delete something with same lang-----');
   let sampleDataWords = {
     "id": "r1524107780801s1524642972145m1524725848720",
     "language": "zh-CN",
@@ -413,3 +414,36 @@ describe('update data and delete something with new lang', () => {
   };
   unittest(sampleOrgData, sampleDataWords);
 });
+
+/*
+describe('new data test', () => {
+  let sampleDataWords = {
+    "id": "r1524107780801s1524642972145m1524725848720",
+    "language": "zh-CN",
+    "name": "二號餐",
+    "desc": "鮪魚套餐",
+    "category": "General",
+    "sections": [
+      {
+        "id": 1,
+        "name": "甜點",
+        "items":["r1s1i3"]
+      },
+      {
+        "id": 99999,
+        "name": "Raman",
+        "items": ["r1s1i1", "r2s2i2"]
+      }
+    ],
+    "photos": [
+      {
+        "id": "p1510823573751-0",
+        "mimetype": "image/jpeg",
+      }
+    ]
+  };
+  //TODO:
+  
+  unittest({}, sampleDataWords);
+  
+});*/

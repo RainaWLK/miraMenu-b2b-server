@@ -62,6 +62,11 @@ function menuTest() {
 
   before('prepare data', () => {
     op = new CommonTest(URI);
+    op.setIgnore({
+      sections: [{
+        id: ''
+      }]
+    });
   });
 
   describe(URI+' test', () => {
@@ -107,6 +112,11 @@ function menuByIDTest() {
 
   before('prepare data', () => {
     op = new CommonTest(URI_ID);
+    op.setIgnore({
+      sections: [{
+        id: ''
+      }]
+    });
   });
 
   describe(URI_ID+' test', () => {
@@ -172,6 +182,23 @@ function translationTest() {
       let res = await op.checkOperation('GET', myURI_ID, null, output);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
+      
+      res.body.data.attributes.sections.forEach(section => {
+        expect(section).to.have.property('id');
+      });
+      
+      
+      //set id into sample data
+      sampleData.attributes.sections = sampleData.attributes.sections.map(section => {
+        let target = res.body.data.attributes.sections.find(element => element.name === section.name);
+        if(target !== undefined){
+          return target;
+        }
+        return section;
+      });
+      for(let i in sampleData.attributes.sections) {
+        sampleDataTW.attributes.sections[i].id = sampleData.attributes.sections[i].id;
+      }
 
       //how to check i18n structure?
     });
@@ -192,7 +219,6 @@ function translationTest() {
       let myURI_ID = utils.getURI(URI_ID, parent_idArray);
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
-      console.log(res.body.data.attributes);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });
@@ -205,7 +231,6 @@ function translationTest() {
       myURI_ID += "?lang=zh-tw";
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
-      console.log(res.body.data.attributes);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });
@@ -231,6 +256,7 @@ function translationTest() {
       let res = await op.checkOperation('PATCH', myURI_ID, input, input);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', input.data.language);
+      expect(res.body.data.attributes.sections).to.deep.equal(twData.attributes.sections);
     });    
     
     it('check section: GET '+URI_ID+'?lang=zh-tw', async () => {
@@ -242,14 +268,37 @@ function translationTest() {
       myURI_ID += "?lang=zh-tw";
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
-      console.log(res.body.data.attributes);
       res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
     });
+    
+    //restore section. section[1] should have zh-tw string only
+    it('restore section: PATCH ' + URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      let twData = _.cloneDeep(sampleDataTW);
+			let input = {"data": twData};
+
+      let res = await op.pureOperation('PATCH', myURI_ID, input);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', input.data.language);
+    });   
+    
+    it('check translation: GET '+URI_ID, async () => {
+      let enData = _.cloneDeep(sampleData);
+			let output = {"data": enData};
+      //output.data.attributes.desc = "囧";
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      
+      //check translation of section[0], should be zh-tw'
+      output.data.attributes.sections[0].name = sampleDataTW.attributes.sections[0].name;
+
+      let res = await op.checkOperation('GET', myURI_ID, null, output);
+      expect(res.body.data).to.have.deep.property('language', output.data.language);
+    });
 
     //delete translation
-    it('delete translation "zh-tw": DELETE '+URI_ID, async () => {
-      let deleteLang = 'zh-tw';
+    it('delete default translation "en-us": DELETE '+URI_ID, async () => {
+      let deleteLang = 'en-us';
       let myURI_ID = utils.getURI(URI_ID, parent_idArray) + '/i18n/'+deleteLang;
 
       let res = await op.pureOperation('DELETE', myURI_ID, null);
@@ -258,19 +307,22 @@ function translationTest() {
       expect(res.body.data.i18n.default).to.not.equal(deleteLang);
     });
     
-    it('check default translation: GET '+URI_ID, async () => {
-      let output = _.cloneDeep(sample);
+    it('check new default translation: GET '+URI_ID, async () => {
+      let twData = _.cloneDeep(sampleDataTW);
+			let output = {"data": twData};
       //output.data.attributes.desc = "囧";
       let myURI_ID = utils.getURI(URI_ID, parent_idArray);
 
       let res = await op.checkOperation('GET', myURI_ID, null, output);
-      res.body.data.should.have.deep.property('id', fullid);
       res.body.data.should.have.deep.property('language', output.data.language);
+      
+      expect(res.body.data.i18n).to.have.property(output.data.language);
+      expect(res.body.data.i18n.default).to.equal(output.data.language);
     });
     
     //delete translation
     it('delete all translation : DELETE '+URI_ID, async () => {
-      let deleteLang = 'en-us';
+      let deleteLang = 'zh-tw';
       let myURI_ID = utils.getURI(URI_ID, parent_idArray) + '/i18n/'+deleteLang;
 
       let res = await op.pureOperation('DELETE', myURI_ID, null);
@@ -279,7 +331,8 @@ function translationTest() {
     });
     
     it('check default translation: GET '+URI_ID, async () => {
-      let output = _.cloneDeep(sample);
+      let twData = _.cloneDeep(sampleDataTW);
+			let output = {"data": twData};
       //output.data.attributes.desc = "囧";
       let myURI_ID = utils.getURI(URI_ID, parent_idArray);
 
