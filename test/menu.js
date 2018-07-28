@@ -246,6 +246,54 @@ function translationTest() {
       res.body.data.should.have.deep.property('language', output.data.language);
     });
     
+    it('set section name with 2 language "zh-tw & orc": PATCH ' + URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray);
+      let twData = _.cloneDeep(sampleDataTW);
+			let input = {"data": twData};
+			
+			let testSection = {
+        "name": "飲料",
+        "items":[]
+      };
+      input.data.attributes.sections.push(testSection);
+
+      let res = await op.checkOperation('PATCH', myURI_ID, input, input);
+      res.body.data.should.have.deep.property('id', fullid);
+      res.body.data.should.have.deep.property('language', input.data.language);
+      testSection = res.body.data.attributes.sections.find(e => e.name===testSection.name);
+      
+      input.data.attributes.sections[2].id = testSection.id;
+      input.data.attributes.sections[2].name = "飲品";
+      
+      //set zh-tw, change name to "飲品". should be the same id
+      res = await op.checkOperation('PATCH', myURI_ID, input, input);
+      testSection = res.body.data.attributes.sections.find(e => e.name==="飲品");
+      expect(testSection.id).to.equal(input.data.attributes.sections[2].id);
+      
+      //set orc, should be the same id and named "lok-tar"
+      input.data.language = 'orc';
+      input.data.attributes.sections[2].name = "lok-tar";
+      res = await op.checkOperation('PATCH', myURI_ID, input, input);
+      testSection = res.body.data.attributes.sections.find(e => e.name==="lok-tar");
+      expect(testSection.id).to.equal(input.data.attributes.sections[2].id);
+      
+      //check zh-tw, should be "飲品"
+      res = await op.pureOperation('GET', myURI_ID+"?lang=zh-tw", null);
+      testSection = res.body.data.attributes.sections.find(e => e.id===testSection.id);
+      expect(testSection.name).to.equal("飲品");
+    });
+    
+    //clear
+    it('delete translation "orc": DELETE '+URI_ID, async () => {
+      let deleteLang = 'orc';
+      let myURI_ID = utils.getURI(URI_ID, parent_idArray) + '/i18n/'+deleteLang;
+
+      let res = await op.pureOperation('DELETE', myURI_ID, null);
+      
+      expect(res.body.data.i18n).to.not.have.property(deleteLang);
+      expect(res.body.data.i18n.default).to.not.equal(deleteLang);
+    });
+    
     //delete section
     it('delete a section: PATCH ' + URI_ID, async () => {
       let myURI_ID = utils.getURI(URI_ID, parent_idArray);

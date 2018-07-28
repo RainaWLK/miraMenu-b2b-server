@@ -305,8 +305,8 @@ class Menus {
             throw err;
         }
 
-        console.log("===== org menu data======");
-        console.log(menuData);
+        //console.log("===== org menu data======");
+        //console.log(menuData);
 
         let inputData = JSONAPI.parseJSONAPI(payload);
         let dbMenusData = await this.getMenusData(true);
@@ -316,6 +316,8 @@ class Menus {
             menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
           });
           inputData.sections = this.makeSections(inputData.sections);
+          console.log('inputData.sections');
+          console.log(inputData.sections);
         }
         else {
           inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
@@ -381,6 +383,8 @@ class Menus {
     let idList = newSections
             .filter(section => section.id !== undefined)
             .map(section => section.id);
+    console.log("idList=");
+    console.log(idList);
             
     let result = newSections.map(section => {
       if(section.id === undefined) {
@@ -582,15 +586,9 @@ class Menus {
       }
 
       return output;*/
-      console.log("add photo");
       let menuData = await this.getMenuData(false);
-      console.log("get menu data done");
-      console.log(menuData);
-      console.log(payload);
 
       let inputData = JSONAPI.parseJSONAPI(payload);
-      console.log("parseJSONAPI done");
-      console.log(inputData);
       let output = Image.addPhoto(inputData, this.idArray);
       
       return output;

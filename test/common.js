@@ -83,7 +83,6 @@ class CommonTest {
   }
 
   removeInternalElement(inputData){
-    console.log('removeInternalElement');
     if(typeof inputData === 'object') {
       if(typeof inputData.i18n !== 'undefined'){
         delete inputData.i18n;
@@ -104,7 +103,6 @@ class CommonTest {
       //for others
       inputData.attributes = this.removeIgnoreElement(this.ignoreKeys, inputData.attributes);
     }
-    console.log(inputData.attributes);
     return inputData;
   }
 

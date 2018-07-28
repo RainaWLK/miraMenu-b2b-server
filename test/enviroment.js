@@ -14,7 +14,7 @@ exports.chai = chai;
 let aws = {
   region: 'us-west-2',
   host: '6qzss09080.execute-api.us-west-2.amazonaws.com',
-  stage: 'prod',
+  stage: 'dev',
   //stage: 'auth',
   //credentials: { 
   //  accessKeyId: 'ASIAJEJDSVKVHO5XXC2A',
@@ -34,6 +34,6 @@ let aws = {
 }
 
 exports.aws = aws;
-//exports.server = 'https://'+aws.host+'/'+aws.stage;
-exports.server = 'http://localhost:8081';
+exports.server = 'https://'+aws.host+'/'+aws.stage;
+//exports.server = 'http://localhost:8081';
 

@@ -206,7 +206,8 @@ function putData(tableName, data){
     return new Promise((resolve, reject) => {
 
         docClient.update(params).promise().then(async result => {
-          console.log("UpdateItem succeeded:", JSON.stringify(inputData, null, 2));
+          //console.log("UpdateItem succeeded:", JSON.stringify(inputData, null, 2));
+          console.log("UpdateItem succeeded");
           let outputData = result.Attributes;
           outputData.id = inputData.id;
           resolve(outputData);
@@ -300,7 +301,8 @@ async function batchGet(params){
 async function sendBatchGet(params, output) {
   try {
     let result = await docClient.batchGet(params).promise();
-    console.log("Batch get succeeded:", JSON.stringify(result, null, 2));
+    //console.log("Batch get succeeded:", JSON.stringify(result, null, 2));
+    console.log("Batch get succeeded:", JSON.stringify(params.RequestItems, null, 2));
     
     //combine output
     if((typeof output === 'object') && (typeof output.Responses === 'object')) {

@@ -40,8 +40,8 @@ function makeReqData(req) {
 		//fake user info
 		reqData.userinfo.cognitoAuthenticationProvider = "jumi.co";
 		reqData.userinfo.cognitoAuthenticationType = "authenticated";
-		reqData.userinfo.cognitoIdentityId = 'us-east-1:db063670-27cb-42a8-a6da-97fe436af727';
-		reqData.userinfo.cognitoIdentityPoolId = 'us-east-1:4ad17068-f8a4-4fed-aaf7-55e7e9a2e7ac';		
+		reqData.userinfo.cognitoIdentityId = 'us-west-2:97f12645-0fd0-4068-a8ac-a3d3d681ad73';
+		reqData.userinfo.cognitoIdentityPoolId = 'us-west-2:402b42ff-45c7-494b-a043-70a457930f4a';		
     }
     else {
         reqData.paths = req.proxyRequest.path.split('/');
