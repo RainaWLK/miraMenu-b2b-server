@@ -377,14 +377,50 @@ async function batchWrite(params) {
   }
 }
 
-async function sendBatchWrite(params) {
+async function sendBatchWrite(inputParams){
+  let runBatchWrite = async (params) => {
+    try {
+      console.log(params);
+      let result = await docClient.batchWrite(params).promise();
+      console.log("Batch write succeeded:", JSON.stringify(result, null, 2));
+      return result;
+    }
+    catch(err) {
+      console.error("Batch write fail. Error JSON:", JSON.stringify(err, null, 2));
+      throw err;
+    }
+  };
+  
+  
   try {
-    let result = await docClient.batchWrite(params).promise();
-    console.log("Batch write succeeded:", JSON.stringify(result, null, 2));
+    inputParams = fixEmptyValue(inputParams);
+    
+    let outputParams = {
+      RequestItems: {}
+    };
+    let count = 0;
+    let result = null;
+    for(let table in inputParams.RequestItems) {
+      outputParams.RequestItems[table] = [];
+      
+      for(let i in inputParams.RequestItems[table]) {
+        let data = inputParams.RequestItems[table][i];
+        outputParams.RequestItems[table].push(data);
+        count++;
+        //batchWrite limit 25
+        if(count >= 25){
+          result = await runBatchWrite(outputParams);
+          outputParams.RequestItems[table] = [];
+          count = 0;
+        }
+      }
+      result = await runBatchWrite(outputParams);
+      delete outputParams.RequestItems[table];
+      count = 0;
+    }
     return result;
   }
   catch(err) {
-    console.error("Batch write fail. Error JSON:", JSON.stringify(err, null, 2));
     throw err;
   }
 }
