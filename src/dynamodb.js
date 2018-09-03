@@ -414,7 +414,9 @@ async function sendBatchWrite(inputParams){
           count = 0;
         }
       }
-      result = await runBatchWrite(outputParams);
+      if(outputParams.RequestItems[table].length > 0) {
+        result = await runBatchWrite(outputParams);
+      }
       delete outputParams.RequestItems[table];
       count = 0;
     }

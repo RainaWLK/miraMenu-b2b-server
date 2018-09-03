@@ -221,158 +221,210 @@ class Menus {
       }
   }
 
-    async create(payload) {
-        let inputData = JSONAPI.parseJSONAPI(payload);
+  async create(payload) {
+    let inputData = JSONAPI.parseJSONAPI(payload);
 
-        try{
-            let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
-            let menu_id = this.getNewID();
-            let fullID = this.branch_fullID + menu_id;
+    try{
+      let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
+      let menu_id = this.getNewID();
+      let fullID = this.branch_fullID + menu_id;
 
-            let dbMenusData = await this.getMenusData(true);
+      let dbMenusData = await this.getMenusData(true);
 
-            let menusData;
-            try {
-                menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-                //migration
-                if(typeof menusData.menus == 'undefined'){
-                    menusData.menus = {};
-                }
-            }
-            catch(err){
-                //init
-                menusData = {
-                    "id": this.branch_fullID,
-                    "menus": {},
-                    "items": {}
-                } 
-            }
-            //sections and check item existed
-            if(typeof inputData.sections === 'object'){
-              //let menu_section_id = 0;
-              
-              //TODO: merge these?
-              inputData.sections.map(menu_section => {
-                menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
-              
-                //menu_section.id = menu_section_id++;
-              });
-              inputData.sections = this.makeSections(inputData.sections);
-            }
-            else {
-              inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
-            }
-            
-            inputData.photos = {};
-            inputData.resources = {};
-            inputData.i18n = {};
-
-            //i18n
-            let lang = inputData.language;
-            delete inputData.language;
-            if(typeof lang == 'undefined'){
-              lang = "en-us";
-            }
-            let i18nUtils = new I18n.main(inputData, this.idArray);
-            inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
-
-            menusData.menus[fullID] = inputData; 
-            let msg = await db.post(TABLE_NAME, menusData);
-
-            
-            //translate
-            inputData = i18nUtils.translate(lang);
-            //output
-            let output = this.output(inputData, fullID);
-            return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+      let menusData;
+      try {
+        menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+        //migration
+        if(typeof menusData.menus == 'undefined'){
+          menusData.menus = {};
         }
-        catch(err) {
-            console.log(err);
-            throw err;
-        }
+      }
+      catch(err){
+        //init
+        menusData = {
+          "id": this.branch_fullID,
+          "menus": {},
+          "items": {}
+        } 
+      }
+      //sections and check item existed
+      if(typeof inputData.sections === 'object'){
+        //let menu_section_id = 0;
+        
+        //TODO: merge these?
+        inputData.sections.map(menu_section => {
+          menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
+        
+          //menu_section.id = menu_section_id++;
+        });
+        inputData.sections = this.makeSections(inputData.sections);
+      }
+      else {
+        inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
+      }
+      
+      inputData.photos = {};
+      inputData.resources = {};
+      inputData.i18n = {};
 
+      //i18n
+      let lang = inputData.language;
+      delete inputData.language;
+      if(typeof lang == 'undefined'){
+        lang = "en-us";
+      }
+      let i18nUtils = new I18n.main(inputData, this.idArray);
+      inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+
+      menusData.menus[fullID] = inputData; 
+      let msg = await db.post(TABLE_NAME, menusData);
+
+      
+      //translate
+      inputData = i18nUtils.translate(lang);
+      //output
+      let output = this.output(inputData, fullID);
+      return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+    }
+    catch(err) {
+      console.log(err);
+      throw err;
     }
 
-    async updateByID(payload) {   
-      try{
-        let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-        let menuData = menusData.menus[this.menu_fullID];
+  }
 
-        //check menu existed
-        if(typeof menuData == 'undefined'){
-            let err = new Error("not found");
-            err.statusCode = 404;
-            throw err;
-        }
-
-        //console.log("===== org menu data======");
-        //console.log(menuData);
-
-        let inputData = JSONAPI.parseJSONAPI(payload);
-        let dbMenusData = await this.getMenusData(true);
-        //check item existed
-        if(typeof inputData.sections === 'object'){
-          inputData.sections.map(menu_section => {
-            menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
-          });
-          inputData.sections = this.makeSections(inputData.sections);
-          console.log('inputData.sections');
-          console.log(inputData.sections);
-        }
-        else {
-          inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
-        }
-       
-        delete inputData.id;
-
-        //i18n
-        let lang = inputData.language;
-        delete inputData.language;
-        if(typeof lang === 'string'){
-          let i18nUtils = new I18n.main(menuData, this.idArray);
-          inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
-        }
-
-        //copy photo data
-        inputData.photos = _.cloneDeep(menuData.photos);
-        //copy i18n data
-        inputData.i18n = _.cloneDeep(menuData.i18n);
-        //copy resources data
-        inputData.resources = _.cloneDeep(menuData.resources);
-
-        menusData.menus[this.menu_fullID] = inputData;
-
-        let dbOutput = await db.put(TABLE_NAME, menusData);
-
-        //translate
-        let dbOutputData = dbOutput.menus[this.menu_fullID];
-        let i18nOutputUtils = new I18n.main(dbOutputData, this.idArray);
-        dbOutputData = i18nOutputUtils.translate(lang);
-        //output
-        let output = this.output(dbOutputData, this.menu_fullID);
-        return JSONAPI.makeJSONAPI(TYPE_NAME, output);
-      }
-      catch(err) {
-        throw err;
-      }
-    }
-
-  async deleteByID() {
+  async updateByID(payload) {   
     try{
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      let menuData = menusData.menus[this.menu_fullID];
 
-      if(typeof menusData.menus[this.menu_fullID] == 'undefined'){
+      //check menu existed
+      if(typeof menuData == 'undefined'){
           let err = new Error("not found");
           err.statusCode = 404;
           throw err;
+      }
+
+      //console.log("===== org menu data======");
+      //console.log(menuData);
+
+      let inputData = JSONAPI.parseJSONAPI(payload);
+      let dbMenusData = await this.getMenusData(true);
+      //check item existed
+      if(typeof inputData.sections === 'object'){
+        inputData.sections.map(menu_section => {
+          menu_section.items = this.checkItemExisted(menu_section.items, dbMenusData.items);
+        });
+        inputData.sections = this.makeSections(inputData.sections);
+        console.log('inputData.sections');
+        console.log(inputData.sections);
+      }
+      else {
+        inputData.items = this.checkItemExisted(inputData.items, dbMenusData.items);
+      }
+     
+      delete inputData.id;
+
+      //i18n
+      let lang = inputData.language;
+      delete inputData.language;
+      if(typeof lang === 'string'){
+        let i18nUtils = new I18n.main(menuData, this.idArray);
+        inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+      }
+
+      //copy photo data
+      inputData.photos = _.cloneDeep(menuData.photos);
+      //copy i18n data
+      inputData.i18n = _.cloneDeep(menuData.i18n);
+      //copy resources data
+      inputData.resources = _.cloneDeep(menuData.resources);
+
+      menusData.menus[this.menu_fullID] = inputData;
+
+      let dbOutput = await db.put(TABLE_NAME, menusData);
+
+      //translate
+      let dbOutputData = dbOutput.menus[this.menu_fullID];
+      let i18nOutputUtils = new I18n.main(dbOutputData, this.idArray);
+      dbOutputData = i18nOutputUtils.translate(lang);
+      //output
+      let output = this.output(dbOutputData, this.menu_fullID);
+      return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+    }
+    catch(err) {
+      throw err;
+    }
+  }
+
+  async deleteByID() {
+    try{
+      console.log('delete menu:'+this.menu_fullID);
+      let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+
+      if(typeof menusData.menus[this.menu_fullID] == 'undefined'){
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
       }
       delete menusData.menus[this.menu_fullID];
       //bug: must delete all photos in s3
 
       let msg = await db.put(TABLE_NAME, menusData);
+      
+      //delete menu id in branch
+      if(this.branchQuery) {
+        let branchData = await db.queryById(BRANCH_TABLE_NAME, this.branch_fullID);   //get branch data
+        console.log(branchData.menus);
+        branchData.menus = branchData.menus.filter(e => e !== this.menu_fullID);
+        console.log(branchData);
+        //write back
+        await db.put(BRANCH_TABLE_NAME, branchData);
+      } else {
+        let restaurant_id = this.reqData.params.restaurant_id.toString();
+        console.log('restaurant id = '+ restaurant_id);
+        var params = {
+          TableName: BRANCH_TABLE_NAME,
+          FilterExpression: "#a1.#a2 = :b",
+          ExpressionAttributeNames: {
+              "#a1": "branchControl",
+              "#a2": "restaurant_id"
+          },
+          ExpressionAttributeValues: {
+               ":b": restaurant_id 
+          },
+          ReturnConsumedCapacity: "TOTAL"
+        };
+        let branchDataArray = await db.scanDataByFilter(params);
+        for(let i in branchDataArray) {
+          let branchData = branchDataArray[i];
+          
+          if(Array.isArray(branchData.menus)) {
+            let newMenus = branchData.menus.filter(e => e !== this.menu_fullID);
+            console.log('newMenus=');
+            console.log(newMenus);
+            console.log('branchData=');
+            console.log(branchData.menus);
+            if(newMenus.length < branchData.menus.length) {
+              branchData.menus = newMenus;
+              console.log('write');
+              console.log(branchData);
+              //write back
+              await db.put(BRANCH_TABLE_NAME, branchData);    
+            }
+            else {
+              console.log('skip:' + branchData.id);
+            }
+          }
+        }
+
+      }
+      
+
       return "";
     }
     catch(err) {
+      console.log(err);
       throw err;
     }
   }
@@ -415,9 +467,9 @@ class Menus {
 
       //check menu existed
       if(typeof menuData == 'undefined'){
-          let err = new Error("not found");
-          err.statusCode = 404;
-          throw err;
+        let err = new Error("not found");
+        err.statusCode = 404;
+        throw err;
       }
       //console.log("--menuData--");
       //console.log(menuData);
@@ -459,22 +511,22 @@ class Menus {
     let dataArray = [];
 
     let makePhotoArray = function(source, dest, menu_fullID){
-        for(let photo_id in source.photos){
-          let photoData = source.photos[photo_id];
-          photoData.id = menu_fullID+photo_id;
-          dest.push(photoData);
-        }
-        return;
+      for(let photo_id in source.photos){
+        let photoData = source.photos[photo_id];
+        photoData.id = menu_fullID+photo_id;
+        dest.push(photoData);
+      }
+      return;
     }
 
     makePhotoArray(menuData, dataArray, this.menu_fullID);
 
     //if empty
     if(dataArray.length == 0){
-        //let err = new Error("not found");
-        //err.statusCode = 404;
-        //throw err;
-        return "";
+      //let err = new Error("not found");
+      //err.statusCode = 404;
+      //throw err;
+      return "";
     }
 
     return JSONAPI.makeJSONAPI("photos", dataArray);
