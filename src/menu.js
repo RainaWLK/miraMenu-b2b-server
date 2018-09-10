@@ -284,6 +284,17 @@ class Menus {
       inputData = i18nUtils.translate(lang);
       //output
       let output = this.output(inputData, fullID);
+      
+      //add to branch menus
+      if(this.branchQuery) {
+        if(Array.isArray(branchData.menus) === false) {
+          branchData.menus = [];
+        }
+        branchData.menus.push(fullID);
+        //write back
+        await db.put(this.branchTable, branchData);
+      }
+      
       return JSONAPI.makeJSONAPI(TYPE_NAME, output);
     }
     catch(err) {
@@ -375,11 +386,18 @@ class Menus {
       //delete menu id in branch
       if(this.branchQuery) {
         let branchData = await db.queryById(BRANCH_TABLE_NAME, this.branch_fullID);   //get branch data
-        console.log(branchData.menus);
-        branchData.menus = branchData.menus.filter(e => e !== this.menu_fullID);
-        console.log(branchData);
-        //write back
-        await db.put(BRANCH_TABLE_NAME, branchData);
+        if(Array.isArray(branchData.menus)) {
+          let newMenus = branchData.menus.filter(e => e !== this.menu_fullID);
+          if(newMenus.length < branchData.menus.length) {
+            branchData.menus = newMenus;
+            //write back
+            await db.put(BRANCH_TABLE_NAME, branchData);    
+          }
+          else {
+            console.log('skip:' + branchData.id);
+          }
+        }
+
       } else {
         let restaurant_id = this.reqData.params.restaurant_id.toString();
         console.log('restaurant id = '+ restaurant_id);
@@ -401,14 +419,8 @@ class Menus {
           
           if(Array.isArray(branchData.menus)) {
             let newMenus = branchData.menus.filter(e => e !== this.menu_fullID);
-            console.log('newMenus=');
-            console.log(newMenus);
-            console.log('branchData=');
-            console.log(branchData.menus);
             if(newMenus.length < branchData.menus.length) {
               branchData.menus = newMenus;
-              console.log('write');
-              console.log(branchData);
               //write back
               await db.put(BRANCH_TABLE_NAME, branchData);    
             }

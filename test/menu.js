@@ -4,6 +4,8 @@ let _ = require('lodash');
 let branchTest = require('./branch');
 let photoTest = require('./phototest');
 let utils = require('./utils');
+let request = require('supertest');
+let serv = request(env.server);
 
 var expect = env.chai.expect;
 
@@ -417,6 +419,42 @@ function photoUploadTest(){
   });
 }
 
+function menuCreateTest() {
+  let idArray;
+  let fullid;
+
+  describe('menuCreateTest', () => {
+    it('perpare data: POST ' + URI, async () => {
+      idArray = await prepareTest();
+      fullid = utils.makeFullID(idArray);
+      return;
+    });
+
+
+    it('check data saved: GET '+URI_ID, async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
+      let output = _.cloneDeep(sample);
+      let res = await serv.get(myURI_ID).expect(200);
+      //console.log(res.body);
+  
+      expect(res.body.data.id).to.equal(fullid);
+    });
+    
+    it('check menu registation', async () => {
+      let myURI_ID = utils.getURI('/v1/restaurants/{restaurant_id}/branches/{branch_id}', idArray);
+      let res = await serv.get(myURI_ID);
+      //console.log(res.body.data.attributes);
+      
+      expect(res.body.data.attributes.menus).to.include(fullid);
+    });
+	
+    it('delete data: DELETE '+URI_ID, async () => {
+      await cleanTest(idArray);
+      return;
+    });
+
+  });
+}
 
 
 async function prepareTest(){
@@ -461,8 +499,9 @@ async function cleanTest(idArray){
 function go() {
     //menuByIDTest();
     //menuTest();
-    translationTest();
+    //translationTest();
     //photoUploadTest();
+    menuCreateTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;
