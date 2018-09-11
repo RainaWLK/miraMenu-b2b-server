@@ -53,14 +53,12 @@ class Items {
       }
 
       //parse request
-      this.controlName = "restaurantControl";
       this.branch_fullID = this.reqData.params.restaurant_id;
       this.branchTable = RESTAURANT_TABLE_NAME;
 
       if(this.branchQuery){
-          this.branch_fullID = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
-          this.branchTable = BRANCH_TABLE_NAME;
-          this.controlName = "branchControl";
+        this.branch_fullID = this.reqData.params.restaurant_id + this.reqData.params.branch_id;
+        this.branchTable = BRANCH_TABLE_NAME;
       }
 
       //id array
@@ -321,10 +319,23 @@ class Items {
 
 
   async deleteByID() {
-    const removeItemFromSection = (section, item_id) => {
-      section.items = section.items.filter(e => e !== item_id);
-      return section;
-    }
+    const cleanItemId = (menusData, item_id) => {
+      let changed = false;
+      for(let menu_id in menusData.menus) {
+        let menuData = menusData.menus[menu_id];
+        menuData.sections = menuData.sections.map(section => {
+          if(Array.isArray(section.items)) {
+            let new_items = section.items.filter(e => e !== item_id);
+            if(new_items.length < section.items.length) {
+              section.items = new_items;
+              changed = true;
+            }
+          }
+          return section;
+        });
+      }
+      return changed;
+    };
     
     try{
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
@@ -338,19 +349,35 @@ class Items {
       //bug: must delete all photos in s3
       //bug: must delete all resources in s3
       //delete item id in menu
-      for(let menu_id in menusData.menus) {
-        let menuData = menusData.menus[menu_id];
-        menuData.sections = menuData.sections.map(section => removeItemFromSection(section, this.item_fullID));
-      }
-      if(this.branchQuery === false) {
-        //delete item id inside branch menu
-
-      }
-      /*for(let i in menusData.menus) {
-        console.log(menusData.menus[i].sections);
-      }*/
+      cleanItemId(menusData, this.item_fullID);
 
       let msg = await db.put(TABLE_NAME, menusData);
+      
+      //delete item id inside all menu
+      if(this.branchQuery === false) {
+        let restaurantData = await db.queryById(RESTAURANT_TABLE_NAME, this.branch_fullID);
+        let branch_ids = restaurantData.restaurantControl.branch_ids;
+        
+        for(let i in branch_ids) {
+          let branch_id = restaurantData.id + branch_ids[i];
+          try {
+            menusData = await db.queryById(TABLE_NAME, branch_id);
+
+            let changed = cleanItemId(menusData, this.item_fullID);
+            if(changed) {
+              await db.put(TABLE_NAME, menusData);
+            }
+          }
+          catch(err) {
+            if(err.statusCode === 404) {
+              continue;
+            }
+            throw err;
+          }
+
+        }
+
+      }
       return "";
     }
     catch(err) {

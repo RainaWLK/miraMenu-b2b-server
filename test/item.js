@@ -265,10 +265,16 @@ function itemDeleteTest() {
   let idArray = {
     r: '1531207779057',
     s: '1534748388645',
-    i: '1536669156288',
+    i: '1536689023262',
     m: '1536602589978'
   };
   let fullid = `r${idArray.r}s${idArray.s}i${idArray.i}`;
+  
+  let idArray2 = {
+    r: '1531207779057',
+    i: '1536690286083'
+  };
+  let fullid2 = `r${idArray2.r}i${idArray2.i}`;
 
   describe('itemDeleteTest', () => {
     it('delete item', async () => {
@@ -292,8 +298,30 @@ function itemDeleteTest() {
         expect(section.items).to.not.include(fullid);
       });
     });
+  });
+  
+  describe('restaurant itemDeleteTest', () => {
+    it('delete item', async () => {
+      let myURI_ID = utils.getURI('/v1/restaurants/{restaurant_id}/items/{item_id}', idArray2);
 
-
+      let res = await serv.delete(myURI_ID).expect(204);
+      //console.log(res.body);
+    });
+    
+    it('check item existed', async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
+      let res = await serv.get(myURI_ID).expect(404);
+    });
+    
+    it('check item unregistation', async () => {
+      let myURI_ID = utils.getURI('/v1/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}', idArray);
+      let res = await serv.get(myURI_ID);
+      console.log(res.body.data.attributes);
+      
+      res.body.data.attributes.sections.forEach(section => {
+        expect(section.items).to.not.include(fullid2);
+      });
+    });
   });
 }
 
