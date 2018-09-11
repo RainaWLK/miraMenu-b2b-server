@@ -3,6 +3,8 @@ let CommonTest = require('./common.js');
 let _ = require('lodash');
 let branchTest = require('./branch');
 let utils = require('./utils');
+let request = require('supertest');
+let serv = request(env.server);
 
 var expect = env.chai.expect;
 
@@ -259,7 +261,41 @@ function translationTest() {
   });
 }
 
+function itemDeleteTest() {
+  let idArray = {
+    r: '1531207779057',
+    s: '1534748388645',
+    i: '1536669156288',
+    m: '1536602589978'
+  };
+  let fullid = `r${idArray.r}s${idArray.s}i${idArray.i}`;
 
+  describe('itemDeleteTest', () => {
+    it('delete item', async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
+
+      let res = await serv.delete(myURI_ID).expect(204);
+      //console.log(res.body);
+    });
+    
+    it('check item existed', async () => {
+      let myURI_ID = utils.getURI(URI_ID, idArray);
+      let res = await serv.get(myURI_ID).expect(404);
+    });
+    
+    it('check item unregistation', async () => {
+      let myURI_ID = utils.getURI('/v1/restaurants/{restaurant_id}/branches/{branch_id}/menus/{menu_id}', idArray);
+      let res = await serv.get(myURI_ID);
+      console.log(res.body.data.attributes);
+      
+      res.body.data.attributes.sections.forEach(section => {
+        expect(section.items).to.not.include(fullid);
+      });
+    });
+
+
+  });
+}
 
 async function prepareTest(){
   let op = new CommonTest(URI);
@@ -302,7 +338,8 @@ async function cleanTest(idArray){
 function go() {
   //itemByIDTest();
   //itemTest();
-  translationTest();
+  //translationTest();
+  itemDeleteTest();
 };
 exports.go = go;
 exports.prepareTest = prepareTest;

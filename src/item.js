@@ -317,8 +317,15 @@ class Items {
           throw err;
       }
   }
+  
+
 
   async deleteByID() {
+    const removeItemFromSection = (section, item_id) => {
+      section.items = section.items.filter(e => e !== item_id);
+      return section;
+    }
+    
     try{
       let menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
       if(typeof menusData.items[this.item_fullID] == 'undefined'){
@@ -326,10 +333,22 @@ class Items {
         err.statusCode = 404;
         throw err;
       }
-      //let itemData = await this.getItemData(false);
+
       delete menusData.items[this.item_fullID];
       //bug: must delete all photos in s3
       //bug: must delete all resources in s3
+      //delete item id in menu
+      for(let menu_id in menusData.menus) {
+        let menuData = menusData.menus[menu_id];
+        menuData.sections = menuData.sections.map(section => removeItemFromSection(section, this.item_fullID));
+      }
+      if(this.branchQuery === false) {
+        //delete item id inside branch menu
+
+      }
+      /*for(let i in menusData.menus) {
+        console.log(menusData.menus[i].sections);
+      }*/
 
       let msg = await db.put(TABLE_NAME, menusData);
       return "";
