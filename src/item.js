@@ -6,6 +6,7 @@ let I18n = require('./i18n.js');
 let _ = require('lodash');
 let S3 = require('./s3');
 let AWS = require('aws-sdk');
+const AwsTranslate = require('./translate.js');
 
 const BRANCH_TABLE_NAME = "Branches";
 const RESTAURANT_TABLE_NAME = "Restaurants";
@@ -217,11 +218,11 @@ class Items {
       let inputData = JSONAPI.parseJSONAPI(payload);
 
       try{
-        let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
+        //let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
         let item_id = this.getNewID();
         let fullID = this.branch_fullID + item_id;          
 
-        let dbMenusData = await this.getMenusData(true);          
+        //let dbMenusData = await this.getMenusData(true);          
 
         let menusData;
         try {
@@ -250,6 +251,22 @@ class Items {
         }
         let i18nUtils = new I18n.main(inputData, this.idArray);
         inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+        console.log(inputData);
+        //aws translate
+        if(lang !== 'en-us') {
+          for(let i in i18nSchema) {
+            if(typeof i18nSchema[i] === 'string') {
+              console.log('==translate ' + i);
+              inputData[i] = await AwsTranslate.doTranstale(lang, 'en-us', inputData[i]);
+              console.log(inputData[i]);
+            }
+          }
+          console.log('translate done');
+          console.log(inputData);
+          inputData = i18nUtils.makei18n(i18nSchema, inputData, 'en-us');
+          console.log('i18n');
+          console.log(inputData);
+        }
 
         menusData.items[fullID] = inputData; 
         let msg = await db.post(TABLE_NAME, menusData);
