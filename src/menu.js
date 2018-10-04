@@ -5,6 +5,7 @@ let Image = require('./image.js');
 let I18n = require('./i18n.js');
 let _ = require('lodash');
 let S3 = require('./s3');
+const AwsTranslate = require('./translate.js');
 
 const BRANCH_TABLE_NAME = "Branches";
 const RESTAURANT_TABLE_NAME = "Restaurants";
