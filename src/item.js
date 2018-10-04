@@ -215,72 +215,79 @@ class Items {
   }
 
   async create(payload) {
-      let inputData = JSONAPI.parseJSONAPI(payload);
+    let inputData = JSONAPI.parseJSONAPI(payload);
 
-      try{
-        //let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
-        let item_id = this.getNewID();
-        let fullID = this.branch_fullID + item_id;          
+    try{
+      //let branchData = await db.queryById(this.branchTable, this.branch_fullID);   //get branch data    
+      let item_id = this.getNewID();
+      let fullID = this.branch_fullID + item_id;          
 
-        //let dbMenusData = await this.getMenusData(true);          
+      //let dbMenusData = await this.getMenusData(true);          
 
-        let menusData;
-        try {
-            menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
-        }
-        catch(err){
-            //init
-            menusData = {
-                "id": this.branch_fullID,
-                "menus": {},
-                "items": {}
-            }
-        }
-
-        let control = new ItemControl();
-        inputData.itemControl = JSON.parse(JSON.stringify(control));   //bug
-        inputData.photos = {};
-        inputData.resources = {};
-        inputData.i18n = {};
-
-        //i18n
-        let lang = inputData.language;
-        delete inputData.language;
-        if(typeof lang == 'undefined'){
-          lang = "en-us";
-        }
-        let i18nUtils = new I18n.main(inputData, this.idArray);
-        inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
-        console.log(inputData);
-        //aws translate
-        if(lang !== 'en-us') {
-          for(let i in i18nSchema) {
-            if(typeof i18nSchema[i] === 'string') {
-              console.log('==translate ' + i);
-              inputData[i] = await AwsTranslate.doTranstale(lang, 'en-us', inputData[i]);
-              console.log(inputData[i]);
-            }
+      let menusData;
+      try {
+          menusData = await db.queryById(TABLE_NAME, this.branch_fullID);
+      }
+      catch(err){
+          //init
+          menusData = {
+              "id": this.branch_fullID,
+              "menus": {},
+              "items": {}
           }
+      }
+
+      let control = new ItemControl();
+      inputData.itemControl = JSON.parse(JSON.stringify(control));   //bug
+      inputData.photos = {};
+      inputData.resources = {};
+      inputData.i18n = {};
+
+      //i18n
+      let lang = inputData.language;
+      delete inputData.language;
+      if(typeof lang == 'undefined'){
+        lang = "en-us";
+      }
+      let i18nUtils = new I18n.main(inputData, this.idArray);
+      inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+      console.log(inputData);
+      //aws translate
+      if(lang !== 'en-us') {
+        let translateToEn = false;
+        for(let i in i18nSchema) {
+          if(typeof i18nSchema[i] === 'string') {
+            console.log('==translate ' + i);
+            let enWord = await AwsTranslate.doTranstale(lang, 'en-us', inputData[i]);
+            if(enWord !== null) {
+              inputData[i] = enWord;
+              translateToEn = true;
+            }
+            console.log(inputData[i]);
+          }
+        }
+        if(translateToEn) {
           console.log('translate done');
           console.log(inputData);
           inputData = i18nUtils.makei18n(i18nSchema, inputData, 'en-us');
           console.log('i18n');
           console.log(inputData);
         }
-
-        menusData.items[fullID] = inputData; 
-        let msg = await db.post(TABLE_NAME, menusData);
-
-        //translate
-        inputData = i18nUtils.translate(lang);
-        //output
-        let output = this.output(inputData, fullID);
-        return JSONAPI.makeJSONAPI(TYPE_NAME, output);
       }
-      catch(err) {
-          console.log(err);
-          throw err;
-      }
+
+      menusData.items[fullID] = inputData; 
+      let msg = await db.post(TABLE_NAME, menusData);
+
+      //translate
+      inputData = i18nUtils.translate(lang);
+      //output
+      let output = this.output(inputData, fullID);
+      return JSONAPI.makeJSONAPI(TYPE_NAME, output);
+    }
+    catch(err) {
+      console.log(err);
+      throw err;
+    }
 
   }
 
