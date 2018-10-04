@@ -249,40 +249,40 @@ class Items {
       if(typeof lang == 'undefined'){
         lang = "en-us";
       }
-      let outputData = _.cloneDeep(inputData);
+      let orgData = _.cloneDeep(inputData);
       let i18nUtils = new I18n.main(inputData, this.idArray);
-      let outputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
-      console.log(outputData);
+      inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+      console.log(inputData);
       //aws translate
       if(lang !== 'en-us') {
         let translateToEn = false;
         for(let i in i18nSchema) {
           if(typeof i18nSchema[i] === 'string') {
             console.log('==translate ' + i);
-            let enWord = await AwsTranslate.doTranstale(lang, 'en-us', inputData[i]);
+            let enWord = await AwsTranslate.doTranstale(lang, 'en-us', orgData[i]);
             if(enWord !== null) {
-              inputData[i] = enWord;
+              orgData[i] = enWord;
               translateToEn = true;
             }
-            console.log(inputData[i]);
+            console.log(orgData[i]);
           }
         }
         if(translateToEn) {
           console.log('translate done');
-          console.log(inputData);
-          outputData = i18nUtils.makei18n(i18nSchema, inputData, 'en-us');
+          console.log(orgData);
+          inputData = i18nUtils.makei18n(i18nSchema, orgData, 'en-us');
           console.log('i18n');
-          console.log(outputData);
+          console.log(inputData);
         }
       }
 
-      menusData.items[fullID] = outputData; 
+      menusData.items[fullID] = inputData; 
       let msg = await db.post(TABLE_NAME, menusData);
 
       //translate
-      outputData = i18nUtils.translate(lang);
+      inputData = i18nUtils.translate(lang);
       //output
-      let output = this.output(outputData, fullID);
+      let output = this.output(inputData, fullID);
       return JSONAPI.makeJSONAPI(TYPE_NAME, output);
     }
     catch(err) {
