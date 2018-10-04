@@ -247,32 +247,27 @@ class Items {
       let lang = inputData.language;
       delete inputData.language;
       if(typeof lang == 'undefined'){
-        lang = "en-us";
+        lang = "en-US";
       }
       let orgData = _.cloneDeep(inputData);
       let i18nUtils = new I18n.main(inputData, this.idArray);
       inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
-      console.log(inputData);
       //aws translate
-      if(lang !== 'en-us') {
+      if(lang.toLowerCase() !== 'en-us') {
         let translateToEn = false;
         for(let i in i18nSchema) {
           if(typeof i18nSchema[i] === 'string') {
-            console.log('==translate ' + i);
-            let enWord = await AwsTranslate.doTranstale(lang, 'en-us', orgData[i]);
+            
+            let enWord = await AwsTranslate.doTranstale(lang, 'en-US', orgData[i]);
             if(enWord !== null) {
               orgData[i] = enWord;
               translateToEn = true;
+              console.log('translate ' + i + ' ---> '+ enWord);
             }
-            console.log(orgData[i]);
           }
         }
         if(translateToEn) {
-          console.log('translate done');
-          console.log(orgData);
-          inputData = i18nUtils.makei18n(i18nSchema, orgData, 'en-us');
-          console.log('i18n');
-          console.log(inputData);
+          inputData = i18nUtils.makei18n(i18nSchema, orgData, 'en-US');
         }
       }
 
