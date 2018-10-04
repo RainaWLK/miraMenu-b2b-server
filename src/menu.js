@@ -271,14 +271,32 @@ class Menus {
       let lang = inputData.language;
       delete inputData.language;
       if(typeof lang == 'undefined'){
-        lang = "en-us";
+        lang = "en-US";
       }
+      let orgData = _.cloneDeep(inputData);
       let i18nUtils = new I18n.main(inputData, this.idArray);
       inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+      //aws translate
+      if(lang.toLowerCase() !== 'en-us') {
+        let translateToEn = false;
+        for(let i in i18nSchema) {
+          if(typeof i18nSchema[i] === 'string') {
+            
+            let enWord = await AwsTranslate.doTranstale(lang, 'en-US', orgData[i]);
+            if(enWord !== null) {
+              orgData[i] = enWord;
+              translateToEn = true;
+              console.log('translate ' + i + ' ---> '+ enWord);
+            }
+          }
+        }
+        if(translateToEn) {
+          inputData = i18nUtils.makei18n(i18nSchema, orgData, 'en-US');
+        }
+      }
 
       menusData.menus[fullID] = inputData; 
       let msg = await db.post(TABLE_NAME, menusData);
-
       
       //translate
       inputData = i18nUtils.translate(lang);
