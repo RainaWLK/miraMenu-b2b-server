@@ -249,9 +249,10 @@ class Items {
       if(typeof lang == 'undefined'){
         lang = "en-us";
       }
+      let outputData = _.cloneDeep(inputData);
       let i18nUtils = new I18n.main(inputData, this.idArray);
-      inputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
-      console.log(inputData);
+      let outputData = i18nUtils.makei18n(i18nSchema, inputData, lang);
+      console.log(outputData);
       //aws translate
       if(lang !== 'en-us') {
         let translateToEn = false;
@@ -269,19 +270,19 @@ class Items {
         if(translateToEn) {
           console.log('translate done');
           console.log(inputData);
-          inputData = i18nUtils.makei18n(i18nSchema, inputData, 'en-us');
+          outputData = i18nUtils.makei18n(i18nSchema, inputData, 'en-us');
           console.log('i18n');
-          console.log(inputData);
+          console.log(outputData);
         }
       }
 
-      menusData.items[fullID] = inputData; 
+      menusData.items[fullID] = outputData; 
       let msg = await db.post(TABLE_NAME, menusData);
 
       //translate
-      inputData = i18nUtils.translate(lang);
+      outputData = i18nUtils.translate(lang);
       //output
-      let output = this.output(inputData, fullID);
+      let output = this.output(outputData, fullID);
       return JSONAPI.makeJSONAPI(TYPE_NAME, output);
     }
     catch(err) {
