@@ -34,6 +34,6 @@ let aws = {
 }
 
 exports.aws = aws;
-exports.server = 'https://'+aws.host+'/'+aws.stage;
-//exports.server = 'http://localhost:8081';
+//exports.server = 'https://'+aws.host+'/'+aws.stage;
+exports.server = 'http://localhost:8081';
 

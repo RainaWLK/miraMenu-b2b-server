@@ -262,21 +262,33 @@ function translationTest() {
 }
 
 function itemDeleteTest() {
-  let idArray = {
+  /*let idArray = {
     r: '1531207779057',
     s: '1534748388645',
     i: '1536689023262',
     m: '1536602589978'
   };
-  let fullid = `r${idArray.r}s${idArray.s}i${idArray.i}`;
+  let fullid = `r${idArray.r}s${idArray.s}i${idArray.i}`;*/
   
   let idArray2 = {
     r: '1531207779057',
     i: '1536690286083'
   };
   let fullid2 = `r${idArray2.r}i${idArray2.i}`;
+  
+  let idArray;
+  let fullid;
 
   describe('itemDeleteTest', () => {
+    it('prepare data', async () => {
+      idArray = await prepareTest();
+      fullid = utils.makeFullID(idArray);
+    });
+    
+    it('register into menu', async () => {
+
+    });
+    
     it('delete item', async () => {
       let myURI_ID = utils.getURI(URI_ID, idArray);
 
@@ -298,8 +310,13 @@ function itemDeleteTest() {
         expect(section.items).to.not.include(fullid);
       });
     });
+    
+    it('delete data', async () => {
+      await cleanTest(idArray);
+      return;
+    });
   });
-  
+  /*
   describe('restaurant itemDeleteTest', () => {
     it('delete item', async () => {
       let myURI_ID = utils.getURI('/v1/restaurants/{restaurant_id}/items/{item_id}', idArray2);
@@ -322,7 +339,7 @@ function itemDeleteTest() {
         expect(section.items).to.not.include(fullid2);
       });
     });
-  });
+  });*/
 }
 
 async function prepareTest(){
