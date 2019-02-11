@@ -30,7 +30,7 @@ let i18nSchema = {
     "desc": "",
     "category": "",
     "nutrition": "",
-    "ingredients": [""],
+    "ingredients": "",
     "note": [""],
     "photos": [
       {
