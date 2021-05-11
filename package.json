@@ -22,7 +22,7 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "claudia-api-builder": "^2.4.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "mime-types": "^2.1.15",
     "qrcode": "^1.0.0",
     "sprintf-js": "^1.0.3",
